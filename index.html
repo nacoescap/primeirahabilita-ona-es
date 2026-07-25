@@ -108,6 +108,7 @@ input,select,textarea{font-family:inherit;}
   transition:border-color .15s;
 }
 .field input:focus,.field select:focus,.field textarea:focus{outline:none;border-color:var(--blue-600);}
+.field input:disabled{background:#f2f4f6;color:var(--text-muted);cursor:not-allowed;}
 .field-with-icon{position:relative;}
 .field-with-icon input{padding-right:42px;}
 .icon-btn{
@@ -311,6 +312,7 @@ tbody tr:last-child td{border-bottom:none;}
 .inline-select.sit-reprovado{background:var(--danger-bg);color:var(--danger);border-color:#f3d3d3;}
 .inline-select.sit-enviado{background:#fdf1cd;color:#9a6c00;border-color:#f5e3ad;}
 .inline-select.sit-aprovado{background:var(--success-bg);color:var(--success);border-color:#c9ecd6;}
+.inline-select.sit-ausente{background:#f3e8d9;color:#8a5a1f;border-color:#e8d4b0;}
 
 .perm-row{
   display:flex;align-items:center;gap:10px;
@@ -880,7 +882,7 @@ tbody tr:last-child td{border-bottom:none;}
         <div class="toolbar"><input type="text" class="search-input" id="tstSearch" placeholder="Buscar por cliente..." /><div class="spacer"></div></div>
         <div class="table-wrap">
           <table>
-            <thead><tr><th>Cliente</th><th>WhatsApp</th><th>Situação</th><th>Lead time</th><th>Ações</th></tr></thead>
+            <thead><tr><th>Cliente</th><th>WhatsApp</th><th>Data Início</th><th>Data Conclusão</th><th>Situação</th><th>Lead time</th><th>Ações</th></tr></thead>
             <tbody id="tstTableBody"></tbody>
           </table>
         </div>
@@ -1292,7 +1294,7 @@ tbody tr:last-child td{border-bottom:none;}
 <div class="modal-overlay hidden" id="modalAgendarAula">
   <div class="modal">
     <div class="modal-header">
-      <h3>Agendar Aulas Práticas</h3>
+      <h3>Curso em Andamento</h3>
       <button class="modal-close" data-close="modalAgendarAula">
         <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 6 6 18M6 6l12 12"/></svg>
       </button>
@@ -1301,6 +1303,14 @@ tbody tr:last-child td{border-bottom:none;}
       <input type="hidden" id="aulOrcId" />
       <div class="field"><label>Data</label><input type="date" id="aulData" /></div>
       <div class="field"><label>Turma</label><input type="text" id="aulTurma" placeholder="Ex: Turma A - Manhã" /></div>
+      <div class="field">
+        <label>Curso</label>
+        <select id="aulModalidade">
+          <option value="">Selecione o curso</option>
+          <option value="CNH DO BRASIL EAD">CNH DO BRASIL EAD</option>
+          <option value="Curso Presencial">Curso Presencial</option>
+        </select>
+      </div>
     </div>
     <div class="modal-footer">
       <button class="btn btn-secondary" data-close="modalAgendarAula">Cancelar</button>
@@ -1328,6 +1338,29 @@ tbody tr:last-child td{border-bottom:none;}
     <div class="modal-footer">
       <button class="btn btn-secondary" data-close="modalAgendarTeste">Cancelar</button>
       <button class="btn btn-primary" id="btnConfirmarAgendaTeste">Confirmar Agendamento</button>
+    </div>
+  </div>
+</div>
+
+<!-- ============================================================= -->
+<!-- MODAL: DATA DE CONCLUSÃO DAS AULAS PRÁTICAS                   -->
+<!-- ============================================================= -->
+<div class="modal-overlay hidden" id="modalConclusaoAulas">
+  <div class="modal">
+    <div class="modal-header">
+      <h3>Data de Conclusão</h3>
+      <button class="modal-close" data-close="modalConclusaoAulas">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 6 6 18M6 6l12 12"/></svg>
+      </button>
+    </div>
+    <div class="modal-body">
+      <input type="hidden" id="conclOrcId" />
+      <div class="field"><label>Data Início</label><input type="date" id="conclDataInicio" disabled /></div>
+      <div class="field"><label>Data de Conclusão</label><input type="date" id="conclDataFim" /></div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-secondary" data-close="modalConclusaoAulas">Cancelar</button>
+      <button class="btn btn-primary" id="btnConfirmarConclusaoAulas">Salvar</button>
     </div>
   </div>
 </div>
@@ -2887,6 +2920,7 @@ async function enviarParaAssinaturaContrato(id){
    PIPELINE DO ALUNO (pós-venda): helpers comuns
    ===================================================================== */
 const ICON_PHONE = '<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.13.96.36 1.9.7 2.81a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.91.34 1.85.57 2.81.7A2 2 0 0 1 22 16.92Z"/></svg>';
+const ICON_EDIT = '<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 3a2.85 2.83 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5Z"/><path d="M15 5l4 4"/></svg>';
 
 async function updatePipeline(id, payload, refreshFns){
   payload.updated_at = new Date().toISOString();
@@ -3188,13 +3222,15 @@ function openAgendarAulaModal(id){
   document.getElementById('aulOrcId').value = id;
   document.getElementById('aulData').value = o?.data_aula_agendada || todayISO();
   document.getElementById('aulTurma').value = o?.turma || '';
+  document.getElementById('aulModalidade').value = o?.modalidade_curso || '';
   openModal('modalAgendarAula');
 }
 document.getElementById('btnConfirmarAgendaAula').addEventListener('click', async ()=>{
   const id = document.getElementById('aulOrcId').value;
   const data_aula_agendada = document.getElementById('aulData').value || todayISO();
   const turma = document.getElementById('aulTurma').value.trim() || null;
-  await updatePipeline(id, { etapa:'agendados', situacao_etapa:null, data_aula_agendada, turma }, [renderAulas, renderAgendados]);
+  const modalidade_curso = document.getElementById('aulModalidade').value || null;
+  await updatePipeline(id, { etapa:'agendados', situacao_etapa:null, data_aula_agendada, turma, modalidade_curso }, [renderAulas, renderAgendados]);
   closeModal('modalAgendarAula');
 });
 
@@ -3247,7 +3283,7 @@ function drawAgendadosTable(){
   tbody.innerHTML = rows.map(o=>`
     <tr>
       <td>${o.cliente||''}</td><td>${o.turma||'—'}</td><td>${fmtDate(o.data_aula_agendada)}</td><td>${o.numero_aulas||0}</td>
-      <td>${simpleSelectHtml(o, ['Pendente','Aprovado','Reprovado'], 'agd-select', {'Pendente':'sit-aberto','Aprovado':'sit-aprovado','Reprovado':'sit-reprovado'}, 'Pendente')}</td>
+      <td>${simpleSelectHtml(o, ['Pendente','Aprovado','Reprovado','Ausente'], 'agd-select', {'Pendente':'sit-aberto','Aprovado':'sit-aprovado','Reprovado':'sit-reprovado','Ausente':'sit-ausente'}, 'Pendente')}</td>
       <td>${leadTimeCell(o.etapa_entrada||o.updated_at)}</td>
       <td class="row-actions"><button title="Ligações / Follow-up" data-followup="${o.id}">${ICON_PHONE}</button></td>
     </tr>
@@ -3258,6 +3294,11 @@ function drawAgendadosTable(){
 async function quickChangeAgendado(id, novoValor){
   if(novoValor === 'Reprovado'){
     if(!confirm('Marcar como reprovado? O aluno voltará para o Curso Teórico para reagendar.')){ drawAgendadosTable(); return; }
+    await updatePipeline(id, { etapa:'aulas', situacao_etapa:null, data_aula_agendada:null, turma:null }, [renderAgendados, renderAulas]);
+    return;
+  }
+  if(novoValor === 'Ausente'){
+    if(!confirm('Marcar como ausente? O aluno voltará para o Curso Teórico para reagendar.')){ drawAgendadosTable(); return; }
     await updatePipeline(id, { etapa:'aulas', situacao_etapa:null, data_aula_agendada:null, turma:null }, [renderAgendados, renderAulas]);
     return;
   }
@@ -3367,7 +3408,7 @@ function drawProvaEscritaAguardandoTable(){
   tbody.innerHTML = rows.map(o=>`
     <tr>
       <td>${o.cliente||''}</td><td>${fmtDate(o.data_prova_escrita)}</td><td>${o.hora_prova_escrita||'—'}</td>
-      <td>${simpleSelectHtml(o, ['Pendente','Aprovado','Reprovado'], 'provaagd-select', {'Pendente':'sit-aberto','Aprovado':'sit-aprovado','Reprovado':'sit-reprovado'}, 'Pendente')}</td>
+      <td>${simpleSelectHtml(o, ['Pendente','Aprovado','Reprovado','Ausente'], 'provaagd-select', {'Pendente':'sit-aberto','Aprovado':'sit-aprovado','Reprovado':'sit-reprovado','Ausente':'sit-ausente'}, 'Pendente')}</td>
       <td>${leadTimeCell(o.etapa_entrada||o.updated_at)}</td>
       <td class="row-actions"><button title="Ligações / Follow-up" data-followup="${o.id}">${ICON_PHONE}</button></td>
     </tr>
@@ -3380,6 +3421,11 @@ async function quickChangeProvaEscritaAguardando(id, novoValor){
   if(novoValor === 'Reprovado'){
     if(!confirm('Marcar como reprovado? O aluno irá para "Reprovado na Prova Escrita".')){ drawProvaEscritaAguardandoTable(); return; }
     await updatePipeline(id, { etapa:'prova_escrita_reprovado', situacao_etapa:'Em Andamento' }, [renderProvaEscritaAguardando, renderProvaEscritaReprovado]);
+    return;
+  }
+  if(novoValor === 'Ausente'){
+    if(!confirm('Marcar como ausente? O aluno voltará para o Agendamento de Prova Escrita.')){ drawProvaEscritaAguardandoTable(); return; }
+    await updatePipeline(id, { etapa:'prova_escrita_agendamento', situacao_etapa:null, data_prova_escrita:null, hora_prova_escrita:null }, [renderProvaEscritaAguardando, renderProvaEscritaAgendamento]);
     return;
   }
   if(novoValor === 'Aprovado'){
@@ -3465,20 +3511,30 @@ function drawTestePraticoTable(){
   const search = document.getElementById('tstSearch').value.toLowerCase();
   const rows = state.testePratico.filter(o => !search || (o.cliente||'').toLowerCase().includes(search));
   const tbody = document.getElementById('tstTableBody');
-  if(rows.length===0){ tbody.innerHTML = `<tr class="empty-row"><td colspan="5">Nenhum aluno nesta etapa.</td></tr>`; return; }
+  if(rows.length===0){ tbody.innerHTML = `<tr class="empty-row"><td colspan="7">Nenhum aluno nesta etapa.</td></tr>`; return; }
   tbody.innerHTML = rows.map(o=>`
     <tr>
       <td>${o.cliente||''}</td><td>${o.whatsapp||'—'}</td>
+      <td>${o.data_pagamento_curso ? fmtDate(o.data_pagamento_curso) : '<span class="muted small">—</span>'}</td>
+      <td>
+        <div class="row-actions">
+          <span>${o.data_conclusao_aulas_praticas ? fmtDate(o.data_conclusao_aulas_praticas) : '<span class="muted small">—</span>'}</span>
+          <button title="Editar data de conclusão" data-editar-conclusao="${o.id}">${ICON_EDIT}</button>
+        </div>
+      </td>
       <td>${pendenteBadge(!!o.data_teste_pratico, 'Agendado')}</td>
       <td>${leadTimeCell(o.etapa_entrada||o.updated_at)}</td>
       <td class="row-actions">
         <button title="Ligações / Follow-up" data-followup="${o.id}">${ICON_PHONE}</button>
         <button class="btn btn-sm btn-yellow" data-agendar="${o.id}">Agendar</button>
+        <button class="btn btn-sm btn-secondary" data-ausente="${o.id}">Ausente</button>
       </td>
     </tr>
   `).join('');
   tbody.querySelectorAll('[data-followup]').forEach(b=> b.addEventListener('click', ()=> openFollowupModal(b.dataset.followup)));
   tbody.querySelectorAll('[data-agendar]').forEach(b=> b.addEventListener('click', ()=> openAgendarTesteModal(b.dataset.agendar)));
+  tbody.querySelectorAll('[data-editar-conclusao]').forEach(b=> b.addEventListener('click', ()=> openConclusaoAulasModal(b.dataset.editarConclusao)));
+  tbody.querySelectorAll('[data-ausente]').forEach(b=> b.addEventListener('click', ()=> marcarAusenteTestePratico(b.dataset.ausente)));
 }
 document.getElementById('tstSearch').addEventListener('input', drawTestePraticoTable);
 function openAgendarTesteModal(id){
@@ -3495,6 +3551,23 @@ document.getElementById('btnConfirmarAgendaTeste').addEventListener('click', asy
   await updatePipeline(id, { etapa:'resultado_teste', situacao_etapa:null, data_teste_pratico, hora_teste_pratico }, [renderTestePratico, renderResultadoTeste]);
   closeModal('modalAgendarTeste');
 });
+function openConclusaoAulasModal(id){
+  const o = state.testePratico.find(x=>x.id===id);
+  document.getElementById('conclOrcId').value = id;
+  document.getElementById('conclDataInicio').value = o?.data_pagamento_curso || '';
+  document.getElementById('conclDataFim').value = o?.data_conclusao_aulas_praticas || '';
+  openModal('modalConclusaoAulas');
+}
+document.getElementById('btnConfirmarConclusaoAulas').addEventListener('click', async ()=>{
+  const id = document.getElementById('conclOrcId').value;
+  const data_conclusao_aulas_praticas = document.getElementById('conclDataFim').value || null;
+  await updatePipeline(id, { data_conclusao_aulas_praticas }, [renderTestePratico]);
+  closeModal('modalConclusaoAulas');
+});
+async function marcarAusenteTestePratico(id){
+  if(!confirm('Marcar como ausente? O aluno voltará para a Conferência de Cobrança.')){ return; }
+  await updatePipeline(id, { etapa:'conferencia_cobranca', situacao_etapa:null }, [renderTestePratico, renderConferenciaCobranca]);
+}
 
 /* ---------- 8) AGENDAMENTO DE TESTE DE VOLANTE ---------- */
 async function fetchResultadoTeste(){
