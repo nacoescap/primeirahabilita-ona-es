@@ -3190,17 +3190,15 @@ async function updatePipeline(id, payload, refreshFns){
 }
 
 /* ---------- Lead time (dias na etapa atual) ---------- */
-function leadTimeDias(dateStr, endDateStr){
+function leadTimeDias(dateStr){
   if(!dateStr) return null;
   const d = new Date(dateStr);
   if(isNaN(d.getTime())) return null;
-  const endD = endDateStr ? new Date(endDateStr) : null;
-  const endMs = (endD && !isNaN(endD.getTime())) ? endD.getTime() : Date.now();
-  const diffMs = endMs - d.getTime();
+  const diffMs = Date.now() - d.getTime();
   return Math.max(0, Math.floor(diffMs / 86400000));
 }
-function leadTimeCell(dateStr, endDateStr){
-  const dias = leadTimeDias(dateStr, endDateStr);
+function leadTimeCell(dateStr){
+  const dias = leadTimeDias(dateStr);
   if(dias === null) return '<span class="muted small">—</span>';
   const cls = dias >= 10 ? 'badge-red' : (dias >= 5 ? 'badge-yellow' : 'badge-gray');
   return `<span class="badge ${cls}">${dias} dia${dias===1?'':'s'}</span>`;
@@ -3835,7 +3833,7 @@ function drawTestePraticoTable(){
         </div>
       </td>
       <td>${pendenteBadge(!!o.data_teste_pratico, 'Agendado')}</td>
-      <td>${leadTimeCell(o.data_pagamento_curso || o.etapa_entrada || o.updated_at, o.data_conclusao_aulas_praticas)}</td>
+      <td>${leadTimeCell(o.etapa_entrada||o.updated_at)}</td>
       <td class="row-actions">
         <button title="Ligações / Follow-up" data-followup="${o.id}">${ICON_PHONE}</button>
         <button class="btn btn-sm btn-yellow" data-agendar="${o.id}">Agendar</button>
