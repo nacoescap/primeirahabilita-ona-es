@@ -2636,7 +2636,6 @@ async function quickChangeSituacaoCliente(id, novaSituacao){
       return;
     }
     const payload = { situacao_cliente:'Aprovado', data_aprovacao: todayISO(), motivo_reprovado_cliente_id:null };
-    if(!o.etapa){ payload.etapa = 'exames'; payload.situacao_etapa = 'Em Andamento'; }
     await updateSituacaoClienteRapida(id, payload);
     return;
   }
@@ -3068,7 +3067,6 @@ document.getElementById('btnSalvarEnviado').addEventListener('click', async ()=>
   };
   if(situacao_cliente === 'Aprovado'){
     payload.data_aprovacao = todayISO();
-    if(o && !o.etapa){ payload.etapa = 'exames'; payload.situacao_etapa = 'Em Andamento'; }
   } else {
     payload.data_aprovacao = null;
     payload.etapa = null;
