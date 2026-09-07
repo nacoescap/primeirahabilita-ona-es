@@ -550,8 +550,8 @@ tbody tr:last-child td{border-bottom:none;}
       <div class="login-empresas hidden" id="loginEmpresas"></div>
       <form id="loginForm">
         <div class="field">
-          <label>Usuário</label>
-          <input type="text" id="loginUser" autocomplete="username" placeholder="admin" />
+          <label>E-mail</label>
+          <input type="email" id="loginUser" autocomplete="email" placeholder="seuemail@gmail.com" />
         </div>
         <div class="field">
           <label>Senha</label>
@@ -1193,10 +1193,10 @@ tbody tr:last-child td{border-bottom:none;}
 
       <!-- ============ CADASTRO: USUÁRIOS E PERMISSÕES ============ -->
       <section class="view list-view" id="view-cad-usuarios">
-        <p class="helper-text">Crie logins adicionais para outras pessoas acessarem o sistema, escolhendo quais telas cada um pode ver. O login "admin" é fixo e sempre tem acesso total.</p>
+        <p class="helper-text">O login é feito pelo <b>Supabase Auth</b>: o e-mail e a senha ficam guardados com segurança lá, não neste sistema. Para liberar alguém novo, crie o login em <b>Supabase → Authentication → Users → Add user</b> e a ficha aparece aqui sozinha — aí é só marcar as empresas e as telas que a pessoa pode ver. Trocas de senha também são feitas por lá.</p>
         <div class="toolbar"><div class="spacer"></div><button class="btn btn-yellow" id="btnNovoUsuario">+ Novo Usuário</button></div>
         <div class="table-wrap">
-          <table><thead><tr><th>Nome</th><th>Usuário</th><th>Empresas liberadas</th><th>Status</th><th>Ações</th></tr></thead><tbody id="usuariosTableBody"></tbody></table>
+          <table><thead><tr><th>Nome</th><th>E-mail de acesso</th><th>Empresas liberadas</th><th>Status</th><th>Ações</th></tr></thead><tbody id="usuariosTableBody"></tbody></table>
         </div>
       </section>
 
@@ -1524,20 +1524,16 @@ tbody tr:last-child td{border-bottom:none;}
       <input type="hidden" id="usrId" />
       <div class="form-grid">
         <div class="field"><label>Nome</label><input type="text" id="usrNome" placeholder="Nome completo" /></div>
-        <div class="field"><label>Usuário (login)</label><input type="text" id="usrUsuario" placeholder="ex: joel" /></div>
+        <div class="field"><label>Apelido (identificação interna)</label><input type="text" id="usrUsuario" placeholder="ex: joel" /></div>
         <div class="field">
-          <label>Senha</label>
-          <div class="field-with-icon">
-            <input type="password" id="usrSenha" autocomplete="new-password" placeholder="Deixe em branco para manter" />
-            <button type="button" class="icon-btn" id="toggleUsrSenha" title="Mostrar/ocultar senha">
-              <svg id="usrEyeIcon" width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8Z"/><circle cx="12" cy="12" r="3"/></svg>
-            </button>
-          </div>
+          <label>E-mail de acesso</label>
+          <input type="email" id="usrEmail" placeholder="pessoa@gmail.com" />
         </div>
         <div class="field"><label>Status</label>
           <div class="checkbox-row" style="margin-top:10px;"><input type="checkbox" id="usrAtivo" checked /><label for="usrAtivo">Ativo</label></div>
         </div>
       </div>
+      <div class="field full" id="usrVinculoAviso"></div>
       <div class="field full">
         <label>Empresas que este usuário pode acessar</label>
         <div id="usrEmpresasList" class="followup-list"></div>
@@ -2679,8 +2675,9 @@ async function deleteEmpresa(id){
 }
 
 /* Login fixo da tela (controle de acesso simples, ver schema.sql para notas de segurança) */
-const AUTH_USER = 'admin';
-const AUTH_PASS = 'C@pnac_2026';
+/* O login agora é feito pelo Supabase Auth (Authentication → Users).
+   Não existe mais usuário nem senha gravados dentro deste arquivo.
+   Quem é administrador está marcado na coluna "is_admin" da tabela usuarios. */
 
 /* Telas controláveis por permissão (usadas no cadastro de usuários) */
 const VIEW_LIST = [
@@ -2820,15 +2817,6 @@ function showToast(msg, isError){
 function openModal(id){ document.getElementById(id).classList.remove('hidden'); }
 function closeModal(id){ document.getElementById(id).classList.add('hidden'); }
 
-async function sha256Hex(text){
-  if(!window.crypto || !window.crypto.subtle){
-    throw new Error('Este navegador não oferece suporte a criptografia (crypto.subtle). Tente atualizar o navegador ou acessar via HTTPS.');
-  }
-  const enc = new TextEncoder().encode(text);
-  const buf = await crypto.subtle.digest('SHA-256', enc);
-  return Array.from(new Uint8Array(buf)).map(b=>b.toString(16).padStart(2,'0')).join('');
-}
-
 /* =====================================================================
    LOGIN
    ===================================================================== */
@@ -2860,91 +2848,103 @@ document.getElementById('togglePass').addEventListener('click', ()=>{
     const saved = JSON.parse(safeStorage('getItem','nacoes_saved_login') || 'null');
     if(saved){
       loginUser.value = saved.u || '';
-      loginPass.value = saved.p || '';
       rememberMe.checked = true;
+      /* a senha nunca fica guardada no navegador */
     }
   }catch(e){}
-  if(safeStorage('getItem','nacoes_session') === 'active'){
-    doLogin(true);
-  }
+  restaurarSessao();
 })();
+
+/* Se a pessoa já entrou antes e a sessão continua válida, entra direto */
+async function restaurarSessao(){
+  if(!sb || !sb.auth) return;
+  try{
+    const { data } = await sb.auth.getSession();
+    if(data && data.session && data.session.user){
+      const ok = await carregarPerfil(data.session.user);
+      if(ok) await aposAutenticar();
+    }
+  }catch(e){
+    console.warn('Não foi possível restaurar a sessão:', e);
+  }
+}
 
 loginForm.addEventListener('submit', (e)=>{
   e.preventDefault();
-  doLogin(false);
+  doLogin();
 });
 
-async function doLogin(fromSession){
-  if(fromSession){
-    let savedUser = null;
-    try{ savedUser = JSON.parse(safeStorage('getItem','nacoes_current_user') || 'null'); }catch(e){}
-    if(!savedUser){ return; }
-    if(savedUser.usuario === AUTH_USER){
-      state.currentUser = { usuario: AUTH_USER, nome:'Administrador', isSuperAdmin:true, permissoes: fullPermissoes(), empresas: null };
-      await aposAutenticar();
-      return;
-    }
-    const ok = await loadUserPermissions(savedUser.usuario);
-    if(!ok){
-      safeStorage('removeItem','nacoes_session');
-      safeStorage('removeItem','nacoes_current_user');
-      return;
-    }
-    await aposAutenticar();
-    return;
-  }
-
-  const u = loginUser.value.trim();
-  const p = loginPass.value;
-
-  if(u === AUTH_USER && p === AUTH_PASS){
-    state.currentUser = { usuario: AUTH_USER, nome:'Administrador', isSuperAdmin:true, permissoes: fullPermissoes(), empresas: null };
-    await finalizeLogin(u,p);
-    return;
-  }
-
-  if(!sb){
+async function doLogin(){
+  if(!sb || !sb.auth){
     loginError.textContent = 'Sem conexão com o banco de dados. Verifique sua internet.';
     return;
   }
-  const { data, error } = await sb.from('usuarios').select('*').eq('usuario', u).eq('ativo', true).maybeSingle();
-  if(error || !data){
-    loginError.textContent = 'Usuário ou senha inválidos.';
-    return;
-  }
-  let hash;
-  try{
-    hash = await sha256Hex(p);
-  }catch(err){
-    loginError.textContent = err.message;
-    return;
-  }
-  if(hash !== data.senha_hash){
-    loginError.textContent = 'Usuário ou senha inválidos.';
-    return;
-  }
-  state.currentUser = { usuario: data.usuario, nome: data.nome, isSuperAdmin:false, permissoes: data.permissoes || {}, empresas: data.empresas || [] };
-  await finalizeLogin(u,p);
-}
 
-async function loadUserPermissions(usuario){
-  if(!sb) return false;
-  const { data, error } = await sb.from('usuarios').select('*').eq('usuario', usuario).eq('ativo', true).maybeSingle();
-  if(error || !data) return false;
-  state.currentUser = { usuario: data.usuario, nome: data.nome, isSuperAdmin:false, permissoes: data.permissoes || {}, empresas: data.empresas || [] };
-  return true;
-}
+  const email = loginUser.value.trim().toLowerCase();
+  const senha = loginPass.value;
+  if(!email || !senha){
+    loginError.textContent = 'Informe o e-mail e a senha.';
+    return;
+  }
 
-async function finalizeLogin(u,p){
+  const btn = loginForm.querySelector('button[type="submit"]');
+  if(btn) btn.disabled = true;
   loginError.textContent = '';
-  if(rememberMe.checked){
-    safeStorage('setItem','nacoes_saved_login', JSON.stringify({u,p}));
-  } else {
-    safeStorage('removeItem','nacoes_saved_login');
+
+  try{
+    const { data, error } = await sb.auth.signInWithPassword({ email, password: senha });
+    if(error){
+      loginError.textContent = /confirm/i.test(error.message)
+        ? 'Este e-mail ainda não foi confirmado. Fale com o administrador.'
+        : 'E-mail ou senha inválidos.';
+      return;
+    }
+
+    const ok = await carregarPerfil(data.user);
+    if(!ok) return;
+
+    if(rememberMe.checked){
+      safeStorage('setItem','nacoes_saved_login', JSON.stringify({ u: email }));
+    } else {
+      safeStorage('removeItem','nacoes_saved_login');
+    }
+    await aposAutenticar();
+  }finally{
+    if(btn) btn.disabled = false;
   }
-  safeStorage('setItem','nacoes_session','active');
-  safeStorage('setItem','nacoes_current_user', JSON.stringify({usuario:u}));
-  await aposAutenticar();
+}
+
+/* Carrega a ficha da pessoa (nome, permissões, empresas) já autenticada.
+   Graças ao RLS, esta consulta só devolve a ficha dela mesma. */
+async function carregarPerfil(user){
+  const { data, error } = await sb.from('usuarios').select('*').eq('auth_user_id', user.id).maybeSingle();
+
+  if(error){
+    loginError.textContent = 'Não foi possível carregar seu perfil: ' + error.message;
+    await sb.auth.signOut();
+    return false;
+  }
+  if(!data){
+    loginError.textContent = 'Seu acesso ainda não foi liberado no sistema. Fale com o administrador.';
+    await sb.auth.signOut();
+    return false;
+  }
+  if(data.ativo === false){
+    loginError.textContent = 'Seu acesso está desativado. Fale com o administrador.';
+    await sb.auth.signOut();
+    return false;
+  }
+
+  state.currentUser = {
+    id: data.id,
+    usuario: data.usuario,
+    nome: data.nome,
+    email: data.email || user.email,
+    isSuperAdmin: data.is_admin === true,
+    permissoes: data.is_admin === true ? fullPermissoes() : (data.permissoes || {}),
+    empresas: data.empresas || []
+  };
+  return true;
 }
 
 function canAccessView(view){
@@ -2968,7 +2968,8 @@ function applyPermissionsToUI(){
   if(avatar) avatar.textContent = state.currentUser ? (state.currentUser.usuario||'?').charAt(0).toUpperCase() : '?';
 }
 
-function fazerLogout(manterMensagem){
+async function fazerLogout(manterMensagem){
+  try{ if(sb && sb.auth) await sb.auth.signOut(); }catch(e){}
   safeStorage('removeItem','nacoes_session');
   safeStorage('removeItem','nacoes_current_user');
   state.currentUser = null;
@@ -3107,8 +3108,6 @@ function fillFilterSelect(id, list, placeholder){
 /* Ao abrir a página sem sessão salva, monta os botões de empresa no login */
 (async function prepararTelaDeLogin(){
   try{
-    const sessao = safeStorage('getItem','nacoes_session');
-    if(sessao) return; /* vai entrar direto, não precisa do seletor */
     await montarSeletorDeEmpresaNoLogin();
   }catch(e){ console.warn('Não foi possível montar o seletor de empresa no login:', e); }
 })();
@@ -5514,31 +5513,18 @@ document.getElementById('btnSalvarMetas').addEventListener('click', async ()=>{
 /* =====================================================================
    USUÁRIOS E PERMISSÕES
    ===================================================================== */
-document.getElementById('toggleUsrSenha').addEventListener('click', ()=>{
-  const inp = document.getElementById('usrSenha');
-  const isPass = inp.type === 'password';
-  inp.type = isPass ? 'text' : 'password';
-  document.getElementById('usrEyeIcon').innerHTML = isPass
-    ? '<path d="M17.94 17.94A10.94 10.94 0 0 1 12 20c-7 0-11-8-11-8a21.6 21.6 0 0 1 5.06-6.94M9.9 4.24A10.5 10.5 0 0 1 12 4c7 0 11 8 11 8a21.6 21.6 0 0 1-3.22 4.44M14.12 14.12a3 3 0 1 1-4.24-4.24"/><path d="M1 1l22 22"/>'
-    : '<path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8Z"/><circle cx="12" cy="12" r="3"/>';
-});
-
 async function renderCadastroUsuarios(){
   if(!sb) return;
   const { data, error } = await sb.from('usuarios').select('*').order('nome');
   const tbody = document.getElementById('usuariosTableBody');
   if(error){ showToast('Erro ao carregar usuários: '+error.message, true); return; }
-  const rows = data || [];
-  const allRows = [
-    { id:null, nome:'Administrador', usuario: AUTH_USER, ativo:true, isFixed:true },
-    ...rows
-  ];
+  const allRows = data || [];
   if(allRows.length===0){
     tbody.innerHTML = `<tr class="empty-row"><td colspan="5">Nenhum usuário cadastrado.</td></tr>`;
     return;
   }
   const nomeEmpresas = (u)=>{
-    if(u.isFixed) return '<span class="badge badge-blue">Todas</span>';
+    if(u.is_admin) return '<span class="badge badge-blue">Todas</span>';
     const ids = u.empresas || [];
     if(!ids.length) return '<span class="badge badge-gray">Nenhuma</span>';
     return ids.map(id=>{
@@ -5548,12 +5534,12 @@ async function renderCadastroUsuarios(){
   };
   tbody.innerHTML = allRows.map(u=>`
     <tr>
-      <td>${u.nome}${u.isFixed ? ' <span class="badge badge-blue">Fixo</span>' : ''}</td>
-      <td>${u.usuario}</td>
+      <td>${escapeHtml(u.nome||'')}${u.is_admin ? ' <span class="badge badge-blue">Administrador</span>' : ''}</td>
+      <td>${escapeHtml(u.email || u.usuario || '')}${!u.auth_user_id ? ' <span class="badge badge-red" title="Este e-mail ainda não foi criado em Authentication → Users">sem login</span>' : ''}</td>
       <td>${nomeEmpresas(u)}</td>
       <td>${u.ativo ? '<span class="badge badge-green">Ativo</span>' : '<span class="badge badge-gray">Inativo</span>'}</td>
       <td class="row-actions">
-        ${u.isFixed ? '<span class="muted small">acesso total, fixo</span>' : `
+        ${`
           <button title="Editar" data-editusr="${u.id}">
             <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 3a2.85 2.85 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5Z"/></svg>
           </button>
@@ -5564,7 +5550,7 @@ async function renderCadastroUsuarios(){
       </td>
     </tr>
   `).join('');
-  tbody.querySelectorAll('[data-editusr]').forEach(b=> b.addEventListener('click', ()=> openUsuarioModal(rows.find(r=>r.id===b.dataset.editusr))));
+  tbody.querySelectorAll('[data-editusr]').forEach(b=> b.addEventListener('click', ()=> openUsuarioModal(allRows.find(r=>r.id===b.dataset.editusr))));
   tbody.querySelectorAll('[data-delusr]').forEach(b=> b.addEventListener('click', ()=> deleteUsuario(b.dataset.delusr)));
 }
 
@@ -5576,9 +5562,21 @@ function openUsuarioModal(u){
   document.getElementById('usrNome').value = u ? u.nome : '';
   document.getElementById('usrUsuario').value = u ? u.usuario : '';
   document.getElementById('usrUsuario').disabled = !!u; // não permite trocar o login depois de criado
-  document.getElementById('usrSenha').value = '';
-  document.getElementById('usrSenha').placeholder = u ? 'Deixe em branco para manter a senha atual' : 'Digite uma senha';
   document.getElementById('usrAtivo').checked = u ? u.ativo : true;
+
+  document.getElementById('usrEmail').value = (u && u.email) || '';
+  const aviso = document.getElementById('usrVinculoAviso');
+  if(u && !u.auth_user_id){
+    aviso.innerHTML = '<div class="small" style="background:#fff6f6;border:1px solid #f0c9c9;border-radius:8px;padding:10px 12px;color:var(--danger);">'
+      + 'Este e-mail ainda <b>não tem login criado</b>. Vá em <b>Supabase → Authentication → Users → Add user</b>, '
+      + 'crie o login com exatamente este e-mail e defina a senha. A ligação é feita sozinha.</div>';
+  } else if(!u){
+    aviso.innerHTML = '<div class="small" style="background:var(--bg);border:1px solid var(--border);border-radius:8px;padding:10px 12px;">'
+      + '<b>Como liberar alguém novo:</b> crie o login em <b>Supabase → Authentication → Users → Add user</b> com o e-mail da pessoa e uma senha. '
+      + 'A ficha aparece aqui sozinha, e aí você marca as empresas e as telas.</div>';
+  } else {
+    aviso.innerHTML = '<div class="small muted">Login vinculado. A senha é trocada pelo Supabase (Authentication → Users), não por aqui.</div>';
+  }
 
   const empSel = (u && u.empresas) || [];
   const wrapEmp = document.getElementById('usrEmpresasList');
@@ -5610,12 +5608,10 @@ document.getElementById('btnSalvarUsuario').addEventListener('click', async ()=>
   const id = document.getElementById('usrId').value;
   const nome = document.getElementById('usrNome').value.trim();
   const usuario = document.getElementById('usrUsuario').value.trim().toLowerCase();
-  const senha = document.getElementById('usrSenha').value;
+  const email = document.getElementById('usrEmail').value.trim().toLowerCase();
 
-  if(!nome || !usuario){ showToast('Informe nome e usuário.', true); return; }
-  if(usuario === AUTH_USER.toLowerCase()){ showToast('Este nome de usuário é reservado para o administrador fixo.', true); return; }
-  if(!id && !senha){ showToast('Informe uma senha para o novo usuário.', true); return; }
-  if(senha && senha.length < 4){ showToast('A senha deve ter pelo menos 4 caracteres.', true); return; }
+  if(!nome || !usuario){ showToast('Informe o nome e o apelido.', true); return; }
+  if(!email || !/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(email)){ showToast('Informe um e-mail de acesso válido.', true); return; }
 
   const permissoes = {};
   document.querySelectorAll('#usrPermissoesList [data-perm]').forEach(chk=>{
@@ -5632,18 +5628,11 @@ document.getElementById('btnSalvarUsuario').addEventListener('click', async ()=>
   }
 
   const payload = {
-    nome, usuario, ativo: document.getElementById('usrAtivo').checked,
+    nome, usuario, email,
+    ativo: document.getElementById('usrAtivo').checked,
     permissoes, updated_at: new Date().toISOString()
   };
   if(state.multiEmpresaAtivo) payload.empresas = empresasSel;
-  if(senha){
-    try{
-      payload.senha_hash = await sha256Hex(senha);
-    }catch(err){
-      showToast(err.message, true);
-      return;
-    }
-  }
 
   let error;
   if(id){
@@ -5652,7 +5641,9 @@ document.getElementById('btnSalvarUsuario').addEventListener('click', async ()=>
     ({error} = await sb.from('usuarios').insert(payload));
   }
   if(error){
-    const msg = (error.message||'').includes('duplicate') ? 'Já existe um usuário com esse login.' : error.message;
+    let msg = error.message || '';
+    if(msg.includes('duplicate') || msg.includes('unique')) msg = 'Já existe um usuário com esse apelido ou e-mail.';
+    else if(msg.includes('row-level security')) msg = 'Só o administrador pode alterar usuários.';
     showToast('Erro ao salvar usuário: '+msg, true);
     return;
   }
