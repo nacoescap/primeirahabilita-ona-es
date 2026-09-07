@@ -145,6 +145,35 @@ input,select,textarea{font-family:inherit;}
 .btn-sm{padding:6px 10px;font-size:12.5px;border-radius:7px;}
 .error-msg{color:var(--danger);font-size:13px;margin-top:10px;min-height:16px;}
 
+/* ---------- Escolha da empresa na tela de login ---------- */
+.login-empresas{margin:0 0 22px;}
+.login-empresas .le-label{
+  font-size:10.5px;font-weight:700;letter-spacing:.8px;text-transform:uppercase;
+  color:var(--text-muted);margin-bottom:8px;text-align:center;
+}
+.login-empresas .le-chips{display:flex;flex-wrap:wrap;gap:8px;justify-content:center;}
+.login-empresas .le-chip{
+  display:flex;align-items:center;gap:7px;cursor:pointer;
+  border:1.5px solid var(--border);border-radius:999px;background:#fff;
+  padding:5px 13px 5px 6px;font-size:12.5px;font-weight:600;color:var(--text);
+  transition:border-color .15s, box-shadow .15s, transform .05s;
+}
+.login-empresas .le-chip:hover{border-color:var(--blue-600);}
+.login-empresas .le-chip:active{transform:translateY(1px);}
+.login-empresas .le-chip.active{
+  border-color:var(--blue-700);box-shadow:0 0 0 3px rgba(0,0,0,0.05);
+  background:var(--bg);
+}
+.login-empresas .le-chip img{height:20px;max-width:40px;object-fit:contain;display:block;}
+.login-empresas .le-chip .le-badge{
+  width:20px;height:20px;border-radius:50%;display:flex;align-items:center;justify-content:center;
+  font-size:9px;font-weight:800;font-family:'Poppins',sans-serif;flex-shrink:0;
+}
+.login-empresas select{
+  width:100%;padding:10px 12px;border:1.5px solid var(--border);
+  border-radius:var(--radius-sm);font-size:14px;background:#fff;color:var(--text);
+}
+
 /* ---------- Selecao de empresa ---------- */
 #empresaScreen{
   min-height:100vh;
@@ -166,10 +195,10 @@ input,select,textarea{font-family:inherit;}
 }
 .empresa-pick-item:hover{border-color:var(--blue-600);box-shadow:var(--shadow);}
 .empresa-pick-item:active{transform:translateY(1px);}
-.empresa-pick-item .ep-logo{
+.ep-logo{
   width:64px;height:44px;object-fit:contain;flex-shrink:0;border-radius:6px;background:#fff;
 }
-.empresa-pick-item .ep-badge{
+.ep-badge{
   width:44px;height:44px;border-radius:10px;flex-shrink:0;
   display:flex;align-items:center;justify-content:center;font-weight:800;font-size:15px;
   font-family:'Poppins',sans-serif;
@@ -182,18 +211,19 @@ input,select,textarea{font-family:inherit;}
 .topbar-right{display:flex;align-items:center;gap:18px;}
 .empresa-switch{position:relative;}
 .empresa-btn{
-  display:flex;align-items:center;gap:10px;cursor:pointer;
-  background:var(--bg);border:1.5px solid var(--border);border-radius:10px;
-  padding:5px 10px;font-size:13.5px;font-weight:600;color:var(--blue-800);
-  max-width:260px;
+  display:flex;align-items:center;gap:6px;cursor:pointer;
+  background:var(--bg);border:1.5px solid var(--border);border-radius:9px;
+  padding:3px 7px;height:32px;color:var(--blue-800);
 }
 .empresa-btn:hover{border-color:var(--blue-600);}
-.empresa-btn img{height:26px;max-width:74px;object-fit:contain;}
+.empresa-btn img{height:22px;max-width:46px;object-fit:contain;display:block;}
 .empresa-btn .eb-badge{
-  width:26px;height:26px;border-radius:7px;display:flex;align-items:center;justify-content:center;
-  font-size:11.5px;font-weight:800;font-family:'Poppins',sans-serif;flex-shrink:0;
+  width:22px;height:22px;border-radius:6px;display:flex;align-items:center;justify-content:center;
+  font-size:10px;font-weight:800;font-family:'Poppins',sans-serif;flex-shrink:0;
 }
-.empresa-btn span{white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+.empresa-btn #empresaSwitchIcon{display:flex;align-items:center;}
+/* o nome fica no menu lateral; aqui o botão é só para trocar */
+.empresa-btn .eb-nome{display:none;}
 .empresa-dropdown{
   position:absolute;right:0;top:calc(100% + 8px);min-width:270px;z-index:60;
   background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-sm);
@@ -208,7 +238,9 @@ input,select,textarea{font-family:inherit;}
 }
 .empresa-dropdown .ed-item:hover{background:var(--bg);}
 .empresa-dropdown .ed-item.active{background:var(--bg);font-weight:700;}
-.empresa-dropdown .ed-item .eb-badge{width:24px;height:24px;font-size:11px;}
+.empresa-dropdown .ed-item .eb-badge{width:26px;height:26px;font-size:11px;}
+.ed-logo{height:26px;max-width:56px;object-fit:contain;flex-shrink:0;display:block;}
+.empresa-dropdown .ed-item span{white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
 /* ---------- Backup ---------- */
 .backup-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:16px;margin-bottom:20px;}
 .backup-card{
@@ -515,6 +547,7 @@ tbody tr:last-child td{border-bottom:none;}
     <div class="login-body">
       <h2>Gestão de Vendas</h2>
       <p class="subtitle" id="loginSubtitle">Primeira habilitação · acesso restrito</p>
+      <div class="login-empresas hidden" id="loginEmpresas"></div>
       <form id="loginForm">
         <div class="field">
           <label>Usuário</label>
@@ -732,7 +765,7 @@ tbody tr:last-child td{border-bottom:none;}
         <div class="empresa-switch" id="empresaSwitch">
           <button class="empresa-btn" id="empresaSwitchBtn" title="Trocar de empresa">
             <span id="empresaSwitchIcon"></span>
-            <span id="empresaSwitchNome">Empresa</span>
+            <span class="eb-nome" id="empresaSwitchNome">Empresa</span>
             <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="m6 9 6 6 6-6"/></svg>
           </button>
           <div class="empresa-dropdown hidden" id="empresaDropdown"></div>
@@ -1931,6 +1964,77 @@ function iconeEmpresaHTML(emp, cls){
   return '<span class="'+classe+'" style="background:'+bg+';color:'+fg+';">'+escapeHtml(sigla)+'</span>';
 }
 
+
+/* ------------------------------------------------------------------
+   Escolha da empresa JÁ NA TELA DE LOGIN
+   O visual (logo e cores) muda na hora, antes de digitar a senha.
+   ------------------------------------------------------------------ */
+async function montarSeletorDeEmpresaNoLogin(){
+  const caixa = document.getElementById('loginEmpresas');
+  if(!sb){ caixa.classList.add('hidden'); return; }
+
+  const { data, error } = await sb.from('empresas')
+    .select('id,nome,sigla,cor_primaria,cor_secundaria,logo_url,ativo')
+    .eq('ativo', true).order('nome');
+
+  /* Banco ainda sem a tabela, ou só uma empresa: não faz sentido escolher */
+  if(error || !data || data.length < 2){ caixa.classList.add('hidden'); return; }
+
+  state.empresasLogin = data;
+  const salva = safeStorage('getItem','nacoes_empresa');
+  const atual = data.find(e=> e.id === salva);
+  if(atual){
+    state.empresaEscolhidaNoLogin = atual.id;
+    aplicarTemaEmpresa(atual);
+  }
+
+  const chip = (e)=>{
+    const marcada = state.empresaEscolhidaNoLogin === e.id ? ' active' : '';
+    const icone = e.logo_url
+      ? '<img src="'+e.logo_url+'" alt="" />'
+      : '<span class="le-badge" style="background:'+(e.cor_secundaria||'#f5c518')+';color:'+corDeTextoSobre(e.cor_secundaria||'#f5c518')+';">'+escapeHtml(e.sigla || e.nome.slice(0,2).toUpperCase())+'</span>';
+    return '<button type="button" class="le-chip'+marcada+'" data-loginemp="'+e.id+'">'+icone+'<span>'+escapeHtml(e.nome)+'</span></button>';
+  };
+
+  /* Até 4 empresas viram botões; acima disso, uma lista suspensa */
+  if(data.length <= 4){
+    caixa.innerHTML = '<div class="le-label">Escolha sua autoescola</div>' +
+      '<div class="le-chips">' + data.map(chip).join('') + '</div>';
+    caixa.querySelectorAll('[data-loginemp]').forEach(b=>{
+      b.addEventListener('click', ()=>{
+        const emp = data.find(e=> e.id === b.dataset.loginemp);
+        if(!emp) return;
+        escolherEmpresaNoLogin(emp);
+        caixa.querySelectorAll('.le-chip').forEach(c=> c.classList.remove('active'));
+        b.classList.add('active');
+      });
+    });
+  } else {
+    caixa.innerHTML = '<div class="le-label">Escolha sua autoescola</div>' +
+      '<select id="loginEmpresaSelect"><option value="">Selecione...</option>' +
+      data.map(e=> '<option value="'+e.id+'"'+(state.empresaEscolhidaNoLogin===e.id?' selected':'')+'>'+escapeHtml(e.nome)+'</option>').join('') +
+      '</select>';
+    document.getElementById('loginEmpresaSelect').addEventListener('change', (ev)=>{
+      const emp = data.find(e=> e.id === ev.target.value);
+      if(emp) escolherEmpresaNoLogin(emp);
+    });
+  }
+  caixa.classList.remove('hidden');
+}
+
+function escolherEmpresaNoLogin(emp){
+  state.empresaEscolhidaNoLogin = emp.id;
+  aplicarTemaEmpresa(emp);
+  safeStorage('setItem','nacoes_empresa', emp.id);
+  try{
+    safeStorage('setItem','nacoes_empresa_tema', JSON.stringify({
+      nome:emp.nome, sigla:emp.sigla, cor_primaria:emp.cor_primaria,
+      cor_secundaria:emp.cor_secundaria, logo_url:emp.logo_url
+    }));
+  }catch(e){}
+  loginError.textContent = '';
+}
+
 /* Reaplica o visual da última empresa usada já na tela de login */
 (function restaurarUltimoTema(){
   try{
@@ -1987,6 +2091,16 @@ async function aposAutenticar(){
 
   if(state.empresasDisponiveis.length === 0){
     loginError.textContent = 'Seu usuário não tem nenhuma empresa liberada. Fale com o administrador.';
+    fazerLogout(true);
+    return;
+  }
+
+  /* Se a pessoa escolheu a empresa na tela de login, respeita a escolha */
+  if(state.empresaEscolhidaNoLogin){
+    const escolhida = state.empresasDisponiveis.find(e=> e.id === state.empresaEscolhidaNoLogin);
+    if(escolhida){ entrarNaEmpresa(escolhida); return; }
+    const nomeEmp = (state.empresasLogin.find(e=> e.id === state.empresaEscolhidaNoLogin) || {}).nome || 'a empresa selecionada';
+    loginError.textContent = 'Seu usuário não tem acesso a ' + nomeEmp + '. Escolha outra autoescola ou fale com o administrador.';
     fazerLogout(true);
     return;
   }
@@ -2071,7 +2185,7 @@ function renderSeletorEmpresa(){
   wrap.classList.remove('hidden');
   icone.innerHTML = state.empresaAtual.logo_url
     ? '<img src="'+state.empresaAtual.logo_url+'" alt="" />'
-    : iconeEmpresaHTML(state.empresaAtual);
+    : iconeEmpresaHTML(state.empresaAtual, 'eb');
   nome.textContent = state.empresaAtual.nome;
   const btn = document.getElementById('empresaSwitchBtn');
   const podeTrocar = state.empresasDisponiveis.length > 1;
@@ -2089,7 +2203,7 @@ document.getElementById('empresaSwitchBtn').addEventListener('click', (ev)=>{
   dd.innerHTML = '<div class="ed-label">Trocar de empresa</div>' +
     state.empresasDisponiveis.map(e=>`
       <div class="ed-item ${state.empresaAtual && e.id===state.empresaAtual.id ? 'active':''}" data-troca="${e.id}">
-        ${iconeEmpresaHTML(e)}
+        ${iconeEmpresaHTML(e,'ed-logo')}
         <span>${escapeHtml(e.nome)}</span>
       </div>
     `).join('');
@@ -2645,6 +2759,8 @@ const state = {
   empresaAtual: null,       // empresa selecionada no momento
   multiEmpresaAtivo: false, // true quando a tabela "empresas" existe no banco
   empLogoTemp: '',
+  empresasLogin: [],            // empresas mostradas na tela de login
+  empresaEscolhidaNoLogin: null,// empresa escolhida antes de digitar a senha
   indicadorModo: { contato: 'qtd', propostas: 'qtd', contatos_realizados: 'qtd', aprovados: 'qtd' },
   indicadorPeriodo: { contato: {}, propostas: {}, contatos_realizados: {}, aprovados: {} },
   metasPeriodo: { ano: new Date().getFullYear(), mes: new Date().getMonth() + 1 }
@@ -2863,6 +2979,7 @@ function fazerLogout(manterMensagem){
   document.getElementById('empresaScreen').classList.add('hidden');
   document.getElementById('loginScreen').classList.remove('hidden');
   if(!manterMensagem) loginError.textContent = '';
+  montarSeletorDeEmpresaNoLogin();
 }
 
 document.getElementById('logoutBtn').addEventListener('click', ()=> fazerLogout());
@@ -2986,6 +3103,15 @@ function fillFilterSelect(id, list, placeholder){
   const el = document.getElementById(id);
   el.innerHTML = `<option value="">${placeholder}</option>` + list.map(i=>`<option value="${i.id}">${i.nome}</option>`).join('');
 }
+
+/* Ao abrir a página sem sessão salva, monta os botões de empresa no login */
+(async function prepararTelaDeLogin(){
+  try{
+    const sessao = safeStorage('getItem','nacoes_session');
+    if(sessao) return; /* vai entrar direto, não precisa do seletor */
+    await montarSeletorDeEmpresaNoLogin();
+  }catch(e){ console.warn('Não foi possível montar o seletor de empresa no login:', e); }
+})();
 
 async function initApp(){
   if(state.multiEmpresaAtivo && !state.empresaAtual) return;
