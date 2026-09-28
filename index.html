@@ -890,7 +890,6 @@ tbody tr:last-child td{border-bottom:none;}
           <select id="envFiltroSituacao">
             <option value="">Situação: Todas</option>
             <option value="Aguardando Cliente">Aguardando Cliente</option>
-            <option value="Reprovado">Reprovado</option>
           </select>
           <div class="spacer"></div>
         </div>
@@ -3605,10 +3604,17 @@ function situacaoSelectHtml(o){
 async function fetchLeadsReprovados(){
   const { data, error } = await sb.from('orcamentos')
     .select('*, origem:origens(id,nome), vendedor:vendedores(id,nome), motivo:motivos_reprovacao!motivo_reprovado_id(id,nome)')
-    .eq('situacao','Reprovado')
+    .or('situacao.eq.Reprovado,situacao_cliente.eq.Reprovado')
     .order('data_abertura',{ascending:false});
   if(error){ showToast('Erro ao carregar leads reprovados: '+error.message, true); return []; }
-  return data || [];
+  /* Reprovados na tela "Orçamento enviado" gravam o motivo em motivo_reprovado_cliente_id */
+  return (data || []).map(o=>{
+    if(!o.motivo && o.motivo_reprovado_cliente_id){
+      const m = (state.motivos||[]).find(x=>x.id===o.motivo_reprovado_cliente_id);
+      if(m) o.motivo = { id:m.id, nome:m.nome };
+    }
+    return o;
+  });
 }
 async function renderLeadsReprovados(){
   state.leadsReprovados = await fetchLeadsReprovados();
@@ -3752,7 +3758,13 @@ function drawLeadsReprovadosTable(){
 document.getElementById('leadReprSearch').addEventListener('input', drawLeadsReprovadosTable);
 async function reabrirLead(id){
   if(!confirm('Reabrir este lead? Ele voltará para a lista de Leads.')) return;
-  await updateSituacaoRapida(id, { situacao:'Aberto', motivo_reprovado_id:null }, [renderLeadsReprovados, renderOrcamentos]);
+  const o = state.leadsReprovados.find(x=>x.id===id);
+  const payload = { situacao:'Aberto', motivo_reprovado_id:null };
+  /* Lead reprovado pelo cliente (tela Orçamento enviado): limpa também a situação do cliente */
+  if(o && o.situacao_cliente === 'Reprovado'){
+    Object.assign(payload, { situacao_cliente:null, motivo_reprovado_cliente_id:null, data_envio:null, data_aprovacao:null, etapa:null, situacao_etapa:null });
+  }
+  await updateSituacaoRapida(id, payload, [renderLeadsReprovados, renderOrcamentos]);
 }
 
 /* Alteração rápida de situação direto na lista (sem abrir o Editar) */
@@ -4111,7 +4123,7 @@ async function fetchEnviados(){
   const { data, error } = await sb.from('orcamentos')
     .select('*, origem:origens(id,nome), vendedor:vendedores(id,nome)')
     .eq('situacao','Enviado ao Cliente')
-    .neq('situacao_cliente','Aprovado')
+    .not('situacao_cliente','in','("Aprovado","Reprovado")') /* reprovados ficam só em Leads reprovados */
     .order('data_envio',{ascending:false});
   if(error){ showToast('Erro ao carregar: '+error.message, true); return []; }
   return data || [];
