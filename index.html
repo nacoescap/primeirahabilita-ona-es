@@ -488,7 +488,6 @@ tbody tr:last-child td{border-bottom:none;}
 .btn-print:hover{border-color:var(--blue-600);}
 .btn-print svg{flex-shrink:0;}
 @media print{
-  @page{ size: A4 landscape; margin: 12mm; }
   html,body{height:auto;background:#fff;}
   #loginScreen,.sidebar,.topbar,.toolbar,.legend-row,.modal-overlay,#toastContainer,.no-print{display:none !important;}
   #appShell{display:block;height:auto;min-height:0;overflow:visible;}
@@ -500,21 +499,88 @@ tbody tr:last-child td{border-bottom:none;}
   .view.list-view .view-scroll{overflow:visible !important;max-height:none !important;}
   .print-header{
     display:flex;align-items:flex-end;justify-content:space-between;
-    border-bottom:2px solid #0d4a6e;padding-bottom:10px;margin-bottom:14px;
+    border-bottom:2px solid var(--blue-800);padding-bottom:10px;margin-bottom:14px;
   }
-  .print-header .ph-brand{font-family:'Poppins',system-ui,sans-serif;font-weight:800;font-size:16px;color:#0d4a6e;letter-spacing:.5px;}
+  .print-header .ph-brand{font-family:'Poppins',system-ui,sans-serif;font-weight:800;font-size:16px;color:var(--blue-800);letter-spacing:.5px;display:flex;align-items:center;gap:10px;}
+  .print-header .ph-brand img{height:38px;max-width:120px;object-fit:contain;}
   .print-header .ph-brand small{display:block;font-weight:500;font-size:10px;color:#666;letter-spacing:.3px;}
   .print-header .ph-info{text-align:right;}
-  .print-header .ph-title{font-size:14px;font-weight:700;color:#0d4a6e;font-family:'Poppins',system-ui,sans-serif;}
+  .print-header .ph-title{font-size:14px;font-weight:700;color:var(--blue-800);font-family:'Poppins',system-ui,sans-serif;}
   .print-header .ph-meta{font-size:10.5px;color:#555;margin-top:2px;}
   .table-wrap{box-shadow:none;border:1px solid #ccc;overflow:visible;border-radius:0;}
   table{font-size:10px;min-width:0;width:100%;}
-  thead th{position:static;background:#0d4a6e !important;color:#fff !important;-webkit-print-color-adjust:exact;print-color-adjust:exact;padding:6px 8px;}
+  thead th{position:static;background:var(--blue-800) !important;color:#fff !important;-webkit-print-color-adjust:exact;print-color-adjust:exact;padding:6px 8px;}
   tbody td{padding:5px 8px;}
   tbody tr.weekend{background:#fdeaea !important;-webkit-print-color-adjust:exact;print-color-adjust:exact;}
   tbody tr{break-inside:avoid;}
   .obs-input{border:none;background:transparent;box-shadow:none;padding:0;width:auto;font-size:10px;color:var(--text);}
+  *{-webkit-print-color-adjust:exact;print-color-adjust:exact;}
+  .print-header:empty,.print-footer:empty{display:none !important;}
+  .print-footer{display:block;margin-top:14px;border-top:1px solid #bbb;padding-top:6px;font-size:9.5px;color:#666;text-align:center;}
+  .row-actions button{display:none !important;}
+  .inline-select{appearance:none;-webkit-appearance:none;border:none;padding:2px 8px;}
+  .stat-card,.card,.gauge-card,.mini-chart-card,.backup-card{box-shadow:none;border:1px solid #ddd;break-inside:avoid;}
+  .rel-doc{box-shadow:none !important;padding:0 !important;max-width:none !important;border-radius:0 !important;}
+  .rel-table th{background:var(--blue-800) !important;}
+  .rel-table tr,.rel-chart,.rel-kpi{break-inside:avoid;}
+  .rel-h2{break-after:avoid;}
 }
+.print-footer{display:none;}
+
+/* ---------- Modal de impressão (retrato / paisagem) ---------- */
+.orient-opts{display:grid;grid-template-columns:1fr 1fr;gap:12px;}
+.orient-opt{
+  display:flex;flex-direction:column;align-items:center;gap:10px;cursor:pointer;
+  border:1.5px solid var(--border);border-radius:var(--radius-sm);padding:16px 10px;
+  font-weight:600;font-size:13.5px;color:var(--text);transition:border-color .15s, background .15s;
+}
+.orient-opt:hover{border-color:var(--blue-600);}
+.orient-opt input{display:none;}
+.orient-opt.sel{border-color:var(--blue-700);background:var(--bg);box-shadow:0 0 0 3px rgba(0,0,0,0.04);}
+.orient-page{border:2px solid var(--blue-700);border-radius:4px;background:#fff;position:relative;}
+.orient-page::after{content:'';position:absolute;left:18%;right:18%;top:22%;height:2px;background:var(--border);box-shadow:0 7px 0 var(--border),0 14px 0 var(--border),0 21px 0 var(--border);}
+.orient-page.portrait{width:44px;height:60px;}
+.orient-page.landscape{width:62px;height:44px;}
+
+/* ---------- Filtro por dia/mês/ano ---------- */
+.toolbar select.date-filter{min-width:0;}
+
+/* ---------- Relatório gerencial ---------- */
+.rel-secoes-head{display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin-bottom:10px;}
+.rel-secoes-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(250px,1fr));gap:0 10px;}
+.rel-secoes-grid .perm-row{margin-bottom:6px;}
+.rel-doc{background:#fff;border-radius:var(--radius);box-shadow:var(--shadow);padding:28px 32px;max-width:1100px;margin:0 auto;}
+.rel-header{display:flex;justify-content:space-between;align-items:center;gap:20px;padding-bottom:14px;border-bottom:3px solid var(--blue-800);margin-bottom:18px;}
+.rel-brand{display:flex;align-items:center;gap:14px;}
+.rel-brand img{height:54px;max-width:160px;object-fit:contain;}
+.rel-brand .eb-badge,.rel-brand .ep-badge{width:46px;height:46px;border-radius:10px;display:flex;align-items:center;justify-content:center;font-weight:800;font-family:'Poppins',sans-serif;}
+.rel-empresa{font-family:'Poppins',sans-serif;font-weight:800;font-size:18px;color:var(--blue-800);}
+.rel-sub{font-size:12px;color:var(--text-muted);}
+.rel-info{text-align:right;}
+.rel-titulo{font-family:'Poppins',sans-serif;font-weight:700;font-size:16px;color:var(--blue-800);}
+.rel-periodo{font-weight:700;font-size:13px;margin-top:2px;}
+.rel-meta{font-size:11px;color:var(--text-muted);margin-top:2px;}
+.rel-kpis{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:10px;margin-bottom:6px;}
+.rel-kpi{border:1px solid var(--border);border-top:3px solid var(--blue-600);border-radius:8px;padding:10px 12px;}
+.rel-kpi.y{border-top-color:var(--yellow-500);}
+.rel-kpi.g{border-top-color:var(--success);}
+.rel-kpi.r{border-top-color:var(--danger);}
+.rel-kpi .l{font-size:10.5px;text-transform:uppercase;color:var(--text-muted);font-weight:700;letter-spacing:.3px;}
+.rel-kpi .v{font-family:'Poppins',sans-serif;font-size:20px;font-weight:700;color:var(--blue-800);margin-top:2px;}
+.rel-h2{font-family:'Poppins',sans-serif;font-size:14.5px;font-weight:700;color:var(--blue-800);margin:22px 0 8px;padding-bottom:5px;border-bottom:1px solid var(--border);display:flex;justify-content:space-between;align-items:baseline;gap:10px;}
+.rel-h2 .tot{font-size:12.5px;font-weight:600;color:var(--text-muted);font-family:'Inter',sans-serif;}
+.rel-table{width:100%;border-collapse:collapse;font-size:12.3px;min-width:0;margin-bottom:6px;}
+.rel-table th{background:var(--blue-800);color:#fff;text-align:left;padding:6px 8px;font-size:11px;text-transform:uppercase;letter-spacing:.2px;position:static;}
+.rel-table td{padding:5px 8px;border-bottom:1px solid var(--border);white-space:normal;}
+.rel-table tbody tr:nth-child(even) td{background:#f8fafc;}
+.rel-table .num{text-align:right;white-space:nowrap;}
+.rel-table tfoot td{font-weight:700;border-top:2px solid var(--blue-800);}
+.rel-grid2{display:grid;grid-template-columns:1fr 1fr;gap:14px;align-items:start;margin-bottom:8px;}
+.rel-chart{border:1px solid var(--border);border-radius:8px;padding:10px;}
+.rel-chart img{width:100%;height:auto;display:block;}
+.rel-vazio{font-size:12.5px;color:var(--text-muted);padding:6px 2px;}
+.rel-footer{margin-top:26px;padding-top:8px;border-top:2px solid var(--blue-800);display:flex;justify-content:space-between;font-size:10.5px;color:var(--text-muted);gap:10px;flex-wrap:wrap;}
+@media (max-width:800px){ .rel-grid2{grid-template-columns:1fr;} .rel-header{flex-direction:column;align-items:flex-start;} .rel-info{text-align:left;} }
 .mini-chart-canvas-wrap{height:100px;position:relative;}
 @media (max-width:900px){ .mini-chart-grid{grid-template-columns:repeat(2,1fr);} }
 @media (max-width:700px){ .gauge-grid{grid-template-columns:1fr;} .mini-chart-grid{grid-template-columns:1fr;} }
@@ -717,6 +783,10 @@ tbody tr:last-child td{border-bottom:none;}
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><path d="M22 4 12 14.01l-3-3"/></svg>
           <span>Indicador: Aprovados</span>
         </div>
+        <div class="nav-item" data-view="relatorio">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><path d="M14 2v6h6"/><path d="M8 18v-3M12 18v-6M16 18v-4"/></svg>
+          <span>Relatório Gerencial</span>
+        </div>
       </div>
       <div class="nav-group">
         <div class="nav-group-label">Cadastros</div>
@@ -762,6 +832,10 @@ tbody tr:last-child td{border-bottom:none;}
     <header class="topbar">
       <h1 id="topbarTitle">Painel</h1>
       <div class="topbar-right">
+        <button class="btn btn-print btn-sm" id="btnImprimirTela" type="button" title="Imprimir ou salvar esta tela em PDF">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9V2h12v7"/><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"/><rect x="6" y="14" width="12" height="8"/></svg>
+          Imprimir / PDF
+        </button>
         <div class="empresa-switch" id="empresaSwitch">
           <button class="empresa-btn" id="empresaSwitchBtn" title="Trocar de empresa">
             <span id="empresaSwitchIcon"></span>
@@ -827,6 +901,7 @@ tbody tr:last-child td{border-bottom:none;}
       <section class="view list-view" id="view-orcamentos">
         <div class="toolbar">
           <input type="text" class="search-input" id="orcSearch" placeholder="Buscar por cliente, CPF ou WhatsApp..." />
+          <select class="date-filter" id="orcFDia"></select><select class="date-filter" id="orcFMes"></select><select class="date-filter" id="orcFAno"></select>
           <select id="orcFiltroSituacao">
             <option value="">Situação: Todas</option>
             <option value="Aberto">Aberto</option>
@@ -887,6 +962,7 @@ tbody tr:last-child td{border-bottom:none;}
       <section class="view list-view" id="view-enviados">
         <div class="toolbar">
           <input type="text" class="search-input" id="envSearch" placeholder="Buscar por cliente, CPF ou WhatsApp..." />
+          <select class="date-filter" id="envFDia"></select><select class="date-filter" id="envFMes"></select><select class="date-filter" id="envFAno"></select>
           <select id="envFiltroSituacao">
             <option value="">Situação: Todas</option>
             <option value="Aguardando Cliente">Aguardando Cliente</option>
@@ -908,6 +984,7 @@ tbody tr:last-child td{border-bottom:none;}
       <section class="view list-view" id="view-aprovados">
         <div class="toolbar">
           <input type="text" class="search-input" id="aprSearch" placeholder="Buscar por cliente, CPF ou WhatsApp..." />
+          <select class="date-filter" id="aprFDia"></select><select class="date-filter" id="aprFMes"></select><select class="date-filter" id="aprFAno"></select>
           <select id="aprFiltroOrigem"><option value="">Origem: Todas</option></select>
           <div class="spacer"></div>
         </div>
@@ -925,7 +1002,7 @@ tbody tr:last-child td{border-bottom:none;}
       <!-- ============ ASSINATURA DE CONTRATO ============ -->
       <section class="view list-view" id="view-assinatura-contrato">
         <p class="helper-text">Alunos aprovados na venda entram aqui automaticamente. Ao marcar como "Concluído", o aluno passa para a Cobrança.</p>
-        <div class="toolbar"><input type="text" class="search-input" id="assContSearch" placeholder="Buscar por cliente..." /><div class="spacer"></div></div>
+        <div class="toolbar"><input type="text" class="search-input" id="assContSearch" placeholder="Buscar por cliente..." /><select class="date-filter" id="assContFDia"></select><select class="date-filter" id="assContFMes"></select><select class="date-filter" id="assContFAno"></select><div class="spacer"></div></div>
         <div class="table-wrap">
           <table>
             <thead><tr><th>Cliente</th><th>WhatsApp</th><th>Valor</th><th>Vendedor</th><th>Situação</th><th>Lead time</th><th>Follow-up</th><th>Ações</th></tr></thead>
@@ -937,7 +1014,7 @@ tbody tr:last-child td{border-bottom:none;}
       <!-- ============ COBRANÇA (CONTRATO) ============ -->
       <section class="view list-view" id="view-cobranca-contrato">
         <p class="helper-text">Ao marcar como pago, o aluno segue para o Exame Médico e Psico.</p>
-        <div class="toolbar"><input type="text" class="search-input" id="cobContSearch" placeholder="Buscar por cliente..." /><div class="spacer"></div></div>
+        <div class="toolbar"><input type="text" class="search-input" id="cobContSearch" placeholder="Buscar por cliente..." /><select class="date-filter" id="cobContFDia"></select><select class="date-filter" id="cobContFMes"></select><select class="date-filter" id="cobContFAno"></select><div class="spacer"></div></div>
         <div class="table-wrap">
           <table>
             <thead><tr><th>Cliente</th><th>WhatsApp</th><th>Valor</th><th>Situação</th><th>Lead time</th><th>Ações</th></tr></thead>
@@ -1239,7 +1316,67 @@ tbody tr:last-child td{border-bottom:none;}
         </div>
       </section>
 
+      <!-- ============ RELATÓRIO GERENCIAL ============ -->
+      <section class="view" id="view-relatorio">
+        <div class="card no-print" id="relConfig" style="margin-bottom:18px;">
+          <div class="toolbar" style="margin-bottom:14px;">
+            <select id="relMes"></select>
+            <select id="relAno"></select>
+            <div class="segmented" id="relTipo">
+              <button type="button" data-tipo="completo" class="active">Completo</button>
+              <button type="button" data-tipo="resumido">Resumido</button>
+            </div>
+            <select id="relBase" title="Como considerar as etapas do processo do aluno">
+              <option value="periodo">Etapas do aluno: quem entrou na etapa no período</option>
+              <option value="atual">Etapas do aluno: situação atual (todos na etapa hoje)</option>
+            </select>
+            <div class="spacer"></div>
+            <button class="btn btn-primary" id="btnGerarRelatorio" type="button">Gerar relatório</button>
+            <button class="btn btn-print" id="btnImprimirRelatorio" type="button">
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9V2h12v7"/><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"/><rect x="6" y="14" width="12" height="8"/></svg>
+              Imprimir / PDF
+            </button>
+          </div>
+          <div class="rel-secoes-head">
+            <span style="font-weight:700;color:var(--blue-800);font-size:13.5px;">O que incluir no relatório</span>
+            <button type="button" class="btn btn-secondary btn-sm" id="relMarcarTodas">Marcar todas</button>
+            <button type="button" class="btn btn-secondary btn-sm" id="relDesmarcarTodas">Desmarcar todas</button>
+          </div>
+          <div class="rel-secoes-grid" id="relSecoesGrid"></div>
+          <p class="small muted" style="margin:8px 0 0;"><b>Completo</b> traz os totais e a lista com o nome de cada cliente. <b>Resumido</b> traz só os totais, quebras por origem/motivo e gráficos.</p>
+        </div>
+        <div id="relatorioOutput"></div>
+      </section>
+
+      <div class="print-footer" id="printFooter"></div>
+
     </main>
+  </div>
+</div>
+
+<!-- ============================================================= -->
+<!-- MODAL: IMPRIMIR / PDF (retrato ou paisagem)                    -->
+<!-- ============================================================= -->
+<div class="modal-overlay hidden" id="modalImprimir">
+  <div class="modal" style="max-width:420px;">
+    <div class="modal-header">
+      <h3>Imprimir / Salvar em PDF</h3>
+      <button class="modal-close" data-close="modalImprimir">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 6 6 18M6 6l12 12"/></svg>
+      </button>
+    </div>
+    <div class="modal-body">
+      <div class="field" style="margin-bottom:10px;"><label>Orientação da página</label></div>
+      <div class="orient-opts">
+        <label class="orient-opt" data-orient="portrait"><input type="radio" name="printOrient" value="portrait" /><span class="orient-page portrait"></span>Retrato</label>
+        <label class="orient-opt" data-orient="landscape"><input type="radio" name="printOrient" value="landscape" /><span class="orient-page landscape"></span>Paisagem</label>
+      </div>
+      <p class="small muted" style="margin:14px 0 0;">Para gerar o PDF, escolha <b>"Salvar como PDF"</b> no campo Destino da janela de impressão.</p>
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-secondary" data-close="modalImprimir">Cancelar</button>
+      <button class="btn btn-primary" id="btnConfirmarImpressao">Imprimir</button>
+    </div>
   </div>
 </div>
 
@@ -2216,6 +2353,9 @@ document.addEventListener('click', ()=>{
 });
 
 function limparDadosDaEmpresa(){
+  if(typeof relState !== 'undefined'){ relState.gerado = false; }
+  const relOut = document.getElementById('relatorioOutput');
+  if(relOut) relOut.innerHTML = '';
   Object.keys(state.charts || {}).forEach(k=>{
     try{ state.charts[k].destroy(); }catch(e){}
   });
@@ -2708,7 +2848,8 @@ const VIEW_LIST = [
   { key:'cad-vendedores', label:'Cadastro: Vendedores' },
   { key:'cad-origens', label:'Cadastro: Origens' },
   { key:'cad-motivos', label:'Cadastro: Motivos de Reprovação' },
-  { key:'cad-metas', label:'Cadastro: Metas' }
+  { key:'cad-metas', label:'Cadastro: Metas' },
+  { key:'relatorio', label:'Relatório Gerencial' }
 ];
 function fullPermissoes(){
   const p = {};
@@ -3003,7 +3144,8 @@ const viewTitles = {
   'cad-motivos':'Cadastro de Motivos de Reprovação','cad-metas':'Cadastro de Metas',
   'cad-usuarios':'Usuários e Permissões',
   'cad-empresas':'Empresas',
-  'cad-backup':'Backup e Restauração'
+  'cad-backup':'Backup e Restauração',
+  'relatorio':'Relatório Gerencial'
 };
 
 function goToView(view){
@@ -3052,6 +3194,7 @@ function goToView(view){
   if(view === 'ind-contatos-realizados') renderIndicadorMeta('contatos_realizados');
   if(view === 'ind-aprovados') renderIndicadorMeta('aprovados');
   if(view === 'cad-metas') renderCadastroMetas();
+  if(view === 'relatorio') renderRelatorio();
 }
 
 document.querySelectorAll('.nav-item[data-view]').forEach(el=>{
@@ -3515,6 +3658,7 @@ function drawOrcamentosTable(){
     if(fSit && o.situacao !== fSit) return false;
     if(fVend && o.vendedor?.id !== fVend) return false;
     if(fOri && o.origem?.id !== fOri) return false;
+    if(!passaFiltroData('orcF', o.data_abertura)) return false;
     if(search){
       const blob = `${o.cliente||''} ${o.cpf||''} ${o.whatsapp||''}`.toLowerCase();
       if(!blob.includes(search)) return false;
@@ -4139,6 +4283,7 @@ function drawEnviadosTable(){
   const fSit = document.getElementById('envFiltroSituacao').value;
   let rows = state.enviados.filter(o=>{
     if(fSit && o.situacao_cliente !== fSit) return false;
+    if(!passaFiltroData('envF', o.data_envio)) return false;
     if(search){
       const blob = `${o.cliente||''} ${o.cpf||''} ${o.whatsapp||''}`.toLowerCase();
       if(!blob.includes(search)) return false;
@@ -4280,6 +4425,7 @@ function drawAprovadosTable(){
   const fOri = document.getElementById('aprFiltroOrigem').value;
   let rows = state.aprovados.filter(o=>{
     if(fOri && o.origem?.id !== fOri) return false;
+    if(!passaFiltroData('aprF', o.data_aprovacao)) return false;
     if(search){
       const blob = `${o.cliente||''} ${o.cpf||''} ${o.whatsapp||''}`.toLowerCase();
       if(!blob.includes(search)) return false;
@@ -4411,7 +4557,7 @@ async function fetchAssinaturaContrato(){
 async function renderAssinaturaContrato(){ state.assinaturaContrato = await fetchAssinaturaContrato(); drawAssinaturaContratoTable(); }
 function drawAssinaturaContratoTable(){
   const search = document.getElementById('assContSearch').value.toLowerCase();
-  const rows = state.assinaturaContrato.filter(o => !search || (o.cliente||'').toLowerCase().includes(search));
+  const rows = state.assinaturaContrato.filter(o => (!search || (o.cliente||'').toLowerCase().includes(search)) && passaFiltroData('assContF', o.etapa_entrada||o.updated_at));
   const tbody = document.getElementById('assContTableBody');
   if(rows.length===0){ tbody.innerHTML = `<tr class="empty-row"><td colspan="8">Nenhum aluno nesta etapa.</td></tr>`; return; }
   tbody.innerHTML = rows.map(o=>`
@@ -4449,7 +4595,7 @@ async function fetchCobrancaContrato(){
 async function renderCobrancaContrato(){ state.cobrancaContrato = await fetchCobrancaContrato(); drawCobrancaContratoTable(); }
 function drawCobrancaContratoTable(){
   const search = document.getElementById('cobContSearch').value.toLowerCase();
-  const rows = state.cobrancaContrato.filter(o => !search || (o.cliente||'').toLowerCase().includes(search));
+  const rows = state.cobrancaContrato.filter(o => (!search || (o.cliente||'').toLowerCase().includes(search)) && passaFiltroData('cobContF', o.etapa_entrada||o.updated_at));
   const tbody = document.getElementById('cobContTableBody');
   if(rows.length===0){ tbody.innerHTML = `<tr class="empty-row"><td colspan="6">Nenhum aluno nesta etapa.</td></tr>`; return; }
   tbody.innerHTML = rows.map(o=>`
@@ -5323,16 +5469,7 @@ function imprimirIndicador(key){
   const modo = state.indicadorModo[key] === 'valor' ? 'Valor (R$)' : 'Quantidade';
   const titulo = INDICADOR_TITULOS[key] || 'Indicador';
   const periodoTxt = `${MESES[p.mes-1]} de ${p.ano}`;
-  const agora = new Date();
-  const geradoEm = agora.toLocaleDateString('pt-BR') + ' às ' + agora.toLocaleTimeString('pt-BR',{hour:'2-digit',minute:'2-digit'});
-  document.getElementById('printHeader').innerHTML = `
-    <div class="ph-brand">${(state.empresaAtual ? state.empresaAtual.nome : 'Autoescola Nações').toUpperCase()}<small>Gestão de Vendas</small></div>
-    <div class="ph-info">
-      <div class="ph-title">${titulo}</div>
-      <div class="ph-meta">Período: ${periodoTxt} · Modo: ${modo} · Gerado em ${geradoEm}</div>
-    </div>
-  `;
-  window.print();
+  abrirImpressao({ titulo, linha: `Período: ${periodoTxt} · Modo: ${modo}` });
 }
 
 async function renderIndicadorContato(){
@@ -5670,6 +5807,423 @@ async function deleteUsuario(id){
   if(error){ showToast('Erro ao excluir: '+error.message, true); return; }
   showToast('Usuário excluído.');
   renderCadastroUsuarios();
+}
+
+
+/* =====================================================================
+   IMPRESSÃO / PDF EM QUALQUER TELA (retrato ou paisagem)
+   ===================================================================== */
+let impressaoMeta = null;
+
+function dataLocalISO(str){
+  if(!str) return null;
+  if(/^\d{4}-\d{2}-\d{2}$/.test(str)) return str;
+  const d = new Date(str);
+  if(isNaN(d.getTime())) return null;
+  return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0');
+}
+function agoraFormatado(){
+  const a = new Date();
+  return a.toLocaleDateString('pt-BR') + ' às ' + a.toLocaleTimeString('pt-BR',{hour:'2-digit',minute:'2-digit'});
+}
+function marcarOrientacao(orient){
+  document.querySelectorAll('#modalImprimir .orient-opt').forEach(el=>{
+    const sel = el.dataset.orient === orient;
+    el.classList.toggle('sel', sel);
+    el.querySelector('input').checked = sel;
+  });
+}
+function abrirImpressao(meta){
+  impressaoMeta = meta || null;
+  const padrao = state.currentView === 'relatorio' ? 'portrait' : 'landscape';
+  marcarOrientacao(safeStorage('getItem','nacoes_print_orient_'+(state.currentView==='relatorio'?'rel':'tela')) || padrao);
+  openModal('modalImprimir');
+}
+document.querySelectorAll('#modalImprimir .orient-opt').forEach(el=>{
+  el.addEventListener('click', ()=> marcarOrientacao(el.dataset.orient));
+});
+function aplicarOrientacao(orient){
+  let st = document.getElementById('printPageStyle');
+  if(!st){
+    st = document.createElement('style');
+    st.id = 'printPageStyle';
+    document.head.appendChild(st);
+  }
+  st.textContent = '@page{ size: A4 ' + (orient === 'portrait' ? 'portrait' : 'landscape') + '; margin: 12mm; }';
+}
+function montarCabecalhoImpressao(meta){
+  const ph = document.getElementById('printHeader');
+  const pf = document.getElementById('printFooter');
+  if(state.currentView === 'relatorio'){
+    /* o relatório já tem cabeçalho e rodapé próprios */
+    ph.innerHTML = ''; pf.innerHTML = '';
+    return;
+  }
+  const emp = state.empresaAtual || EMPRESA_FALLBACK;
+  const titulo = (meta && meta.titulo) || viewTitles[state.currentView] || '';
+  const linha = (meta && meta.linha) ? meta.linha + ' · ' : '';
+  const usuario = state.currentUser ? (state.currentUser.nome || state.currentUser.usuario) : '';
+  const logo = emp.logo_url ? '<img src="'+emp.logo_url+'" alt="" />' : '';
+  ph.innerHTML = `
+    <div class="ph-brand">${logo}<div>${escapeHtml((emp.nome||'').toUpperCase())}<small>Gestão de Vendas</small></div></div>
+    <div class="ph-info">
+      <div class="ph-title">${escapeHtml(titulo)}</div>
+      <div class="ph-meta">${escapeHtml(linha)}Gerado em ${agoraFormatado()}</div>
+    </div>`;
+  pf.innerHTML = `${escapeHtml(emp.nome||'')} · Gestão de Vendas · ${escapeHtml(titulo)} · Impresso ${usuario ? 'por '+escapeHtml(usuario)+' ' : ''}em ${agoraFormatado()}`;
+}
+document.getElementById('btnImprimirTela').addEventListener('click', ()=>{
+  if(state.currentView === 'relatorio' && !relState.gerado){
+    showToast('Gere o relatório antes de imprimir.', true);
+    return;
+  }
+  abrirImpressao(null);
+});
+document.getElementById('btnConfirmarImpressao').addEventListener('click', ()=>{
+  const marcado = document.querySelector('#modalImprimir input[name="printOrient"]:checked');
+  const orient = marcado ? marcado.value : 'landscape';
+  safeStorage('setItem','nacoes_print_orient_'+(state.currentView==='relatorio'?'rel':'tela'), orient);
+  closeModal('modalImprimir');
+  montarCabecalhoImpressao(impressaoMeta);
+  aplicarOrientacao(orient);
+  setTimeout(()=> window.print(), 200);
+});
+
+/* =====================================================================
+   FILTRO POR DIA / MÊS / ANO (Leads, Orçamento enviado, Aprovados,
+   Assinatura de contrato e Cobrança do contrato)
+   ===================================================================== */
+function montarFiltroData(prefixo, aoMudar){
+  const selDia = document.getElementById(prefixo+'Dia');
+  const selMes = document.getElementById(prefixo+'Mes');
+  const selAno = document.getElementById(prefixo+'Ano');
+  if(!selDia || !selMes || !selAno || selDia.options.length) return;
+  const agora = new Date();
+  let dias = '<option value="">Dia: Todos</option>';
+  for(let d=1; d<=31; d++) dias += `<option value="${d}">Dia ${String(d).padStart(2,'0')}</option>`;
+  selDia.innerHTML = dias;
+  selMes.innerHTML = '<option value="">Mês: Todos</option>' + MESES.map((m,i)=>`<option value="${i+1}">${m}</option>`).join('');
+  let anos = '<option value="">Ano: Todos</option>';
+  for(let a = agora.getFullYear()-3; a <= agora.getFullYear()+1; a++) anos += `<option value="${a}">${a}</option>`;
+  selAno.innerHTML = anos;
+  [selDia, selMes, selAno].forEach(el=> el.addEventListener('change', aoMudar));
+}
+function passaFiltroData(prefixo, dataStr){
+  const dia = (document.getElementById(prefixo+'Dia')||{}).value;
+  const mes = (document.getElementById(prefixo+'Mes')||{}).value;
+  const ano = (document.getElementById(prefixo+'Ano')||{}).value;
+  if(!dia && !mes && !ano) return true;
+  const iso = dataLocalISO(dataStr);
+  if(!iso) return false;
+  if(ano && Number(iso.slice(0,4)) !== Number(ano)) return false;
+  if(mes && Number(iso.slice(5,7)) !== Number(mes)) return false;
+  if(dia && Number(iso.slice(8,10)) !== Number(dia)) return false;
+  return true;
+}
+montarFiltroData('orcF', ()=> drawOrcamentosTable());
+montarFiltroData('envF', ()=> drawEnviadosTable());
+montarFiltroData('aprF', ()=> drawAprovadosTable());
+montarFiltroData('assContF', ()=> drawAssinaturaContratoTable());
+montarFiltroData('cobContF', ()=> drawCobrancaContratoTable());
+
+/* =====================================================================
+   RELATÓRIO GERENCIAL
+   ===================================================================== */
+const relState = { tipo: 'completo', gerado: false };
+
+function relEtapa(key, label, etapa, extras){
+  return Object.assign({
+    key, label, grupo:'Processo do aluno', dataLabel:'Entrada na etapa',
+    data: o=> o.etapa_entrada || o.updated_at,
+    filtro: (o,P)=> o.etapa === etapa && (P.base === 'atual' || P.no(o.etapa_entrada || o.updated_at))
+  }, extras || {});
+}
+const REL_SECOES = [
+  { key:'leads', label:'Leads recebidos e origem', grupo:'Vendas', dataLabel:'Abertura',
+    data:o=> o.data_abertura, filtro:(o,P)=> P.no(o.data_abertura) },
+  { key:'leads_reprovados', label:'Leads reprovados', grupo:'Vendas', dataLabel:'Reprovado em', motivo:'lead',
+    data:o=> o.updated_at || o.data_abertura,
+    filtro:(o,P)=> (o.situacao === 'Reprovado' || o.situacao_cliente === 'Reprovado') && P.no(o.updated_at || o.data_abertura) },
+  { key:'enviados', label:'Orçamentos enviados ao cliente', grupo:'Vendas', dataLabel:'Envio',
+    data:o=> o.data_envio, filtro:(o,P)=> !!o.data_envio && P.no(o.data_envio) },
+  { key:'aprovados', label:'Leads aprovados (vendas fechadas)', grupo:'Vendas', dataLabel:'Aprovação',
+    data:o=> o.data_aprovacao, filtro:(o,P)=> o.situacao_cliente === 'Aprovado' && P.no(o.data_aprovacao) },
+  relEtapa('assinatura_contrato', 'Assinatura de contrato', 'assinatura_contrato'),
+  relEtapa('cobranca_contrato', 'Cobrança (contrato)', 'cobranca_contrato'),
+  relEtapa('exames', 'Exame médico e psico', 'exames'),
+  relEtapa('conferencia', 'Aguardando resultado (conferência de resultados)', 'conferencia'),
+  relEtapa('reprovados', 'Reprovado no psico/médico', 'reprovados', { motivo:'exame' }),
+  relEtapa('cobranca', 'Cobrança (após exames)', 'cobranca'),
+  relEtapa('aulas', 'Curso teórico', 'aulas'),
+  relEtapa('agendados', 'Curso teórico concluído', 'agendados'),
+  relEtapa('cobranca_curso', 'Cobrança (curso)', 'cobranca_curso'),
+  relEtapa('prova_escrita_agendamento', 'Agendamento de prova escrita', 'prova_escrita_agendamento'),
+  relEtapa('prova_escrita_aguardando', 'Aguardando resultado da prova escrita', 'prova_escrita_aguardando'),
+  relEtapa('prova_escrita_reprovado', 'Reprovado na prova escrita', 'prova_escrita_reprovado'),
+  relEtapa('conferencia_cobranca', 'Conferência de cobrança', 'conferencia_cobranca'),
+  relEtapa('teste_pratico', 'Agendamento de aulas práticas', 'teste_pratico'),
+  relEtapa('resultado_teste', 'Agendamento de teste de volante', 'resultado_teste'),
+  relEtapa('teste_volante_resultado', 'Resultado do teste de volante', 'teste_volante_resultado'),
+  relEtapa('aprovado_final', 'Alunos aprovados (processo concluído)', 'aprovado_final')
+];
+const REL_EXTRAS = [
+  { key:'__kpis', label:'Indicadores gerais (quadro no topo)' },
+  { key:'__resumo', label:'Tabela resumo de todas as etapas' },
+  { key:'__graficos', label:'Gráficos (origem e motivos de reprovação)' }
+];
+
+function montarConfigRelatorio(){
+  const selMes = document.getElementById('relMes');
+  if(selMes.options.length) return;
+  const agora = new Date();
+  selMes.innerHTML = '<option value="0">Ano inteiro</option>' +
+    MESES.map((m,i)=>`<option value="${i+1}" ${i===agora.getMonth()?'selected':''}>${m}</option>`).join('');
+  let anos = '';
+  for(let a = agora.getFullYear()-3; a <= agora.getFullYear()+1; a++) anos += `<option value="${a}" ${a===agora.getFullYear()?'selected':''}>${a}</option>`;
+  document.getElementById('relAno').innerHTML = anos;
+
+  const linha = (item)=> `<div class="perm-row"><input type="checkbox" id="relSec_${item.key}" data-relsec="${item.key}" checked /><label for="relSec_${item.key}">${escapeHtml(item.label)}</label></div>`;
+  document.getElementById('relSecoesGrid').innerHTML =
+    REL_EXTRAS.map(linha).join('') + REL_SECOES.map(linha).join('');
+
+  document.querySelectorAll('#relTipo button').forEach(b=>{
+    b.addEventListener('click', ()=>{
+      relState.tipo = b.dataset.tipo;
+      document.querySelectorAll('#relTipo button').forEach(x=> x.classList.toggle('active', x === b));
+    });
+  });
+  document.getElementById('relMarcarTodas').addEventListener('click', ()=>{
+    document.querySelectorAll('#relSecoesGrid [data-relsec]').forEach(c=> c.checked = true);
+  });
+  document.getElementById('relDesmarcarTodas').addEventListener('click', ()=>{
+    document.querySelectorAll('#relSecoesGrid [data-relsec]').forEach(c=> c.checked = false);
+  });
+  document.getElementById('btnGerarRelatorio').addEventListener('click', gerarRelatorio);
+  document.getElementById('btnImprimirRelatorio').addEventListener('click', ()=>{
+    if(!relState.gerado){ showToast('Gere o relatório antes de imprimir.', true); return; }
+    abrirImpressao(null);
+  });
+}
+
+function renderRelatorio(){
+  montarConfigRelatorio();
+  if(!relState.gerado){
+    document.getElementById('relatorioOutput').innerHTML =
+      '<div class="rel-doc"><p class="muted" style="margin:0;">Escolha o mês, o ano, o tipo (completo ou resumido) e o que deseja incluir. Depois clique em <b>Gerar relatório</b>.</p></div>';
+  }
+}
+
+async function lerOrcamentosRelatorio(){
+  const campos = 'id,cliente,whatsapp,valor,data_abertura,data_envio,data_aprovacao,situacao,situacao_cliente,etapa,etapa_entrada,updated_at,origem_id,vendedor_id,motivo_reprovado_id,motivo_reprovado_cliente_id,motivo_reprovacao_exame';
+  const linhas = [];
+  const passo = 1000;
+  let de = 0;
+  while(true){
+    const { data, error } = await sb.from('orcamentos').select(campos).order('id').range(de, de + passo - 1);
+    if(error) throw error;
+    const lote = data || [];
+    linhas.push(...lote);
+    if(lote.length < passo) break;
+    de += passo;
+  }
+  return linhas;
+}
+
+const relNome = (lista, id, vazio)=> { const x = (lista||[]).find(i=> i.id === id); return x ? x.nome : (vazio || '—'); };
+const relSoma = (itens)=> itens.reduce((t,o)=> t + (Number(o.valor)||0), 0);
+const relPct = (n,t)=> t ? (n/t*100).toFixed(1).replace('.',',')+'%' : '0%';
+
+function relMotivoDe(o, tipo){
+  if(tipo === 'exame') return o.motivo_reprovacao_exame || 'Sem motivo informado';
+  return relNome(state.motivos, o.motivo_reprovado_id || o.motivo_reprovado_cliente_id, 'Sem motivo informado');
+}
+
+function relAgrupar(itens, chaveFn){
+  const mapa = {};
+  itens.forEach(o=>{ const k = chaveFn(o); mapa[k] = (mapa[k]||0) + 1; });
+  return Object.entries(mapa).sort((a,b)=> b[1]-a[1]);
+}
+
+function relTabelaAgrupada(tituloCol, grupos, total){
+  if(!grupos.length) return '';
+  return `<table class="rel-table"><thead><tr><th>${tituloCol}</th><th class="num">Qtd</th><th class="num">%</th></tr></thead><tbody>
+    ${grupos.map(([nome,qtd])=>`<tr><td>${escapeHtml(nome)}</td><td class="num">${qtd}</td><td class="num">${relPct(qtd,total)}</td></tr>`).join('')}
+    </tbody><tfoot><tr><td>Total</td><td class="num">${total}</td><td class="num">100%</td></tr></tfoot></table>`;
+}
+
+function relTabelaNomes(sec, itens){
+  if(!itens.length) return '<div class="rel-vazio">Nenhum registro no período.</div>';
+  const ord = itens.slice().sort((a,b)=> (a.cliente||'').localeCompare(b.cliente||'', 'pt-BR'));
+  const temMotivo = !!sec.motivo;
+  return `<table class="rel-table"><thead><tr>
+      <th style="width:34px;">#</th><th>Cliente</th><th>WhatsApp</th><th>Vendedor</th><th>Origem</th>
+      ${temMotivo ? '<th>Motivo</th>' : ''}<th class="num">Valor</th><th>${sec.dataLabel}</th>
+    </tr></thead><tbody>
+    ${ord.map((o,i)=>`<tr>
+      <td>${i+1}</td>
+      <td>${escapeHtml(o.cliente||'')}</td>
+      <td>${escapeHtml(o.whatsapp||'—')}</td>
+      <td>${escapeHtml(relNome(state.vendedores, o.vendedor_id))}</td>
+      <td>${escapeHtml(relNome(state.origens, o.origem_id))}</td>
+      ${temMotivo ? `<td>${escapeHtml(relMotivoDe(o, sec.motivo))}</td>` : ''}
+      <td class="num">${fmtMoney(o.valor)}</td>
+      <td>${fmtDate(dataLocalISO(sec.data(o)))}</td>
+    </tr>`).join('')}
+    </tbody><tfoot><tr><td colspan="${temMotivo?6:5}">Total: ${itens.length} cliente${itens.length===1?'':'s'}</td><td class="num">${fmtMoney(relSoma(itens))}</td><td></td></tr></tfoot></table>`;
+}
+
+function relGraficoImagem(slotId, config, w, h){
+  const slot = document.getElementById(slotId);
+  if(!slot) return;
+  if(typeof Chart === 'undefined'){ slot.innerHTML = '<div class="rel-vazio">Gráfico indisponível (sem conexão).</div>'; return; }
+  const cv = document.createElement('canvas');
+  cv.width = w; cv.height = h;
+  cv.style.width = w+'px'; cv.style.height = h+'px';
+  slot.innerHTML = '';
+  slot.appendChild(cv);
+  config.options = Object.assign({ responsive:false, maintainAspectRatio:false, animation:false, devicePixelRatio:2 }, config.options || {});
+  const ch = new Chart(cv, config);
+  /* Troca o gráfico por imagem: sai perfeito na impressão/PDF */
+  setTimeout(()=>{
+    try{
+      const img = new Image();
+      img.alt = '';
+      img.src = ch.toBase64Image('image/png', 1);
+      slot.innerHTML = '';
+      slot.appendChild(img);
+    }catch(e){ console.warn(e); }
+    ch.destroy();
+  }, 80);
+}
+
+async function gerarRelatorio(){
+  const out = document.getElementById('relatorioOutput');
+  const btn = document.getElementById('btnGerarRelatorio');
+  if(!sb){ showToast('Sem conexão com o banco de dados.', true); return; }
+  const marcadas = Array.from(document.querySelectorAll('#relSecoesGrid [data-relsec]:checked')).map(c=> c.dataset.relsec);
+  if(!marcadas.length){ showToast('Marque pelo menos um item para incluir no relatório.', true); return; }
+
+  btn.disabled = true;
+  out.innerHTML = '<div class="rel-doc"><p class="muted" style="margin:0;">Gerando relatório...</p></div>';
+  try{
+    if(!state.origens.length && !state.vendedores.length) await loadLookups();
+    const linhas = await lerOrcamentosRelatorio();
+    const ano = Number(document.getElementById('relAno').value);
+    const mes = Number(document.getElementById('relMes').value);
+    const base = document.getElementById('relBase').value;
+    const completo = relState.tipo === 'completo';
+    const P = {
+      base,
+      no: (str)=>{
+        const iso = dataLocalISO(str);
+        if(!iso || Number(iso.slice(0,4)) !== ano) return false;
+        return mes === 0 || Number(iso.slice(5,7)) === mes;
+      }
+    };
+    const periodoTxt = mes === 0 ? `Ano de ${ano}` : `${MESES[mes-1]}/${ano}`;
+    const periodoCurto = mes === 0 ? String(ano) : `${String(mes).padStart(2,'0')}/${ano}`;
+
+    /* calcula todas as seções (o quadro de indicadores usa sempre os números reais) */
+    const res = {};
+    REL_SECOES.forEach(sec=>{ res[sec.key] = linhas.filter(o=> sec.filtro(o, P)); });
+
+    const emp = state.empresaAtual || EMPRESA_FALLBACK;
+    const usuario = state.currentUser ? (state.currentUser.nome || state.currentUser.usuario) : '';
+    const bg = emp.cor_secundaria || '#f5c518';
+    const marca = emp.logo_url
+      ? `<img src="${emp.logo_url}" alt="" />`
+      : `<span class="ep-badge" style="background:${bg};color:${corDeTextoSobre(bg)};">${escapeHtml(emp.sigla || (emp.nome||'?').slice(0,2).toUpperCase())}</span>`;
+
+    let h = `<div class="rel-doc">
+      <div class="rel-header">
+        <div class="rel-brand">${marca}<div><div class="rel-empresa">${escapeHtml(emp.nome||'')}</div><div class="rel-sub">Gestão de Vendas</div></div></div>
+        <div class="rel-info">
+          <div class="rel-titulo">Relatório Gerencial · ${completo ? 'Completo' : 'Resumido'}</div>
+          <div class="rel-periodo">Período: ${periodoTxt}</div>
+          <div class="rel-meta">Gerado em ${agoraFormatado()}${usuario ? ' por '+escapeHtml(usuario) : ''}</div>
+        </div>
+      </div>`;
+
+    if(marcadas.includes('__kpis')){
+      const nLeads = res.leads.length, nAprov = res.aprovados.length;
+      h += `<div class="rel-kpis">
+        <div class="rel-kpi"><div class="l">Leads recebidos</div><div class="v">${nLeads}</div></div>
+        <div class="rel-kpi y"><div class="l">Orçamentos enviados</div><div class="v">${res.enviados.length}</div></div>
+        <div class="rel-kpi g"><div class="l">Vendas aprovadas</div><div class="v">${nAprov}</div></div>
+        <div class="rel-kpi g"><div class="l">Valor aprovado</div><div class="v">${fmtMoney(relSoma(res.aprovados))}</div></div>
+        <div class="rel-kpi"><div class="l">Conversão (aprov./leads)</div><div class="v">${relPct(nAprov, nLeads)}</div></div>
+        <div class="rel-kpi r"><div class="l">Leads reprovados</div><div class="v">${res.leads_reprovados.length}</div></div>
+        <div class="rel-kpi g"><div class="l">Alunos concluídos</div><div class="v">${res.aprovado_final.length}</div></div>
+      </div>`;
+    }
+
+    const secoes = REL_SECOES.filter(sec=> marcadas.includes(sec.key));
+
+    if(marcadas.includes('__resumo') && secoes.length){
+      let grupoAtual = '';
+      h += `<div class="rel-h2"><span>Resumo por etapa</span><span class="tot">${periodoCurto}</span></div>
+        <table class="rel-table"><thead><tr><th style="width:34px;">#</th><th>Etapa</th><th class="num">Qtd</th><th class="num">Valor</th></tr></thead><tbody>
+        ${secoes.map((sec,i)=>{
+          let linhaGrupo = '';
+          if(sec.grupo !== grupoAtual){ grupoAtual = sec.grupo; linhaGrupo = `<tr><td colspan="4" style="font-weight:700;color:var(--blue-800);background:#eef3f7;">${sec.grupo}</td></tr>`; }
+          return linhaGrupo + `<tr><td>${i+1}</td><td>${escapeHtml(sec.label)}</td><td class="num">${res[sec.key].length}</td><td class="num">${fmtMoney(relSoma(res[sec.key]))}</td></tr>`;
+        }).join('')}
+        </tbody></table>`;
+      if(base === 'periodo'){
+        h += '<p class="small muted" style="margin:4px 0 0;">Etapas do processo do aluno: alunos que entraram na etapa dentro do período e ainda estão nela.</p>';
+      } else {
+        h += '<p class="small muted" style="margin:4px 0 0;">Etapas do processo do aluno: todos os alunos que estão hoje em cada etapa.</p>';
+      }
+    }
+
+    const graficos = marcadas.includes('__graficos');
+    const pendentes = [];
+    secoes.forEach((sec, i)=>{
+      const itens = res[sec.key];
+      h += `<div class="rel-section"><div class="rel-h2"><span>${i+1}. ${escapeHtml(sec.label)}</span><span class="tot">Total: ${itens.length} · ${fmtMoney(relSoma(itens))}</span></div>`;
+
+      if(sec.key === 'leads' && itens.length){
+        const grupos = relAgrupar(itens, o=> relNome(state.origens, o.origem_id, 'Sem origem'));
+        h += `<div class="${graficos ? 'rel-grid2' : ''}">${relTabelaAgrupada('Origem', grupos, itens.length)}${graficos ? '<div class="rel-chart" id="relChartOrigem"></div>' : ''}</div>`;
+        if(graficos) pendentes.push(()=> relGraficoImagem('relChartOrigem', {
+          type:'bar',
+          data:{ labels: grupos.map(g=>g[0]), datasets:[{ data: grupos.map(g=>g[1]), backgroundColor: grupos.map((g,j)=> CHART_PALETTE[j % CHART_PALETTE.length]), borderRadius:4 }] },
+          options:{ indexAxis:'y', layout:{padding:{right:36}}, plugins:{ legend:{display:false}, title:{display:true, text:'Leads por origem'} },
+            scales:{ x:{ beginAtZero:true, suggestedMax: Math.max(...grupos.map(g=>g[1]),1)*1.2, ticks:{precision:0} } } },
+          plugins:[BAR_VALUE_LABELS_PLUGIN]
+        }, 480, Math.max(180, grupos.length*34 + 60)));
+      }
+
+      if(sec.motivo && itens.length){
+        const grupos = relAgrupar(itens, o=> relMotivoDe(o, sec.motivo));
+        const slot = 'relChartMotivo_' + sec.key;
+        h += `<div class="${graficos ? 'rel-grid2' : ''}">${relTabelaAgrupada('Motivo', grupos, itens.length)}${graficos ? '<div class="rel-chart" id="'+slot+'"></div>' : ''}</div>`;
+        if(graficos) pendentes.push(()=> relGraficoImagem(slot, {
+          type:'pie',
+          data:{ labels: grupos.map(g=>g[0]), datasets:[{ data: grupos.map(g=>g[1]), backgroundColor: grupos.map((g,j)=> CHART_PALETTE[j % CHART_PALETTE.length]), borderColor:'#fff', borderWidth:2 }] },
+          options:{ plugins:{ legend:{ position:'right', labels:{ boxWidth:12, font:{size:11} } }, title:{display:true, text:'Motivos de reprovação'} } },
+          plugins:[PIE_VALUE_LABELS_PLUGIN]
+        }, 480, 240));
+      }
+
+      if(completo) h += relTabelaNomes(sec, itens);
+      else if(!itens.length) h += '<div class="rel-vazio">Nenhum registro no período.</div>';
+      h += '</div>';
+    });
+
+    h += `<div class="rel-footer">
+        <span>${escapeHtml(emp.nome||'')} · Relatório Gerencial ${completo ? 'Completo' : 'Resumido'} · ${periodoTxt}</span>
+        <span>Gerado em ${agoraFormatado()}${usuario ? ' por '+escapeHtml(usuario) : ''} · Documento de uso interno</span>
+      </div></div>`;
+
+    out.innerHTML = h;
+    pendentes.forEach(fn=> fn());
+    relState.gerado = true;
+  }catch(err){
+    out.innerHTML = '<div class="rel-doc"><p style="color:var(--danger);margin:0;">Erro ao gerar o relatório: '+escapeHtml(err.message||String(err))+'</p></div>';
+  }finally{
+    btn.disabled = false;
+  }
 }
 
 </script>
