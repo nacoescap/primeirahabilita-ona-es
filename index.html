@@ -4140,10 +4140,6 @@ function parseFollowups(raw){
   return list.slice(0, FOLLOWUP_ETAPAS.length).map((f,i)=> ({ ...f, etapa: f.etapa || FOLLOWUP_ETAPAS[i] }));
 }
 
-/* Cria D1 (na data informada) e pré-agenda D2...D28 */
-function gerarCadencia(dataD1){
-  return FOLLOWUP_ETAPAS.map(et=> ({ etapa: et, data: addDiasISO(dataD1, etapaOffset(et)), observacao: '' }));
-}
 /* Ao mudar a data do D1, reprograma as etapas ainda não realizadas */
 function reprogramarCadencia(list){
   const d1 = list.find(f=> f.etapa==='D1');
@@ -4152,17 +4148,33 @@ function reprogramarCadencia(list){
     if(f.etapa!=='D1' && !ligacaoRealizada(f)) f.data = addDiasISO(d1.data, etapaOffset(f.etapa));
   });
 }
-/* Botão "+ Registrar Ligação": sem nada → gera D1..D28; senão adiciona a próxima etapa que faltar */
+/* Mantém sempre: ligações realizadas + apenas a PRÓXIMA etapa prevista (data editável) */
+function normalizarFollowups(list){
+  const ordenada = list.slice().sort((a,b)=> FOLLOWUP_ETAPAS.indexOf(a.etapa) - FOLLOWUP_ETAPAS.indexOf(b.etapa));
+  const feitas = ordenada.filter(ligacaoRealizada);
+  let prox = ordenada.find(f=> !ligacaoRealizada(f) && FOLLOWUP_ETAPAS.indexOf(f.etapa) > FOLLOWUP_ETAPAS.indexOf(feitas.length ? feitas[feitas.length-1].etapa : '')) || null;
+  if(!prox && feitas.length){
+    const idxUlt = FOLLOWUP_ETAPAS.indexOf(feitas[feitas.length-1].etapa);
+    const et = FOLLOWUP_ETAPAS[idxUlt+1];
+    if(et){
+      const d1 = feitas.find(f=> f.etapa==='D1');
+      const base = d1 && d1.data ? d1.data : todayISO();
+      prox = { etapa: et, data: addDiasISO(base, etapaOffset(et)), observacao: '' };
+    }
+  }
+  const nova = prox ? [...feitas, prox] : (feitas.length ? feitas : ordenada.slice(0,1));
+  list.splice(0, list.length, ...nova);
+  return list;
+}
+/* Botão "+ Registrar Ligação": só aparece sem ligações; cria o D1 com a data de hoje */
 function adicionarLigacao(list){
-  if(!list.length){ list.push(...gerarCadencia(todayISO())); return; }
-  const prox = FOLLOWUP_ETAPAS.find(et=> !list.some(f=> f.etapa===et));
-  if(!prox){ showToast('Cadência completa: D28 é a última ligação.', true); return; }
-  const d1 = list.find(f=> f.etapa==='D1');
-  list.push({ etapa: prox, data: d1 && d1.data ? addDiasISO(d1.data, etapaOffset(prox)) : todayISO(), observacao: '' });
-  list.sort((a,b)=> FOLLOWUP_ETAPAS.indexOf(a.etapa) - FOLLOWUP_ETAPAS.indexOf(b.etapa));
+  if(!list.length) list.push({ etapa: 'D1', data: todayISO(), observacao: '' });
 }
 
-function renderFollowupRows(wrapId, list, rerender){
+function renderFollowupRows(wrapId, list, rerender, btnId){
+  normalizarFollowups(list);
+  const btn = document.getElementById(btnId);
+  if(btn) btn.style.display = list.length ? 'none' : '';
   const wrap = document.getElementById(wrapId);
   if(list.length === 0){
     wrap.innerHTML = `<div class="followup-empty">Nenhuma ligação registrada ainda.</div>`;
@@ -4186,6 +4198,7 @@ function renderFollowupRows(wrapId, list, rerender){
       list[idx].observacao = e.target.value;
       row.classList.toggle('pendente', !ligacaoRealizada(list[idx]));
     });
+    row.querySelector('.followup-note').addEventListener('change', ()=> rerender());
     row.querySelector('.followup-remove').addEventListener('click', ()=>{
       list.splice(idx,1);
       rerender();
@@ -4193,7 +4206,7 @@ function renderFollowupRows(wrapId, list, rerender){
   });
 }
 
-function renderFollowupList(){ renderFollowupRows('orcFollowupList', currentFollowups, renderFollowupList); }
+function renderFollowupList(){ renderFollowupRows('orcFollowupList', currentFollowups, renderFollowupList, 'btnAddLigacao'); }
 
 document.getElementById('btnAddLigacao').addEventListener('click', ()=>{
   adicionarLigacao(currentFollowups);
@@ -4232,7 +4245,7 @@ function openFollowupModal(id){
   openModal('modalFollowup');
 }
 
-function renderFollowupOnlyList(){ renderFollowupRows('followupOnlyList', followupOnlyList, renderFollowupOnlyList); }
+function renderFollowupOnlyList(){ renderFollowupRows('followupOnlyList', followupOnlyList, renderFollowupOnlyList, 'btnAddLigacaoStandalone'); }
 
 document.getElementById('btnAddLigacaoStandalone').addEventListener('click', ()=>{
   adicionarLigacao(followupOnlyList);
@@ -4241,6 +4254,7 @@ document.getElementById('btnAddLigacaoStandalone').addEventListener('click', ()=
 
 document.getElementById('btnSalvarFollowup').addEventListener('click', async ()=>{
   const id = document.getElementById('followupOrcId').value;
+  normalizarFollowups(followupOnlyList);
   const payload = { followup: followupOnlyList.length ? JSON.stringify(followupOnlyList) : null, updated_at: new Date().toISOString() };
   const { error } = await sb.from('orcamentos').update(payload).eq('id', id);
   if(error){ showToast('Erro ao salvar follow-up: '+error.message, true); return; }
@@ -4297,7 +4311,7 @@ document.getElementById('btnSalvarOrcamento').addEventListener('click', async ()
     numero_aulas: aulasA + aulasB,
     origem_id: document.getElementById('orcOrigem').value || null,
     vendedor_id: document.getElementById('orcVendedor').value || null,
-    followup: currentFollowups.length ? JSON.stringify(currentFollowups) : null,
+    followup: normalizarFollowups(currentFollowups).length ? JSON.stringify(currentFollowups) : null,
     situacao,
     motivo_reprovado_id: situacao === 'Reprovado' ? (document.getElementById('orcMotivo').value || null) : null,
     data_fechamento: document.getElementById('orcDataFechamento').value || null,
