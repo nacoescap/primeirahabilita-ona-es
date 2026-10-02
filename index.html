@@ -453,6 +453,12 @@ tbody tr:last-child td{border-bottom:none;}
 }
 .followup-remove:hover{filter:brightness(0.96);}
 .followup-empty{font-size:12.5px;color:var(--text-muted);padding:6px 2px 10px;}
+.followup-badge{min-width:38px;text-align:center;}
+.followup-row.pendente{background:#fff;border-style:dashed;}
+.followup-row.pendente .followup-badge{background:#94a3b8;}
+.fu-prox{white-space:nowrap;font-weight:600;font-size:12.5px;}
+.fu-prox.atrasada{color:var(--danger);}
+.fu-prox.hoje{color:#b7791f;}
 
 .inline-select{
   padding:6px 9px;border:1.5px solid var(--border);border-radius:999px;font-size:12px;font-weight:700;
@@ -915,7 +921,7 @@ tbody tr:last-child td{border-bottom:none;}
           <table>
             <thead><tr>
               <th>Abertura</th><th>Cliente</th><th>WhatsApp</th><th>CPF</th><th>Valor</th>
-              <th>Carteira</th><th>Aulas</th><th>Origem</th><th>Vendedor</th><th>Situação</th><th>Lead time</th><th>Follow-up</th><th>Ações</th>
+              <th>Carteira</th><th>Aulas</th><th>Origem</th><th>Vendedor</th><th>Situação</th><th>Lead time</th><th>Follow-up</th><th>Próx. Ligação</th><th>Ações</th>
             </tr></thead>
             <tbody id="orcTableBody"></tbody>
           </table>
@@ -973,7 +979,7 @@ tbody tr:last-child td{border-bottom:none;}
           <table>
             <thead><tr>
               <th>Envio</th><th>Cliente</th><th>WhatsApp</th><th>Valor</th><th>Origem</th>
-              <th>Vendedor</th><th>Situação Cliente</th><th>Data Aprovação</th><th>Lead time</th><th>Follow-up</th><th>Ações</th>
+              <th>Vendedor</th><th>Situação Cliente</th><th>Data Aprovação</th><th>Lead time</th><th>Follow-up</th><th>Próx. Ligação</th><th>Ações</th>
             </tr></thead>
             <tbody id="envTableBody"></tbody>
           </table>
@@ -992,7 +998,7 @@ tbody tr:last-child td{border-bottom:none;}
           <table>
             <thead><tr>
               <th>Aprovação</th><th>Cliente</th><th>WhatsApp</th><th>Valor</th><th>Origem</th>
-              <th>Vendedor</th><th>Situação</th><th>Etapa Atual</th><th>Lead time</th><th>Follow-up</th><th>Fechamento</th><th>Ações</th>
+              <th>Vendedor</th><th>Situação</th><th>Etapa Atual</th><th>Lead time</th><th>Follow-up</th><th>Próx. Ligação</th><th>Fechamento</th><th>Ações</th>
             </tr></thead>
             <tbody id="aprTableBody"></tbody>
           </table>
@@ -1005,7 +1011,7 @@ tbody tr:last-child td{border-bottom:none;}
         <div class="toolbar"><input type="text" class="search-input" id="assContSearch" placeholder="Buscar por cliente..." /><select class="date-filter" id="assContFDia"></select><select class="date-filter" id="assContFMes"></select><select class="date-filter" id="assContFAno"></select><div class="spacer"></div></div>
         <div class="table-wrap">
           <table>
-            <thead><tr><th>Cliente</th><th>WhatsApp</th><th>Valor</th><th>Vendedor</th><th>Situação</th><th>Lead time</th><th>Follow-up</th><th>Ações</th></tr></thead>
+            <thead><tr><th>Cliente</th><th>WhatsApp</th><th>Valor</th><th>Vendedor</th><th>Situação</th><th>Lead time</th><th>Follow-up</th><th>Próx. Ligação</th><th>Ações</th></tr></thead>
             <tbody id="assContTableBody"></tbody>
           </table>
         </div>
@@ -1029,7 +1035,7 @@ tbody tr:last-child td{border-bottom:none;}
         <div class="toolbar"><input type="text" class="search-input" id="exaSearch" placeholder="Buscar por cliente..." /><div class="spacer"></div></div>
         <div class="table-wrap">
           <table>
-            <thead><tr><th>Cliente</th><th>WhatsApp</th><th>Valor</th><th>Vendedor</th><th>Situação</th><th>Lead time</th><th>Follow-up</th><th>Ações</th></tr></thead>
+            <thead><tr><th>Cliente</th><th>WhatsApp</th><th>Valor</th><th>Vendedor</th><th>Situação</th><th>Lead time</th><th>Follow-up</th><th>Próx. Ligação</th><th>Ações</th></tr></thead>
             <tbody id="exaTableBody"></tbody>
           </table>
         </div>
@@ -3695,7 +3701,7 @@ function drawOrcamentosTable(){
 
   const tbody = document.getElementById('orcTableBody');
   if(rows.length === 0){
-    tbody.innerHTML = `<tr class="empty-row"><td colspan="13">Nenhum orçamento encontrado.</td></tr>`;
+    tbody.innerHTML = `<tr class="empty-row"><td colspan="14">Nenhum orçamento encontrado.</td></tr>`;
     return;
   }
   tbody.innerHTML = rows.map(o=>`
@@ -3712,6 +3718,7 @@ function drawOrcamentosTable(){
       <td>${situacaoSelectHtml(o)}</td>
       <td>${leadTimeCell(o.data_abertura || o.created_at)}</td>
       <td>${firstFollowupCell(o)}</td>
+      <td>${nextFollowupCell(o)}</td>
       <td class="row-actions">
         <button title="Ligações / Follow-up" data-followup="${o.id}">
           <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.13.96.36 1.9.7 2.81a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.91.34 1.85.57 2.81.7A2 2 0 0 1 22 16.92Z"/></svg>
@@ -3735,12 +3742,21 @@ function drawOrcamentosTable(){
 }
 function firstFollowupCell(o){
   const list = parseFollowups(o.followup);
-  if(!list.length) return '<span class="muted">—</span>';
-  const f = list[0];
-  const txt = (f.observacao||'').trim() || '(sem observação)';
-  const short = txt.length > 34 ? txt.slice(0,34)+'…' : txt;
-  const full = `1ª Ligação (${fmtDate(f.data)}): ${txt}`.replace(/"/g,'&quot;');
-  return `<span title="${full}">${short}</span>`;
+  const ult = ultimaLigacaoRealizada(list);
+  if(!ult) return '<span class="muted">—</span>';
+  const txt = (ult.observacao||'').trim();
+  const label = `${ult.etapa} · ${fmtDate(ult.data)}`;
+  const short = txt.length > 30 ? txt.slice(0,30)+'…' : txt;
+  const full = `${ult.etapa} (${fmtDate(ult.data)}): ${txt}`.replace(/"/g,'&quot;');
+  return `<span title="${full}"><b>${label}</b><br>${short}</span>`;
+}
+function nextFollowupCell(o){
+  const prox = proximaLigacao(parseFollowups(o.followup));
+  if(!prox) return '<span class="muted">—</span>';
+  const hoje = todayISO();
+  const cls = prox.data < hoje ? 'atrasada' : (prox.data === hoje ? 'hoje' : '');
+  const dica = cls==='atrasada' ? 'Ligação atrasada' : (cls==='hoje' ? 'Ligar hoje' : 'Ligação prevista');
+  return `<span class="fu-prox ${cls}" title="${dica}">${prox.etapa} · ${fmtDate(prox.data)}</span>`;
 }
 function carteiraBadge(c){
   if(c === 'A') return '<span class="badge badge-blue">Carteira A</span>';
@@ -4090,48 +4106,97 @@ function openOrcamentoModal(id){
 }
 
 /* ---------- Follow-up (ligações) ---------- */
+/* Cadência: D1 é o dia 1; DN cai N-1 dias após o D1 (D2 = dia seguinte, D28 = 27 dias depois) */
+const FOLLOWUP_ETAPAS = ['D1','D2','D4','D8','D12','D16','D20','D24','D28'];
 let currentFollowups = [];
+
+function etapaOffset(etapa){ return Number(String(etapa).replace('D','')) - 1; }
+function addDiasISO(iso, dias){
+  const [a,m,d] = iso.split('-').map(Number);
+  const dt = new Date(a, m-1, d + dias);
+  return `${dt.getFullYear()}-${String(dt.getMonth()+1).padStart(2,'0')}-${String(dt.getDate()).padStart(2,'0')}`;
+}
+/* Ligação realizada = tem observação registrada */
+function ligacaoRealizada(f){ return !!(f && (f.observacao||'').trim()); }
+function ultimaLigacaoRealizada(list){
+  const feitas = list.filter(ligacaoRealizada);
+  return feitas.length ? feitas[feitas.length-1] : null;
+}
+function proximaLigacao(list){
+  return list.find(f=> !ligacaoRealizada(f) && f.data) || null;
+}
 
 function parseFollowups(raw){
   if(!raw) return [];
+  let list = [];
   try{
     const parsed = JSON.parse(raw);
-    if(Array.isArray(parsed)) return parsed;
+    if(Array.isArray(parsed)) list = parsed;
   }catch(e){
-    // Registro antigo (texto livre) - preserva como a 1ª ligação
-    return [{ data: todayISO(), observacao: raw }];
+    // Registro antigo (texto livre) - preserva como D1
+    list = [{ data: todayISO(), observacao: raw }];
   }
-  return [];
+  // Registros antigos sem etapa recebem D1, D2, D4... pela ordem
+  return list.slice(0, FOLLOWUP_ETAPAS.length).map((f,i)=> ({ ...f, etapa: f.etapa || FOLLOWUP_ETAPAS[i] }));
 }
 
-function renderFollowupList(){
-  const wrap = document.getElementById('orcFollowupList');
-  if(currentFollowups.length === 0){
+/* Cria D1 (na data informada) e pré-agenda D2...D28 */
+function gerarCadencia(dataD1){
+  return FOLLOWUP_ETAPAS.map(et=> ({ etapa: et, data: addDiasISO(dataD1, etapaOffset(et)), observacao: '' }));
+}
+/* Ao mudar a data do D1, reprograma as etapas ainda não realizadas */
+function reprogramarCadencia(list){
+  const d1 = list.find(f=> f.etapa==='D1');
+  if(!d1 || !d1.data) return;
+  list.forEach(f=>{
+    if(f.etapa!=='D1' && !ligacaoRealizada(f)) f.data = addDiasISO(d1.data, etapaOffset(f.etapa));
+  });
+}
+/* Botão "+ Registrar Ligação": sem nada → gera D1..D28; senão adiciona a próxima etapa que faltar */
+function adicionarLigacao(list){
+  if(!list.length){ list.push(...gerarCadencia(todayISO())); return; }
+  const prox = FOLLOWUP_ETAPAS.find(et=> !list.some(f=> f.etapa===et));
+  if(!prox){ showToast('Cadência completa: D28 é a última ligação.', true); return; }
+  const d1 = list.find(f=> f.etapa==='D1');
+  list.push({ etapa: prox, data: d1 && d1.data ? addDiasISO(d1.data, etapaOffset(prox)) : todayISO(), observacao: '' });
+  list.sort((a,b)=> FOLLOWUP_ETAPAS.indexOf(a.etapa) - FOLLOWUP_ETAPAS.indexOf(b.etapa));
+}
+
+function renderFollowupRows(wrapId, list, rerender){
+  const wrap = document.getElementById(wrapId);
+  if(list.length === 0){
     wrap.innerHTML = `<div class="followup-empty">Nenhuma ligação registrada ainda.</div>`;
     return;
   }
-  wrap.innerHTML = currentFollowups.map((f,i)=>`
-    <div class="followup-row" data-idx="${i}">
-      <span class="followup-badge">${i+1}ª Ligação</span>
-      <input type="date" class="followup-date" value="${f.data || todayISO()}" />
-      <input type="text" class="followup-note" placeholder="O que foi conversado..." value="${(f.observacao||'').replace(/"/g,'&quot;')}" />
+  wrap.innerHTML = list.map((f,i)=>`
+    <div class="followup-row ${ligacaoRealizada(f)?'':'pendente'}" data-idx="${i}">
+      <span class="followup-badge" title="${f.etapa==='D1'?'Dia 1':'Dia '+(etapaOffset(f.etapa)+1)+' após o D1'}">${f.etapa}</span>
+      <input type="date" class="followup-date" value="${f.data || ''}" />
+      <input type="text" class="followup-note" placeholder="${ligacaoRealizada(f)?'':'Prevista — registre o que foi conversado...'}" value="${(f.observacao||'').replace(/"/g,'&quot;')}" />
       <button type="button" class="followup-remove" title="Remover ligação">×</button>
     </div>
   `).join('');
-
   wrap.querySelectorAll('.followup-row').forEach(row=>{
     const idx = Number(row.dataset.idx);
-    row.querySelector('.followup-date').addEventListener('change', (e)=>{ currentFollowups[idx].data = e.target.value; });
-    row.querySelector('.followup-note').addEventListener('input', (e)=>{ currentFollowups[idx].observacao = e.target.value; });
+    row.querySelector('.followup-date').addEventListener('change', (e)=>{
+      list[idx].data = e.target.value;
+      if(list[idx].etapa==='D1'){ reprogramarCadencia(list); rerender(); }
+    });
+    row.querySelector('.followup-note').addEventListener('input', (e)=>{
+      list[idx].observacao = e.target.value;
+      row.classList.toggle('pendente', !ligacaoRealizada(list[idx]));
+    });
     row.querySelector('.followup-remove').addEventListener('click', ()=>{
-      currentFollowups.splice(idx,1);
-      renderFollowupList();
+      list.splice(idx,1);
+      rerender();
     });
   });
 }
 
+function renderFollowupList(){ renderFollowupRows('orcFollowupList', currentFollowups, renderFollowupList); }
+
 document.getElementById('btnAddLigacao').addEventListener('click', ()=>{
-  currentFollowups.push({ data: todayISO(), observacao: '' });
+  adicionarLigacao(currentFollowups);
   renderFollowupList();
 });
 
@@ -4167,33 +4232,10 @@ function openFollowupModal(id){
   openModal('modalFollowup');
 }
 
-function renderFollowupOnlyList(){
-  const wrap = document.getElementById('followupOnlyList');
-  if(followupOnlyList.length === 0){
-    wrap.innerHTML = `<div class="followup-empty">Nenhuma ligação registrada ainda.</div>`;
-    return;
-  }
-  wrap.innerHTML = followupOnlyList.map((f,i)=>`
-    <div class="followup-row" data-idx="${i}">
-      <span class="followup-badge">${i+1}ª Ligação</span>
-      <input type="date" class="followup-date" value="${f.data || todayISO()}" />
-      <input type="text" class="followup-note" placeholder="O que foi conversado..." value="${(f.observacao||'').replace(/"/g,'&quot;')}" />
-      <button type="button" class="followup-remove" title="Remover ligação">×</button>
-    </div>
-  `).join('');
-  wrap.querySelectorAll('.followup-row').forEach(row=>{
-    const idx = Number(row.dataset.idx);
-    row.querySelector('.followup-date').addEventListener('change', (e)=>{ followupOnlyList[idx].data = e.target.value; });
-    row.querySelector('.followup-note').addEventListener('input', (e)=>{ followupOnlyList[idx].observacao = e.target.value; });
-    row.querySelector('.followup-remove').addEventListener('click', ()=>{
-      followupOnlyList.splice(idx,1);
-      renderFollowupOnlyList();
-    });
-  });
-}
+function renderFollowupOnlyList(){ renderFollowupRows('followupOnlyList', followupOnlyList, renderFollowupOnlyList); }
 
 document.getElementById('btnAddLigacaoStandalone').addEventListener('click', ()=>{
-  followupOnlyList.push({ data: todayISO(), observacao: '' });
+  adicionarLigacao(followupOnlyList);
   renderFollowupOnlyList();
 });
 
@@ -4319,7 +4361,7 @@ function drawEnviadosTable(){
   });
   const tbody = document.getElementById('envTableBody');
   if(rows.length===0){
-    tbody.innerHTML = `<tr class="empty-row"><td colspan="11">Nenhum orçamento enviado ao cliente ainda.</td></tr>`;
+    tbody.innerHTML = `<tr class="empty-row"><td colspan="12">Nenhum orçamento enviado ao cliente ainda.</td></tr>`;
     return;
   }
   tbody.innerHTML = rows.map(o=>`
@@ -4334,6 +4376,7 @@ function drawEnviadosTable(){
       <td>${fmtDate(o.data_aprovacao)}</td>
       <td>${leadTimeCell(o.data_envio)}</td>
       <td>${firstFollowupCell(o)}</td>
+      <td>${nextFollowupCell(o)}</td>
       <td class="row-actions">
         <button title="Ligações / Follow-up" data-followup="${o.id}">
           <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.13.96.36 1.9.7 2.81a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.91.34 1.85.57 2.81.7A2 2 0 0 1 22 16.92Z"/></svg>
@@ -4461,7 +4504,7 @@ function drawAprovadosTable(){
   });
   const tbody = document.getElementById('aprTableBody');
   if(rows.length===0){
-    tbody.innerHTML = `<tr class="empty-row"><td colspan="12">Nenhum orçamento aprovado ainda.</td></tr>`;
+    tbody.innerHTML = `<tr class="empty-row"><td colspan="13">Nenhum orçamento aprovado ainda.</td></tr>`;
     return;
   }
   tbody.innerHTML = rows.map(o=>`
@@ -4476,6 +4519,7 @@ function drawAprovadosTable(){
       <td>${etapaCell(o)}</td>
       <td>${leadTimeCell(o.etapa ? (o.etapa_entrada||o.updated_at) : o.data_aprovacao)}</td>
       <td>${firstFollowupCell(o)}</td>
+      <td>${nextFollowupCell(o)}</td>
       <td>${fmtDate(o.data_fechamento)}</td>
       <td class="row-actions">
         <button title="Ligações / Follow-up" data-followup="${o.id}">
@@ -4586,13 +4630,14 @@ function drawAssinaturaContratoTable(){
   const search = document.getElementById('assContSearch').value.toLowerCase();
   const rows = state.assinaturaContrato.filter(o => (!search || (o.cliente||'').toLowerCase().includes(search)) && passaFiltroData('assContF', o.etapa_entrada||o.updated_at));
   const tbody = document.getElementById('assContTableBody');
-  if(rows.length===0){ tbody.innerHTML = `<tr class="empty-row"><td colspan="8">Nenhum aluno nesta etapa.</td></tr>`; return; }
+  if(rows.length===0){ tbody.innerHTML = `<tr class="empty-row"><td colspan="9">Nenhum aluno nesta etapa.</td></tr>`; return; }
   tbody.innerHTML = rows.map(o=>`
     <tr>
       <td>${o.cliente||''}</td><td>${o.whatsapp||'—'}</td><td>${fmtMoney(o.valor)}</td><td>${o.vendedor?.nome||'—'}</td>
       <td>${simpleSelectHtml(o, ['Em Andamento','Concluído'], 'asscont-select', {'Em Andamento':'sit-enviado','Concluído':'sit-aprovado'})}</td>
       <td>${leadTimeCell(o.etapa_entrada||o.updated_at)}</td>
       <td>${firstFollowupCell(o)}</td>
+      <td>${nextFollowupCell(o)}</td>
       <td class="row-actions">
         <button title="Ligações / Follow-up" data-followup="${o.id}">${ICON_PHONE}</button>
         <button title="Reverter" class="danger" data-revert="${o.id}">${ICON_REVERT}</button>
@@ -4667,13 +4712,14 @@ function drawExamesTable(){
   const search = document.getElementById('exaSearch').value.toLowerCase();
   const rows = state.exames.filter(o => !search || (o.cliente||'').toLowerCase().includes(search));
   const tbody = document.getElementById('exaTableBody');
-  if(rows.length===0){ tbody.innerHTML = `<tr class="empty-row"><td colspan="8">Nenhum aluno nesta etapa.</td></tr>`; return; }
+  if(rows.length===0){ tbody.innerHTML = `<tr class="empty-row"><td colspan="9">Nenhum aluno nesta etapa.</td></tr>`; return; }
   tbody.innerHTML = rows.map(o=>`
     <tr>
       <td>${o.cliente||''}</td><td>${o.whatsapp||'—'}</td><td>${fmtMoney(o.valor)}</td><td>${o.vendedor?.nome||'—'}</td>
       <td>${simpleSelectHtml(o, ['Em Andamento','Concluído'], 'exame-select', {'Em Andamento':'sit-enviado','Concluído':'sit-aprovado'})}</td>
       <td>${leadTimeCell(o.etapa_entrada||o.updated_at)}</td>
       <td>${firstFollowupCell(o)}</td>
+      <td>${nextFollowupCell(o)}</td>
       <td class="row-actions">
         <button title="Ligações / Follow-up" data-followup="${o.id}">${ICON_PHONE}</button>
         <button title="Reverter" class="danger" data-revert="${o.id}">${ICON_REVERT}</button>
