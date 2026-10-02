@@ -2887,7 +2887,7 @@ const state = {
   clientesAprovados: [],
   agendadosPeriodo: { ano: new Date().getFullYear(), mes: new Date().getMonth() + 1 },
   resultadoTestePeriodo: { ano: new Date().getFullYear(), mes: new Date().getMonth() + 1 },
-  dashboardPeriodo: { ano: new Date().getFullYear(), mes: new Date().getMonth() + 1 },
+  dashboardPeriodo: { ano: new Date().getFullYear(), mes: new Date().getMonth() + 1, dia: new Date().getDate() },
   charts: {},
   currentView: 'dashboard',
   currentUser: null, // { usuario, nome, isSuperAdmin, permissoes, empresas }
@@ -3263,6 +3263,28 @@ async function initApp(){
 /* =====================================================================
    DASHBOARD
    ===================================================================== */
+/* Último dia útil (seg a sex) do mês */
+function ultimoDiaUtil(ano, mes){
+  let d = daysInMonth(ano, mes);
+  while(d > 1 && isWeekend(ano, mes, d)) d--;
+  return d;
+}
+/* Dia padrão do filtro do painel: hoje no mês/ano atual; senão, o último dia útil do mês */
+function diaPadraoDashboard(ano, mes){
+  const hoje = new Date();
+  if(ano === hoje.getFullYear() && mes === hoje.getMonth()+1) return hoje.getDate();
+  return ultimoDiaUtil(ano, mes);
+}
+function preencherDiasDashboard(){
+  const p = state.dashboardPeriodo;
+  const total = daysInMonth(p.ano, p.mes);
+  if(!p.dia || p.dia > total) p.dia = diaPadraoDashboard(p.ano, p.mes);
+  let html = '';
+  for(let d=1; d<=total; d++){
+    html += `<option value="${d}" ${p.dia===d?'selected':''}>Dia ${String(d).padStart(2,'0')} · ${DIAS_SEMANA[weekdayOf(p.ano,p.mes,d)]}</option>`;
+  }
+  document.getElementById('dashDia').innerHTML = html;
+}
 function buildDashboardToolbar(){
   const now = new Date();
   const p = state.dashboardPeriodo;
@@ -3270,12 +3292,15 @@ function buildDashboardToolbar(){
   for(let a = now.getFullYear()-2; a <= now.getFullYear()+1; a++) anos.push(a);
   const el = document.getElementById('dashboardToolbar');
   el.innerHTML = `
+    <select id="dashDia" title="Dia de referência das metas"></select>
     <select id="dashMes">${MESES.map((m,i)=>`<option value="${i+1}" ${p.mes===i+1?'selected':''}>${m}</option>`).join('')}</select>
     <select id="dashAno">${anos.map(a=>`<option value="${a}" ${p.ano===a?'selected':''}>${a}</option>`).join('')}</select>
     <div class="spacer"></div>
   `;
-  document.getElementById('dashMes').addEventListener('change', (e)=>{ p.mes = Number(e.target.value); renderDashboard(); });
-  document.getElementById('dashAno').addEventListener('change', (e)=>{ p.ano = Number(e.target.value); renderDashboard(); });
+  preencherDiasDashboard();
+  document.getElementById('dashDia').addEventListener('change', (e)=>{ p.dia = Number(e.target.value); renderDashboard(); });
+  document.getElementById('dashMes').addEventListener('change', (e)=>{ p.mes = Number(e.target.value); p.dia = diaPadraoDashboard(p.ano, p.mes); preencherDiasDashboard(); renderDashboard(); });
+  document.getElementById('dashAno').addEventListener('change', (e)=>{ p.ano = Number(e.target.value); p.dia = diaPadraoDashboard(p.ano, p.mes); preencherDiasDashboard(); renderDashboard(); });
 }
 
 const CHART_PALETTE = ['#1477a8','#f5c518','#1f9d55','#d64545','#8b5cf6','#0d9488','#e08e0b','#64748b','#db2777','#0891b2'];
@@ -3581,12 +3606,14 @@ async function renderFunilEtapas(){
 async function computeGaugeData(indicador, dataField, filtroFn){
   const p = state.dashboardPeriodo;
   const inicio = `${p.ano}-${String(p.mes).padStart(2,'0')}-01`;
-  const fim = `${p.ano}-${String(p.mes).padStart(2,'0')}-${String(daysInMonth(p.ano,p.mes)).padStart(2,'0')}`;
+  /* Meta e realizado acumulados do dia 1 até o dia selecionado (proporcional) */
+  const diaRef = Math.min(p.dia || daysInMonth(p.ano,p.mes), daysInMonth(p.ano,p.mes));
+  const fim = `${p.ano}-${String(p.mes).padStart(2,'0')}-${String(diaRef).padStart(2,'0')}`;
   let query = sb.from('orcamentos').select(dataField).gte(dataField, inicio).lte(dataField, fim);
   query = filtroFn(query);
   const [{ data: reais }, { data: metasRows }] = await Promise.all([
     query,
-    sb.from('metas').select('meta_qtd').eq('indicador', indicador).eq('ano', p.ano).eq('mes', p.mes)
+    sb.from('metas').select('meta_qtd').eq('indicador', indicador).eq('ano', p.ano).eq('mes', p.mes).lte('dia', diaRef)
   ]);
   const real = (reais||[]).length;
   const meta = (metasRows||[]).reduce((s,r)=> s + (Number(r.meta_qtd)||0), 0);
