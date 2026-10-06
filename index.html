@@ -459,6 +459,21 @@ tbody tr:last-child td{border-bottom:none;}
 .fu-prox{white-space:nowrap;font-weight:600;font-size:12.5px;}
 .fu-prox.atrasada{color:var(--danger);}
 .fu-prox.hoje{color:#b7791f;}
+/* Tela de Leads: Próx. Ligação em destaque (hoje = verde, atrasada = vermelho) */
+#orcTableBody .fu-prox.hoje,#orcTableBody .fu-prox.atrasada{
+  display:inline-block;color:#fff;font-weight:700;padding:3px 10px;border-radius:999px;
+}
+#orcTableBody .fu-prox.hoje{background:var(--success);}
+#orcTableBody .fu-prox.atrasada{background:var(--danger);}
+
+/* Aviso de ligações ao abrir o sistema */
+.alerta-lig-sec{margin-bottom:18px;}
+.alerta-lig-sec:last-child{margin-bottom:0;}
+.alerta-lig-titulo{display:flex;align-items:center;gap:8px;font-weight:700;font-size:13.5px;color:#fff;padding:8px 12px;border-radius:8px 8px 0 0;}
+.alerta-lig-titulo.atrasada{background:var(--danger);}
+.alerta-lig-titulo.hoje{background:var(--success);}
+.alerta-lig-sec table{min-width:0;font-size:12.8px;border:1px solid var(--border);border-top:none;}
+.alerta-lig-sec thead th{position:static;background:#f3f6f8;color:var(--text-muted);}
 
 .inline-select{
   padding:6px 9px;border:1.5px solid var(--border);border-radius:999px;font-size:12px;font-weight:700;
@@ -529,6 +544,8 @@ tbody tr:last-child td{border-bottom:none;}
   .rel-doc{box-shadow:none !important;padding:0 !important;max-width:none !important;border-radius:0 !important;}
   .rel-table th{background:var(--blue-800) !important;}
   .rel-table tr,.rel-chart,.rel-kpi{break-inside:avoid;}
+  .rel-kpis{grid-template-columns:repeat(4,1fr) !important;}
+  .rel-kpi{min-height:80px;}
   .rel-h2{break-after:avoid;}
 }
 .print-footer{display:none;}
@@ -566,13 +583,17 @@ tbody tr:last-child td{border-bottom:none;}
 .rel-titulo{font-family:'Poppins',sans-serif;font-weight:700;font-size:16px;color:var(--blue-800);}
 .rel-periodo{font-weight:700;font-size:13px;margin-top:2px;}
 .rel-meta{font-size:11px;color:var(--text-muted);margin-top:2px;}
-.rel-kpis{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:10px;margin-bottom:6px;}
-.rel-kpi{border:1px solid var(--border);border-top:3px solid var(--blue-600);border-radius:8px;padding:10px 12px;}
+.rel-kpis{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:6px;}
+.rel-kpi{
+  display:flex;flex-direction:column;justify-content:space-between;gap:8px;min-height:92px;
+  background:#fff;border:1px solid var(--border);border-top:4px solid var(--blue-600);border-radius:10px;
+  padding:12px 16px;box-shadow:0 1px 3px rgba(15,23,42,0.06);
+}
 .rel-kpi.y{border-top-color:var(--yellow-500);}
 .rel-kpi.g{border-top-color:var(--success);}
 .rel-kpi.r{border-top-color:var(--danger);}
-.rel-kpi .l{font-size:10.5px;text-transform:uppercase;color:var(--text-muted);font-weight:700;letter-spacing:.3px;}
-.rel-kpi .v{font-family:'Poppins',sans-serif;font-size:20px;font-weight:700;color:var(--blue-800);margin-top:2px;}
+.rel-kpi .l{font-size:10.5px;text-transform:uppercase;color:var(--text-muted);font-weight:700;letter-spacing:.4px;line-height:1.35;min-height:28px;}
+.rel-kpi .v{font-family:'Poppins',sans-serif;font-size:22px;font-weight:700;color:var(--blue-800);line-height:1.1;white-space:nowrap;}
 .rel-h2{font-family:'Poppins',sans-serif;font-size:14.5px;font-weight:700;color:var(--blue-800);margin:22px 0 8px;padding-bottom:5px;border-bottom:1px solid var(--border);display:flex;justify-content:space-between;align-items:baseline;gap:10px;}
 .rel-h2 .tot{font-size:12.5px;font-weight:600;color:var(--text-muted);font-family:'Inter',sans-serif;}
 .rel-table{width:100%;border-collapse:collapse;font-size:12.3px;min-width:0;margin-bottom:6px;}
@@ -586,7 +607,7 @@ tbody tr:last-child td{border-bottom:none;}
 .rel-chart img{width:100%;height:auto;display:block;}
 .rel-vazio{font-size:12.5px;color:var(--text-muted);padding:6px 2px;}
 .rel-footer{margin-top:26px;padding-top:8px;border-top:2px solid var(--blue-800);display:flex;justify-content:space-between;font-size:10.5px;color:var(--text-muted);gap:10px;flex-wrap:wrap;}
-@media (max-width:800px){ .rel-grid2{grid-template-columns:1fr;} .rel-header{flex-direction:column;align-items:flex-start;} .rel-info{text-align:left;} }
+@media (max-width:800px){ .rel-kpis{grid-template-columns:repeat(2,1fr);} .rel-grid2{grid-template-columns:1fr;} .rel-header{flex-direction:column;align-items:flex-start;} .rel-info{text-align:left;} }
 .mini-chart-canvas-wrap{height:100px;position:relative;}
 @media (max-width:900px){ .mini-chart-grid{grid-template-columns:repeat(2,1fr);} }
 @media (max-width:700px){ .gauge-grid{grid-template-columns:1fr;} .mini-chart-grid{grid-template-columns:1fr;} }
@@ -1925,6 +1946,21 @@ tbody tr:last-child td{border-bottom:none;}
 <!-- ============================================================= -->
 <!-- MODAL: AGENDAMENTO DE PROVA ESCRITA                            -->
 <!-- ============================================================= -->
+<!-- ============================================================= -->
+<!-- MODAL: AVISO DE LIGAÇÕES (ao abrir o sistema; fecha só no X)   -->
+<!-- ============================================================= -->
+<div class="modal-overlay hidden" id="modalAlertaLigacoes">
+  <div class="modal modal-wide" style="max-width:820px;">
+    <div class="modal-header">
+      <h3>Ligações para hoje e atrasadas</h3>
+      <button class="modal-close" data-close="modalAlertaLigacoes" title="Fechar (confirmo que li)">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 6 6 18M6 6l12 12"/></svg>
+      </button>
+    </div>
+    <div class="modal-body" id="alertaLigacoesBody"></div>
+  </div>
+</div>
+
 <div class="modal-overlay hidden" id="modalAgendarProva">
   <div class="modal">
     <div class="modal-header">
@@ -3264,7 +3300,75 @@ async function initApp(){
   if(state.multiEmpresaAtivo && !state.empresaAtual) return;
   await loadLookups();
   goToView('dashboard');
+  await mostrarAlertaLigacoes();
 }
+
+/* =====================================================================
+   AVISO DE LIGAÇÕES AO ABRIR O SISTEMA (hoje e atrasadas)
+   ===================================================================== */
+function telaDoRegistro(o){
+  if(o.situacao === 'Aberto') return { key:'orcamentos', label:'Leads' };
+  if(o.situacao_cliente === 'Aprovado') return { key:'aprovados', label: o.etapa ? (ETAPA_LABELS[o.etapa]||'Aprovados') : 'Aprovados' };
+  if(o.situacao === 'Enviado ao Cliente' && o.situacao_cliente !== 'Reprovado') return { key:'enviados', label:'Orçamento enviado' };
+  return null;
+}
+async function mostrarAlertaLigacoes(){
+  if(!sb) return;
+  const linhas = [];
+  const passo = 1000;
+  let de = 0;
+  while(true){
+    const { data, error } = await sb.from('orcamentos')
+      .select('id,cliente,whatsapp,vendedor_id,followup,situacao,situacao_cliente,etapa')
+      .not('followup','is',null).order('id').range(de, de + passo - 1);
+    if(error){ console.warn('Aviso de ligações:', error.message); return; }
+    linhas.push(...(data||[]));
+    if(!data || data.length < passo) break;
+    de += passo;
+  }
+  const hoje = todayISO();
+  const atrasadas = [], doDia = [];
+  linhas.forEach(o=>{
+    const tela = telaDoRegistro(o);
+    if(!tela || !canAccessView(tela.key)) return;
+    const prox = proximaLigacao(parseFollowups(o.followup));
+    if(!prox || !prox.data) return;
+    const item = { o, prox, tela };
+    if(prox.data < hoje) atrasadas.push(item);
+    else if(prox.data === hoje) doDia.push(item);
+  });
+  if(!atrasadas.length && !doDia.length) return;
+  atrasadas.sort((a,b)=> a.prox.data.localeCompare(b.prox.data));
+  doDia.sort((a,b)=> (a.o.cliente||'').localeCompare(b.o.cliente||'','pt-BR'));
+
+  const tabela = (itens, mostrarAtraso)=> `<table><thead><tr>
+      <th>Cliente</th><th>WhatsApp</th><th>Ligação</th><th>Data</th>${mostrarAtraso?'<th>Atraso</th>':''}<th>Tela</th><th>Vendedor</th>
+    </tr></thead><tbody>
+    ${itens.map(({o,prox,tela})=>`<tr>
+      <td>${escapeHtml(o.cliente||'')}</td>
+      <td>${escapeHtml(o.whatsapp||'—')}</td>
+      <td><b>${prox.etapa}</b></td>
+      <td>${fmtDate(prox.data)}</td>
+      ${mostrarAtraso?`<td>${leadTimeDias(prox.data+'T00:00:00')} dia(s)</td>`:''}
+      <td>${escapeHtml(tela.label)}</td>
+      <td>${escapeHtml((state.vendedores.find(v=>v.id===o.vendedor_id)||{}).nome||'—')}</td>
+    </tr>`).join('')}
+    </tbody></table>`;
+
+  let h = '';
+  if(atrasadas.length){
+    h += `<div class="alerta-lig-sec"><div class="alerta-lig-titulo atrasada">Atrasadas (${atrasadas.length})</div>${tabela(atrasadas, true)}</div>`;
+  }
+  if(doDia.length){
+    h += `<div class="alerta-lig-sec"><div class="alerta-lig-titulo hoje">Para hoje · ${fmtDate(hoje)} (${doDia.length})</div>${tabela(doDia, false)}</div>`;
+  }
+  document.getElementById('alertaLigacoesBody').innerHTML = h;
+  openModal('modalAlertaLigacoes');
+}
+/* Ao fechar o aviso no X, leva para a tela de Leads */
+document.querySelector('#modalAlertaLigacoes .modal-close').addEventListener('click', ()=>{
+  if(canAccessView('orcamentos')) goToView('orcamentos');
+});
 
 /* =====================================================================
    DASHBOARD
@@ -6239,6 +6343,7 @@ async function gerarRelatorio(){
         <div class="rel-kpi g"><div class="l">Vendas aprovadas</div><div class="v">${nAprov}</div></div>
         <div class="rel-kpi g"><div class="l">Valor aprovado</div><div class="v">${fmtMoney(relSoma(res.aprovados))}</div></div>
         <div class="rel-kpi"><div class="l">Conversão (aprov./leads)</div><div class="v">${relPct(nAprov, nLeads)}</div></div>
+        <div class="rel-kpi"><div class="l">Conversão (aprov./enviados)</div><div class="v">${relPct(nAprov, res.enviados.length)}</div></div>
         <div class="rel-kpi r"><div class="l">Leads reprovados</div><div class="v">${res.leads_reprovados.length}</div></div>
         <div class="rel-kpi g"><div class="l">Alunos concluídos</div><div class="v">${res.aprovado_final.length}</div></div>
       </div>`;
