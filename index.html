@@ -1307,6 +1307,24 @@ tbody tr:last-child td{border-bottom:none;}
       <section class="view" id="view-cad-backup">
         <p class="helper-text">Baixe uma cópia completa dos seus dados para o seu computador. Faça isso antes de qualquer mudança importante no sistema. O arquivo fica salvo no seu computador, não depende da internet e pode ser guardado onde você quiser.</p>
 
+        <div class="backup-card" style="margin-bottom:16px;">
+          <h3>Opções do backup</h3>
+          <p>Escolha a pasta onde os arquivos serão gravados e, se quiser, um período. Sem pasta escolhida, os arquivos vão para a pasta de Downloads do navegador. Sem período, o backup leva tudo.</p>
+          <div class="form-grid">
+            <div class="field full">
+              <label>Pasta de destino</label>
+              <div class="select-with-btn">
+                <input type="text" id="bkpPastaNome" value="Downloads do navegador (padrão)" readonly style="flex:1;" />
+                <button type="button" id="btnBkpEscolherPasta" style="font-weight:600;font-size:13px;">Escolher pasta</button>
+                <button type="button" id="btnBkpLimparPasta" style="font-size:13px;">Usar Downloads</button>
+              </div>
+            </div>
+            <div class="field"><label>Período — de</label><input type="date" id="bkpDataDe" /></div>
+            <div class="field"><label>Período — até</label><input type="date" id="bkpDataAte" /></div>
+          </div>
+          <p class="small muted" style="margin:0;">O período filtra os leads (pela data de abertura) e as metas/observações (pelo dia). Cadastros (empresas, usuários, vendedores, origens, motivos) vão sempre completos. A escolha de pasta funciona no Chrome e no Edge.</p>
+        </div>
+
         <div class="backup-grid">
           <div class="backup-card">
             <h3>Backup completo</h3>
@@ -1427,13 +1445,18 @@ tbody tr:last-child td{border-bottom:none;}
         <div class="field"><label>CPF</label><input type="text" id="orcCpf" placeholder="000.000.000-00" maxlength="14" /></div>
         <div class="field"><label>Valor (R$)</label><input type="number" step="0.01" min="0" id="orcValor" placeholder="0,00" /></div>
         <div class="field">
-          <label>Carteira</label>
-          <select id="orcCarteira">
-            <option value="">Selecione a carteira</option>
-            <option value="A">Carteira A</option>
-            <option value="B">Carteira B</option>
-            <option value="AB">Carteira AB</option>
-          </select>
+          <label>Produtos (Carteiras)</label>
+          <div class="select-with-btn">
+            <select id="orcCarteira">
+              <option value="">Selecione o produto</option>
+              <option value="A">Carteira A</option>
+              <option value="B">Carteira B</option>
+              <option value="AB">Carteira AB</option>
+            </select>
+            <button type="button" title="Incluir novo produto" id="btnNovoProdutoLead">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 5v14M5 12h14"/></svg>
+            </button>
+          </div>
         </div>
         <div class="field hidden" id="orcAulasAWrap">
           <label id="orcAulasALabel">Número de Aulas</label>
@@ -2679,24 +2702,104 @@ function carimboDeData(){
   return d.getFullYear()+'-'+p(d.getMonth()+1)+'-'+p(d.getDate())+'_'+p(d.getHours())+'h'+p(d.getMinutes());
 }
 
+/* ---------------------------- Opções: pasta e período --------------- */
+let bkpPastaHandle = null;
+
+document.getElementById('btnBkpEscolherPasta').addEventListener('click', async ()=>{
+  if(!window.showDirectoryPicker){
+    showToast('Este navegador não permite escolher pasta. Use o Chrome ou o Edge; por enquanto os arquivos irão para Downloads.', true);
+    return;
+  }
+  try{
+    const h = await window.showDirectoryPicker({ mode:'readwrite' });
+    bkpPastaHandle = h;
+    document.getElementById('bkpPastaNome').value = 'Pasta: ' + h.name;
+    showToast('Pasta selecionada: ' + h.name);
+  }catch(err){
+    if(err && err.name === 'AbortError') return;
+    showToast('Não foi possível usar a pasta: ' + err.message, true);
+  }
+});
+document.getElementById('btnBkpLimparPasta').addEventListener('click', ()=>{
+  bkpPastaHandle = null;
+  document.getElementById('bkpPastaNome').value = 'Downloads do navegador (padrão)';
+});
+
+/* Grava na pasta escolhida; se não houver pasta (ou falhar), baixa normalmente */
+async function salvarArquivoBackup(nomeArquivo, conteudo, tipo){
+  if(bkpPastaHandle){
+    try{
+      if(bkpPastaHandle.queryPermission && (await bkpPastaHandle.queryPermission({mode:'readwrite'})) !== 'granted'){
+        if((await bkpPastaHandle.requestPermission({mode:'readwrite'})) !== 'granted') throw new Error('permissão negada');
+      }
+      const fh = await bkpPastaHandle.getFileHandle(nomeArquivo, { create:true });
+      const w = await fh.createWritable();
+      await w.write(new Blob([conteudo], { type: tipo + ';charset=utf-8;' }));
+      await w.close();
+      return 'pasta';
+    }catch(err){
+      logBackup('Não gravou na pasta (' + err.message + '); enviando para Downloads.', 'warn');
+    }
+  }
+  baixarArquivo(nomeArquivo, conteudo, tipo);
+  return 'download';
+}
+
+function lerPeriodoBackup(){
+  const de = document.getElementById('bkpDataDe').value || '';
+  const ate = document.getElementById('bkpDataAte').value || '';
+  if(de && ate && de > ate){ showToast('A data inicial do período é maior que a final.', true); return null; }
+  return { de, ate, ativo: !!(de || ate) };
+}
+
+/* Data de referência de cada registro para o filtro de período (null = tabela sem filtro) */
+function dataRefBackup(tabela, l){
+  if(tabela === 'orcamentos') return l.data_abertura || '';
+  if(tabela === 'metas' || tabela === 'observacoes_indicador'){
+    if(!l.ano || !l.mes) return '';
+    const p = (n)=> String(n).padStart(2,'0');
+    return l.ano + '-' + p(l.mes) + '-' + p(l.dia || 1);
+  }
+  return null;
+}
+function filtrarPeriodoBackup(tabela, linhas, periodo){
+  if(!periodo || !periodo.ativo) return linhas;
+  return linhas.filter(l=>{
+    const d = dataRefBackup(tabela, l);
+    if(d === null) return true;
+    if(!d) return false;
+    if(periodo.de && d < periodo.de) return false;
+    if(periodo.ate && d > periodo.ate) return false;
+    return true;
+  });
+}
+function sufixoPeriodoBackup(periodo){
+  if(!periodo || !periodo.ativo) return '';
+  return '_periodo_' + (periodo.de || 'inicio') + '_a_' + (periodo.ate || 'hoje');
+}
+
 /* ---------------------------- Backup completo (JSON) ---------------- */
 document.getElementById('btnBackupJson').addEventListener('click', async ()=>{
   const btn = document.getElementById('btnBackupJson');
   if(!sb){ showToast('Sem conexão com o banco de dados.', true); return; }
+  const periodo = lerPeriodoBackup();
+  if(!periodo) return;
   btn.disabled = true;
   limparLogBackup();
   logBackup('Iniciando backup completo...');
+  if(periodo.ativo) logBackup('Período: ' + (periodo.de || 'início') + ' até ' + (periodo.ate || 'hoje'));
   const pacote = {
     gerado_em: new Date().toISOString(),
     gerado_por: state.currentUser ? state.currentUser.usuario : '',
     versao: 1,
+    periodo: periodo.ativo ? { de: periodo.de || null, ate: periodo.ate || null } : null,
     tabelas: {}
   };
   let total = 0;
   try{
     for(const t of TABELAS_BACKUP){
       try{
-        const linhas = await lerTabelaCompleta(t);
+        const linhas = filtrarPeriodoBackup(t, await lerTabelaCompleta(t), periodo);
         pacote.tabelas[t] = linhas;
         total += linhas.length;
         logBackup(t + ': ' + linhas.length + ' registro(s)', 'ok');
@@ -2705,9 +2808,9 @@ document.getElementById('btnBackupJson').addEventListener('click', async ()=>{
         logBackup(t + ': não encontrada no banco (ignorada)', 'warn');
       }
     }
-    const nome = 'backup_gestao_vendas_' + carimboDeData() + '.json';
-    baixarArquivo(nome, JSON.stringify(pacote, null, 2), 'application/json');
-    logBackup('Concluído: ' + total + ' registros no arquivo ' + nome, 'ok');
+    const nome = 'backup_gestao_vendas_' + carimboDeData() + sufixoPeriodoBackup(periodo) + '.json';
+    const destino = await salvarArquivoBackup(nome, JSON.stringify(pacote, null, 2), 'application/json');
+    logBackup('Concluído: ' + total + ' registros no arquivo ' + nome + (destino === 'pasta' ? ' (gravado na pasta ' + bkpPastaHandle.name + ')' : ''), 'ok');
     logBackup('Guarde este arquivo em um lugar seguro (pendrive, Google Drive, e-mail).');
     showToast('Backup baixado com sucesso.');
   }catch(err){
@@ -2736,19 +2839,22 @@ function paraCsv(linhas){
 document.getElementById('btnBackupCsv').addEventListener('click', async ()=>{
   const btn = document.getElementById('btnBackupCsv');
   if(!sb){ showToast('Sem conexão com o banco de dados.', true); return; }
+  const periodo = lerPeriodoBackup();
+  if(!periodo) return;
   btn.disabled = true;
   limparLogBackup();
   logBackup('Gerando planilhas...');
-  const carimbo = carimboDeData();
+  if(periodo.ativo) logBackup('Período: ' + (periodo.de || 'início') + ' até ' + (periodo.ate || 'hoje'));
+  const carimbo = carimboDeData() + sufixoPeriodoBackup(periodo);
   try{
     for(const t of TABELAS_BACKUP){
       if(t === 'usuarios') continue; /* não exporta senhas em planilha */
       try{
-        const linhas = await lerTabelaCompleta(t);
+        const linhas = filtrarPeriodoBackup(t, await lerTabelaCompleta(t), periodo);
         if(!linhas.length){ logBackup(t + ': vazia, pulando', 'warn'); continue; }
-        baixarArquivo(t + '_' + carimbo + '.csv', paraCsv(linhas), 'text/csv');
-        logBackup(t + ': ' + linhas.length + ' linha(s) baixadas', 'ok');
-        await new Promise(r=> setTimeout(r, 400)); /* o navegador precisa de um respiro entre downloads */
+        const destino = await salvarArquivoBackup(t + '_' + carimbo + '.csv', paraCsv(linhas), 'text/csv');
+        logBackup(t + ': ' + linhas.length + ' linha(s) ' + (destino === 'pasta' ? 'gravadas na pasta' : 'baixadas'), 'ok');
+        if(destino !== 'pasta') await new Promise(r=> setTimeout(r, 400)); /* o navegador precisa de um respiro entre downloads */
       }catch(err){
         logBackup(t + ': não encontrada no banco (ignorada)', 'warn');
       }
@@ -3263,11 +3369,14 @@ async function loadLookups(){
     showToast('Não foi possível conectar ao Supabase (verifique sua internet e a configuração no início do script).', true);
     return;
   }
-  const [{data:origens}, {data:vendedores}, {data:motivos}] = await Promise.all([
+  const [{data:origens}, {data:vendedores}, {data:motivos}, {data:produtos}] = await Promise.all([
     sb.from('origens').select('*').order('nome'),
     sb.from('vendedores').select('*').order('nome'),
-    sb.from('motivos_reprovacao').select('*').order('nome')
+    sb.from('motivos_reprovacao').select('*').order('nome'),
+    sb.from('produtos').select('*').order('nome')
   ]);
+  state.produtos = produtos || [];
+  fillProdutosSelect();
   state.origens = origens || [];
   state.vendedores = vendedores || [];
   state.motivos = motivos || [];
@@ -3278,6 +3387,19 @@ async function loadLookups(){
   fillFilterSelect('orcFiltroVendedor', state.vendedores, 'Vendedor: Todos');
   fillFilterSelect('orcFiltroOrigem', state.origens, 'Origem: Todas');
   fillFilterSelect('aprFiltroOrigem', state.origens, 'Origem: Todas');
+}
+/* Produtos (Carteiras): A, B e AB fixos (controlam nº de aulas) + produtos cadastrados na tabela "produtos" */
+function fillProdutosSelect(extraValor){
+  const el = document.getElementById('orcCarteira');
+  if(!el) return;
+  const atual = extraValor !== undefined ? extraValor : el.value;
+  const fixos = ['A','B','AB'];
+  const extras = (state.produtos||[]).filter(p=>p.ativo && !fixos.includes(p.nome)).map(p=>p.nome);
+  if(atual && !fixos.includes(atual) && !extras.includes(atual)) extras.push(atual);
+  el.innerHTML = '<option value="">Selecione o produto</option>' +
+    fixos.map(c=>`<option value="${c}">Carteira ${c}</option>`).join('') +
+    extras.map(n=>`<option value="${escapeHtml(n)}">${escapeHtml(n)}</option>`).join('');
+  el.value = atual || '';
 }
 function fillSelect(id, list, placeholder){
   const el = document.getElementById(id);
@@ -3866,6 +3988,7 @@ function carteiraBadge(c){
   if(c === 'A') return '<span class="badge badge-blue">Carteira A</span>';
   if(c === 'B') return '<span class="badge badge-blue">Carteira B</span>';
   if(c === 'AB') return '<span class="badge badge-blue">Carteira AB</span>';
+  if(c) return `<span class="badge badge-blue">${escapeHtml(c)}</span>`;
   return '<span class="muted">—</span>';
 }
 function aulasBreakdownCell(o){
@@ -4178,7 +4301,7 @@ function openOrcamentoModal(id){
     document.getElementById('orcWhatsapp').value = o.whatsapp || '';
     document.getElementById('orcCpf').value = o.cpf || '';
     document.getElementById('orcValor').value = o.valor || '';
-    document.getElementById('orcCarteira').value = o.carteira || '';
+    fillProdutosSelect(o.carteira || '');
     document.getElementById('orcAulasA').value = o.aulas_carteira_a || '';
     document.getElementById('orcAulasB').value = o.aulas_carteira_b || '';
     document.getElementById('orcOrigem').value = o.origem_id || '';
@@ -4193,7 +4316,7 @@ function openOrcamentoModal(id){
     document.getElementById('orcWhatsapp').value = '';
     document.getElementById('orcCpf').value = '';
     document.getElementById('orcValor').value = '';
-    document.getElementById('orcCarteira').value = '';
+    fillProdutosSelect('');
     document.getElementById('orcAulasA').value = '';
     document.getElementById('orcAulasB').value = '';
     document.getElementById('orcOrigem').value = '';
@@ -5535,13 +5658,15 @@ document.getElementById('finSearch').addEventListener('input', drawClientesAprov
 const cadastroConfig = {
   vendedores: { tabela:'vendedores', tbody:'vendedoresTableBody', label:'Vendedor' },
   origens: { tabela:'origens', tbody:'origensTableBody', label:'Origem' },
-  motivos_reprovacao: { tabela:'motivos_reprovacao', tbody:'motivosTableBody', label:'Motivo' }
+  motivos_reprovacao: { tabela:'motivos_reprovacao', tbody:'motivosTableBody', label:'Motivo' },
+  produtos: { tabela:'produtos', tbody:null, label:'Produto' }
 };
 let cadastroAtual = null;
 
 async function renderCadastroSimples(tabela){
   cadastroAtual = tabela;
   const cfg = cadastroConfig[tabela];
+  if(!cfg.tbody) return;
   const { data, error } = await sb.from(tabela).select('*').order('nome');
   if(error){ showToast('Erro ao carregar: '+error.message, true); return; }
   const tbody = document.getElementById(cfg.tbody);
@@ -5579,6 +5704,7 @@ function openCadastroModal(tabela, item){
 document.getElementById('btnNovoVendedor').addEventListener('click', ()=> openCadastroModal('vendedores', null));
 document.getElementById('btnNovaOrigem').addEventListener('click', ()=> openCadastroModal('origens', null));
 document.getElementById('btnNovoMotivo').addEventListener('click', ()=> openCadastroModal('motivos_reprovacao', null));
+document.getElementById('btnNovoProdutoLead').addEventListener('click', ()=> openCadastroModal('produtos', null));
 
 document.getElementById('btnSalvarCadastro').addEventListener('click', async ()=>{
   const tabela = document.getElementById('cadTabela').value;
@@ -5597,6 +5723,10 @@ document.getElementById('btnSalvarCadastro').addEventListener('click', async ()=
   showToast('Salvo com sucesso.');
   closeModal('modalCadastroSimples');
   await loadLookups();
+  if(tabela === 'produtos' && !id){
+    fillProdutosSelect(nome);
+    updateOrcCarteiraUI();
+  }
   renderCadastroSimples(tabela);
 });
 
