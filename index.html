@@ -2684,6 +2684,26 @@ async function lerTabelaCompleta(tabela){
   return linhas;
 }
 
+/* Busca TODAS as linhas de uma consulta, de mil em mil (o Supabase
+   devolve no máximo 1.000 por consulta). Recebe uma função que monta
+   a consulta (com filtros e ordem) e devolve { data, error }, no mesmo
+   formato de uma consulta normal. O desempate por id garante que
+   nenhuma linha se repita ou fique de fora entre as páginas. */
+async function buscarTodos(montarConsulta){
+  const linhas = [];
+  const passo = 1000;
+  let de = 0;
+  while(true){
+    const { data, error } = await montarConsulta().order('id').range(de, de + passo - 1);
+    if(error) return { data: null, error };
+    const lote = data || [];
+    linhas.push(...lote);
+    if(lote.length < passo) break;
+    de += passo;
+  }
+  return { data: linhas, error: null };
+}
+
 function baixarArquivo(nomeArquivo, conteudo, tipo){
   const blob = new Blob([conteudo], { type: tipo + ';charset=utf-8;' });
   const url = URL.createObjectURL(blob);
@@ -3697,9 +3717,9 @@ async function renderDashboard(){
   ] = await Promise.all([
     sb.from('orcamentos').select('*',{count:'exact',head:true}).eq('situacao','Aberto'),
     sb.from('orcamentos').select('*',{count:'exact',head:true}).eq('situacao','Enviado ao Cliente').eq('situacao_cliente','Aguardando Cliente'),
-    sb.from('orcamentos').select('valor, origem_id').gte('data_abertura', inicio).lte('data_abertura', fim),
-    sb.from('orcamentos').select('valor').eq('situacao_cliente','Aprovado').gte('data_aprovacao', inicio).lte('data_aprovacao', fim),
-    sb.from('orcamentos').select('valor, data_aprovacao').eq('situacao_cliente','Aprovado').gte('data_aprovacao', inicioAno).lte('data_aprovacao', fimAno)
+    buscarTodos(()=> sb.from('orcamentos').select('valor, origem_id').gte('data_abertura', inicio).lte('data_abertura', fim)),
+    buscarTodos(()=> sb.from('orcamentos').select('valor').eq('situacao_cliente','Aprovado').gte('data_aprovacao', inicio).lte('data_aprovacao', fim)),
+    buscarTodos(()=> sb.from('orcamentos').select('valor, data_aprovacao').eq('situacao_cliente','Aprovado').gte('data_aprovacao', inicioAno).lte('data_aprovacao', fimAno))
   ]);
 
   const totalQtd = (orcamentosMes||[]).length;
@@ -3841,8 +3861,7 @@ async function computeGaugeData(indicador, dataField, filtroFn){
   /* Meta e realizado acumulados do dia 1 até o dia selecionado (proporcional) */
   const diaRef = Math.min(p.dia || daysInMonth(p.ano,p.mes), daysInMonth(p.ano,p.mes));
   const fim = `${p.ano}-${String(p.mes).padStart(2,'0')}-${String(diaRef).padStart(2,'0')}`;
-  let query = sb.from('orcamentos').select(dataField).gte(dataField, inicio).lte(dataField, fim);
-  query = filtroFn(query);
+  const query = buscarTodos(()=> filtroFn(sb.from('orcamentos').select(dataField).gte(dataField, inicio).lte(dataField, fim)));
   const [{ data: reais }, { data: metasRows }] = await Promise.all([
     query,
     sb.from('metas').select('meta_qtd').eq('indicador', indicador).eq('ano', p.ano).eq('mes', p.mes).lte('dia', diaRef)
@@ -3894,10 +3913,10 @@ function renderGauge(canvasId, chartKey, pct, real, meta, metaElId){
    ORÇAMENTOS
    ===================================================================== */
 async function fetchOrcamentos(){
-  const { data, error } = await sb.from('orcamentos')
+  const { data, error } = await buscarTodos(()=> sb.from('orcamentos')
     .select('*, origem:origens(id,nome), vendedor:vendedores(id,nome), motivo:motivos_reprovacao!motivo_reprovado_id(id,nome)')
     .eq('situacao','Aberto')
-    .order('data_abertura',{ascending:false});
+    .order('data_abertura',{ascending:false}));
   if(error){ showToast('Erro ao carregar orçamentos: '+error.message, true); return []; }
   return data || [];
 }
@@ -4016,10 +4035,10 @@ function situacaoSelectHtml(o){
    LEADS REPROVADOS
    ===================================================================== */
 async function fetchLeadsReprovados(){
-  const { data, error } = await sb.from('orcamentos')
+  const { data, error } = await buscarTodos(()=> sb.from('orcamentos')
     .select('*, origem:origens(id,nome), vendedor:vendedores(id,nome), motivo:motivos_reprovacao!motivo_reprovado_id(id,nome)')
     .or('situacao.eq.Reprovado,situacao_cliente.eq.Reprovado')
-    .order('data_abertura',{ascending:false});
+    .order('data_abertura',{ascending:false}));
   if(error){ showToast('Erro ao carregar leads reprovados: '+error.message, true); return []; }
   /* Reprovados na tela "Orçamento enviado" gravam o motivo em motivo_reprovado_cliente_id */
   return (data || []).map(o=>{
@@ -4574,11 +4593,11 @@ async function deleteOrcamento(id){
    ENVIADO AO CLIENTE
    ===================================================================== */
 async function fetchEnviados(){
-  const { data, error } = await sb.from('orcamentos')
+  const { data, error } = await buscarTodos(()=> sb.from('orcamentos')
     .select('*, origem:origens(id,nome), vendedor:vendedores(id,nome)')
     .eq('situacao','Enviado ao Cliente')
     .not('situacao_cliente','in','("Aprovado","Reprovado")') /* reprovados ficam só em Leads reprovados */
-    .order('data_envio',{ascending:false});
+    .order('data_envio',{ascending:false}));
   if(error){ showToast('Erro ao carregar: '+error.message, true); return []; }
   return data || [];
 }
@@ -4720,10 +4739,10 @@ document.getElementById('btnSalvarEnviado').addEventListener('click', async ()=>
    APROVADOS
    ===================================================================== */
 async function fetchAprovados(){
-  const { data, error } = await sb.from('orcamentos')
+  const { data, error } = await buscarTodos(()=> sb.from('orcamentos')
     .select('*, origem:origens(id,nome), vendedor:vendedores(id,nome)')
     .eq('situacao_cliente','Aprovado')
-    .order('data_aprovacao',{ascending:false});
+    .order('data_aprovacao',{ascending:false}));
   if(error){ showToast('Erro ao carregar aprovados: '+error.message, true); return []; }
   return data || [];
 }
@@ -4862,7 +4881,7 @@ function pendenteBadge(feito, textoFeito, textoPendente){
 
 /* ---------- 0a) ASSINATURA DE CONTRATO ---------- */
 async function fetchAssinaturaContrato(){
-  const { data, error } = await sb.from('orcamentos').select('*, vendedor:vendedores(id,nome)').eq('etapa','assinatura_contrato').order('updated_at',{ascending:false});
+  const { data, error } = await buscarTodos(()=> sb.from('orcamentos').select('*, vendedor:vendedores(id,nome)').eq('etapa','assinatura_contrato').order('updated_at',{ascending:false}));
   if(error){ showToast('Erro ao carregar: '+error.message, true); return []; }
   return data || [];
 }
@@ -4901,7 +4920,7 @@ async function quickChangeAssinaturaContrato(id, novoValor){
 
 /* ---------- 0b) COBRANÇA (CONTRATO) ---------- */
 async function fetchCobrancaContrato(){
-  const { data, error } = await sb.from('orcamentos').select('*').eq('etapa','cobranca_contrato').order('updated_at',{ascending:false});
+  const { data, error } = await buscarTodos(()=> sb.from('orcamentos').select('*').eq('etapa','cobranca_contrato').order('updated_at',{ascending:false}));
   if(error){ showToast('Erro ao carregar: '+error.message, true); return []; }
   return data || [];
 }
@@ -4944,7 +4963,7 @@ document.getElementById('btnConfirmarPagamentoContrato').addEventListener('click
 
 /* ---------- 1) EXAMES ---------- */
 async function fetchExames(){
-  const { data, error } = await sb.from('orcamentos').select('*, vendedor:vendedores(id,nome)').eq('etapa','exames').order('data_aprovacao',{ascending:false});
+  const { data, error } = await buscarTodos(()=> sb.from('orcamentos').select('*, vendedor:vendedores(id,nome)').eq('etapa','exames').order('data_aprovacao',{ascending:false}));
   if(error){ showToast('Erro ao carregar: '+error.message, true); return []; }
   return data || [];
 }
@@ -4983,7 +5002,7 @@ async function quickChangeExame(id, novoValor){
 
 /* ---------- 2) CONFERÊNCIA DE RESULTADOS ---------- */
 async function fetchConferencia(){
-  const { data, error } = await sb.from('orcamentos').select('*, vendedor:vendedores(id,nome)').eq('etapa','conferencia').order('updated_at',{ascending:false});
+  const { data, error } = await buscarTodos(()=> sb.from('orcamentos').select('*, vendedor:vendedores(id,nome)').eq('etapa','conferencia').order('updated_at',{ascending:false}));
   if(error){ showToast('Erro ao carregar: '+error.message, true); return []; }
   return data || [];
 }
@@ -5036,7 +5055,7 @@ document.getElementById('btnConfirmarReprovacaoExame').addEventListener('click',
 
 /* ---------- 3) ALUNOS REPROVADOS (repescagem) ---------- */
 async function fetchAlunosReprovados(){
-  const { data, error } = await sb.from('orcamentos').select('*').eq('etapa','reprovados').order('updated_at',{ascending:false});
+  const { data, error } = await buscarTodos(()=> sb.from('orcamentos').select('*').eq('etapa','reprovados').order('updated_at',{ascending:false}));
   if(error){ showToast('Erro ao carregar: '+error.message, true); return []; }
   return data || [];
 }
@@ -5073,7 +5092,7 @@ async function quickChangeReprovado(id, novoValor){
 
 /* ---------- 4) COBRANÇA ---------- */
 async function fetchCobranca(){
-  const { data, error } = await sb.from('orcamentos').select('*').eq('etapa','cobranca').order('updated_at',{ascending:false});
+  const { data, error } = await buscarTodos(()=> sb.from('orcamentos').select('*').eq('etapa','cobranca').order('updated_at',{ascending:false}));
   if(error){ showToast('Erro ao carregar: '+error.message, true); return []; }
   return data || [];
 }
@@ -5116,7 +5135,7 @@ document.getElementById('btnConfirmarPagamento').addEventListener('click', async
 
 /* ---------- 5) AGENDAMENTO DE AULAS PRÁTICAS ---------- */
 async function fetchAulas(){
-  const { data, error } = await sb.from('orcamentos').select('*').eq('etapa','aulas').order('updated_at',{ascending:false});
+  const { data, error } = await buscarTodos(()=> sb.from('orcamentos').select('*').eq('etapa','aulas').order('updated_at',{ascending:false}));
   if(error){ showToast('Erro ao carregar: '+error.message, true); return []; }
   return data || [];
 }
@@ -5164,7 +5183,7 @@ document.getElementById('btnConfirmarAgendaAula').addEventListener('click', asyn
 
 /* ---------- 6) ALUNOS AGENDADOS ---------- */
 async function fetchAgendados(){
-  const { data, error } = await sb.from('orcamentos').select('*').eq('etapa','agendados').order('data_aula_agendada',{ascending:false});
+  const { data, error } = await buscarTodos(()=> sb.from('orcamentos').select('*').eq('etapa','agendados').order('data_aula_agendada',{ascending:false}));
   if(error){ showToast('Erro ao carregar: '+error.message, true); return []; }
   return data || [];
 }
@@ -5244,7 +5263,7 @@ async function quickChangeAgendado(id, novoValor){
 
 /* ---------- 6b) COBRANÇA (CURSO) ---------- */
 async function fetchCobrancaCurso(){
-  const { data, error } = await sb.from('orcamentos').select('*').eq('etapa','cobranca_curso').order('updated_at',{ascending:false});
+  const { data, error } = await buscarTodos(()=> sb.from('orcamentos').select('*').eq('etapa','cobranca_curso').order('updated_at',{ascending:false}));
   if(error){ showToast('Erro ao carregar: '+error.message, true); return []; }
   return data || [];
 }
@@ -5287,7 +5306,7 @@ document.getElementById('btnConfirmarPagamentoCurso').addEventListener('click', 
 
 /* ---------- 6c) AGENDAMENTO DE PROVA ESCRITA ---------- */
 async function fetchProvaEscritaAgendamento(){
-  const { data, error } = await sb.from('orcamentos').select('*').eq('etapa','prova_escrita_agendamento').order('updated_at',{ascending:false});
+  const { data, error } = await buscarTodos(()=> sb.from('orcamentos').select('*').eq('etapa','prova_escrita_agendamento').order('updated_at',{ascending:false}));
   if(error){ showToast('Erro ao carregar: '+error.message, true); return []; }
   return data || [];
 }
@@ -5331,7 +5350,7 @@ document.getElementById('btnConfirmarAgendaProva').addEventListener('click', asy
 
 /* ---------- 6d) AGUARDANDO RESULTADO DA PROVA ESCRITA ---------- */
 async function fetchProvaEscritaAguardando(){
-  const { data, error } = await sb.from('orcamentos').select('*').eq('etapa','prova_escrita_aguardando').order('data_prova_escrita',{ascending:false});
+  const { data, error } = await buscarTodos(()=> sb.from('orcamentos').select('*').eq('etapa','prova_escrita_aguardando').order('data_prova_escrita',{ascending:false}));
   if(error){ showToast('Erro ao carregar: '+error.message, true); return []; }
   return data || [];
 }
@@ -5378,7 +5397,7 @@ async function quickChangeProvaEscritaAguardando(id, novoValor){
 
 /* ---------- 6e) REPROVADO NA PROVA ESCRITA ---------- */
 async function fetchProvaEscritaReprovado(){
-  const { data, error } = await sb.from('orcamentos').select('*').eq('etapa','prova_escrita_reprovado').order('updated_at',{ascending:false});
+  const { data, error } = await buscarTodos(()=> sb.from('orcamentos').select('*').eq('etapa','prova_escrita_reprovado').order('updated_at',{ascending:false}));
   if(error){ showToast('Erro ao carregar: '+error.message, true); return []; }
   return data || [];
 }
@@ -5412,7 +5431,7 @@ async function reprogramarProvaEscrita(id){
 
 /* ---------- 6f) CONFERÊNCIA DE COBRANÇA ---------- */
 async function fetchConferenciaCobranca(){
-  const { data, error } = await sb.from('orcamentos').select('*').eq('etapa','conferencia_cobranca').order('updated_at',{ascending:false});
+  const { data, error } = await buscarTodos(()=> sb.from('orcamentos').select('*').eq('etapa','conferencia_cobranca').order('updated_at',{ascending:false}));
   if(error){ showToast('Erro ao carregar: '+error.message, true); return []; }
   return data || [];
 }
@@ -5446,7 +5465,7 @@ async function confirmarConferenciaCobranca(id){
 
 /* ---------- 7) AGENDAMENTO DE AULAS PRÁTICAS ---------- */
 async function fetchTestePratico(){
-  const { data, error } = await sb.from('orcamentos').select('*').eq('etapa','teste_pratico').order('updated_at',{ascending:false});
+  const { data, error } = await buscarTodos(()=> sb.from('orcamentos').select('*').eq('etapa','teste_pratico').order('updated_at',{ascending:false}));
   if(error){ showToast('Erro ao carregar: '+error.message, true); return []; }
   return data || [];
 }
@@ -5517,7 +5536,7 @@ async function marcarAusenteTestePratico(id){
 
 /* ---------- 8) AGENDAMENTO DE TESTE DE VOLANTE ---------- */
 async function fetchResultadoTeste(){
-  const { data, error } = await sb.from('orcamentos').select('*').eq('etapa','resultado_teste').order('updated_at',{ascending:false});
+  const { data, error } = await buscarTodos(()=> sb.from('orcamentos').select('*').eq('etapa','resultado_teste').order('updated_at',{ascending:false}));
   if(error){ showToast('Erro ao carregar: '+error.message, true); return []; }
   return data || [];
 }
@@ -5584,7 +5603,7 @@ document.getElementById('btnConfirmarAgendaVolante').addEventListener('click', a
 
 /* ---------- 9) RESULTADO TESTE DE VOLANTE ---------- */
 async function fetchTesteVolanteResultado(){
-  const { data, error } = await sb.from('orcamentos').select('*').eq('etapa','teste_volante_resultado').order('data_teste_volante',{ascending:false});
+  const { data, error } = await buscarTodos(()=> sb.from('orcamentos').select('*').eq('etapa','teste_volante_resultado').order('data_teste_volante',{ascending:false}));
   if(error){ showToast('Erro ao carregar: '+error.message, true); return []; }
   return data || [];
 }
@@ -5626,7 +5645,7 @@ async function quickChangeTesteVolanteResultado(id, novoValor){
 
 /* ---------- 10) ALUNOS APROVADOS (final) ---------- */
 async function fetchClientesAprovados(){
-  const { data, error } = await sb.from('orcamentos').select('*, vendedor:vendedores(id,nome)').eq('etapa','aprovado_final').order('data_teste_volante',{ascending:false});
+  const { data, error } = await buscarTodos(()=> sb.from('orcamentos').select('*, vendedor:vendedores(id,nome)').eq('etapa','aprovado_final').order('data_teste_volante',{ascending:false}));
   if(error){ showToast('Erro ao carregar: '+error.message, true); return []; }
   return data || [];
 }
@@ -5804,9 +5823,9 @@ async function renderIndicadorContato(){
 
   const inicio = `${p.ano}-${String(p.mes).padStart(2,'0')}-01`;
   const fim = `${p.ano}-${String(p.mes).padStart(2,'0')}-${String(daysInMonth(p.ano,p.mes)).padStart(2,'0')}`;
-  const { data, error } = await sb.from('orcamentos')
+  const { data, error } = await buscarTodos(()=> sb.from('orcamentos')
     .select('data_abertura, valor, origem_id')
-    .gte('data_abertura', inicio).lte('data_abertura', fim);
+    .gte('data_abertura', inicio).lte('data_abertura', fim));
 
   const body = document.getElementById('indContatoBody');
   if(error){ body.innerHTML = `<tr class="empty-row"><td colspan="${origensAtivas.length+3}">Erro ao carregar: ${error.message}</td></tr>`; return; }
@@ -5854,9 +5873,7 @@ async function renderIndicadorMeta(indicador){
   const inicio = `${p.ano}-${String(p.mes).padStart(2,'0')}-01`;
   const fim = `${p.ano}-${String(p.mes).padStart(2,'0')}-${String(dias).padStart(2,'0')}`;
 
-  let query = sb.from('orcamentos').select(`${cfg.dataField}, valor`).gte(cfg.dataField, inicio).lte(cfg.dataField, fim);
-  query = cfg.filtro(query);
-  const { data: reais, error } = await query;
+  const { data: reais, error } = await buscarTodos(()=> cfg.filtro(sb.from('orcamentos').select(`${cfg.dataField}, valor`).gte(cfg.dataField, inicio).lte(cfg.dataField, fim)));
 
   const { data: metas } = await sb.from('metas').select('*').eq('indicador', cfg.key).eq('ano', p.ano).eq('mes', p.mes);
   const { data: obs } = await sb.from('observacoes_indicador').select('*').eq('indicador', cfg.key).eq('ano', p.ano).eq('mes', p.mes);
