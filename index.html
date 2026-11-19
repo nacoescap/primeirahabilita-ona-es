@@ -616,6 +616,56 @@ tbody tr:last-child td{border-bottom:none;}
 .legend-row{display:flex;align-items:center;gap:8px;font-size:12.5px;color:var(--text-muted);margin-bottom:12px;}
 .legend-swatch{width:12px;height:12px;border-radius:3px;background:var(--weekend-bg);border:1px solid #f0c9c9;}
 
+/* ---------- Cliente menor de 18 anos (cadastro do lead) ---------- */
+.menor-box{border:1.5px dashed #f0b429;background:#fffaf0;border-radius:var(--radius-sm);padding:12px 14px;}
+.menor-box .checkbox-row{margin:0;}
+.menor-box .checkbox-row label{color:var(--text);text-transform:none;letter-spacing:0;font-size:13.5px;font-weight:500;margin:0;}
+.menor-campos{display:grid;grid-template-columns:1fr 1fr;gap:0 16px;margin-top:12px;}
+.menor-campos .field{margin-bottom:10px;}
+.menor-info{grid-column:1 / -1;font-size:13px;font-weight:600;padding:8px 10px;border-radius:8px;background:#fdf1cd;color:#8a5a00;}
+.menor-info.ok{background:var(--success-bg);color:var(--success);}
+.menor-info:empty{display:none;}
+
+/* ---------- Aviso chamativo: clientes chegando aos 18 anos ---------- */
+#modalAlerta18{z-index:110;}
+.a18-modal{max-width:880px;overflow:hidden;border:3px solid #f59e0b;}
+.a18-head{background:linear-gradient(135deg,#ea580c,#f59e0b 55%,#facc15);color:#fff;padding:22px 56px 22px 24px;display:flex;align-items:center;gap:16px;position:relative;}
+.a18-head h3{color:#fff;font-size:22px;margin:0;text-shadow:0 1px 2px rgba(0,0,0,.18);}
+.a18-head p{margin:4px 0 0;font-size:13.5px;opacity:.95;}
+.a18-head .modal-close{position:absolute;top:12px;right:12px;color:#fff;}
+.a18-head .modal-close:hover{background:rgba(255,255,255,.2);}
+.a18-icon{width:58px;height:58px;border-radius:50%;background:rgba(255,255,255,.22);display:flex;align-items:center;justify-content:center;flex-shrink:0;animation:a18pulse 1.4s ease-in-out infinite;}
+@keyframes a18pulse{0%,100%{transform:scale(1);box-shadow:0 0 0 0 rgba(255,255,255,.6);}50%{transform:scale(1.08);box-shadow:0 0 0 12px rgba(255,255,255,0);}}
+.a18-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:14px;}
+.a18-card{border:2px solid #fde3b0;border-radius:12px;padding:14px 16px;background:#fffdf7;display:flex;flex-direction:column;gap:5px;}
+.a18-card.ja18{border-color:#9be3b7;background:#f2fcf6;}
+.a18-dias{font-family:'Poppins',sans-serif;font-size:42px;font-weight:800;color:#ea580c;line-height:1;}
+.a18-dias small{font-size:14px;font-weight:700;margin-left:4px;}
+.a18-card.ja18 .a18-dias{color:var(--success);font-size:24px;}
+.a18-sub{font-size:12px;font-weight:700;text-transform:uppercase;letter-spacing:.4px;color:#b45309;}
+.a18-card.ja18 .a18-sub{color:var(--success);}
+.a18-nome{font-weight:700;font-size:15px;margin-top:4px;}
+.a18-det{font-size:12.5px;color:var(--text-muted);}
+
+/* ---------- Comunicação interna (aviso para o usuário) ---------- */
+#modalAvisoComunicacao{z-index:120;}
+.com-modal{max-width:640px;overflow:hidden;border:3px solid var(--blue-600);}
+.com-head{background:linear-gradient(135deg,var(--blue-900),var(--blue-700));color:#fff;padding:20px 56px 20px 22px;display:flex;align-items:center;gap:14px;position:relative;}
+.com-head h3{color:#fff;font-size:20px;margin:0;}
+.com-head p{margin:3px 0 0;font-size:13px;opacity:.9;}
+.com-head .modal-close{position:absolute;top:12px;right:12px;color:#fff;}
+.com-head .modal-close:hover{background:rgba(255,255,255,.2);}
+.com-head .a18-icon{width:50px;height:50px;}
+.com-card{border:1.5px solid var(--border);border-left:5px solid var(--yellow-500);border-radius:10px;padding:12px 14px;margin-bottom:12px;background:#fff;}
+.com-card:last-child{margin-bottom:0;}
+.com-de{font-size:12px;color:var(--text-muted);margin-bottom:4px;}
+.com-cliente{font-weight:700;font-size:14.5px;color:var(--blue-800);}
+.com-msg{white-space:pre-wrap;font-size:14px;margin:8px 0 10px;line-height:1.45;}
+.btn-whats{background:#25d366;color:#fff;}
+.btn-whats:hover{filter:brightness(1.05);}
+.row-actions button.whats{color:#1a9e4b;}
+.row-actions button.whats:hover{background:#e3f8eb;}
+
 .section-title{font-size:16px;font-weight:700;color:var(--blue-800);margin:0 0 14px;}
 .helper-text{font-size:12.5px;color:var(--text-muted);margin-top:-6px;margin-bottom:16px;}
 
@@ -711,6 +761,10 @@ tbody tr:last-child td{border-bottom:none;}
         <div class="nav-item" data-view="leads-reprovados">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M15 9l-6 6M9 9l6 6"/></svg>
           <span>Leads reprovados</span>
+        </div>
+        <div class="nav-item" data-view="clientes-18">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-8a2 2 0 0 0-2-2H6a2 2 0 0 0-2 2v8"/><path d="M4 16s.5-1 2-1 2.5 2 4 2 2.5-2 4-2 2.5 2 4 2 2-1 2-1"/><path d="M2 21h20"/><path d="M7 8v3M12 8v3M17 8v3"/><path d="M7 4h.01M12 4h.01M17 4h.01"/></svg>
+          <span>Clientes 18 anos</span>
         </div>
         <div class="nav-item" data-view="enviados">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 2 11 13"/><path d="M22 2 15 22l-4-9-9-4Z"/></svg>
@@ -981,6 +1035,32 @@ tbody tr:last-child td{border-bottom:none;}
               <th>Vendedor</th><th>Motivo da Reprovação</th><th>Ações</th>
             </tr></thead>
             <tbody id="leadReprTableBody"></tbody>
+          </table>
+        </div>
+      </section>
+
+      <!-- ============ CLIENTES 18 ANOS (potenciais) ============ -->
+      <section class="view list-view" id="view-clientes-18">
+        <p class="helper-text">Clientes marcados no cadastro do lead como "ainda não tem 18 anos". Quando completarem 18, envie a mensagem padrão pelo WhatsApp chamando para tirar a carteira de motorista.</p>
+        <div class="toolbar">
+          <input type="text" class="search-input" id="c18Search" placeholder="Buscar por cliente ou WhatsApp..." />
+          <select id="c18FiltroStatus">
+            <option value="">Status: Todos</option>
+            <option value="ja18">Já completaram 18 anos</option>
+            <option value="30">Completam 18 em até 30 dias</option>
+            <option value="menor">Ainda menores de 18</option>
+            <option value="pendente">Mensagem ainda não enviada</option>
+          </select>
+          <div class="spacer"></div>
+          <button class="btn btn-secondary" id="btnEditarMsg18" type="button">Editar mensagem padrão</button>
+        </div>
+        <div class="table-wrap">
+          <table>
+            <thead><tr>
+              <th>Cliente</th><th>WhatsApp</th><th>Nascimento</th><th>Idade</th><th>Completa 18 em</th><th>Faltam</th>
+              <th>Avisar em</th><th>Vendedor</th><th>Situação</th><th>Mensagem</th><th>Ações</th>
+            </tr></thead>
+            <tbody id="c18TableBody"></tbody>
           </table>
         </div>
       </section>
@@ -1484,6 +1564,17 @@ tbody tr:last-child td{border-bottom:none;}
             </button>
           </div>
         </div>
+        <div class="field full menor-box">
+          <div class="checkbox-row">
+            <input type="checkbox" id="orcMenor" />
+            <label for="orcMenor"><b>Cliente ainda não tem 18 anos</b> — avisar quando puder tirar a carteira</label>
+          </div>
+          <div class="menor-campos hidden" id="orcMenorCampos">
+            <div class="field"><label>Data de Nascimento</label><input type="date" id="orcDataNascimento" /></div>
+            <div class="field"><label>Data para ser avisado</label><input type="date" id="orcDataAviso18" /></div>
+            <div class="menor-info" id="orcMenorInfo"></div>
+          </div>
+        </div>
         <div class="field full">
           <label>Follow-up (Ligações)</label>
           <div id="orcFollowupList" class="followup-list"></div>
@@ -1511,6 +1602,7 @@ tbody tr:last-child td{border-bottom:none;}
       <p class="helper-text" id="orcEnvioHint">Ao marcar a situação como "Enviado ao Cliente", este orçamento sairá desta lista e passará para a tela "Orçamento enviado".</p>
     </div>
     <div class="modal-footer">
+      <button class="btn btn-secondary hidden" id="btnComunicacaoLead" type="button" style="margin-right:auto;">Enviar comunicação a um usuário</button>
       <button class="btn btn-secondary" data-close="modalOrcamento">Cancelar</button>
       <button class="btn btn-primary" id="btnSalvarOrcamento">Salvar</button>
     </div>
@@ -1984,6 +2076,140 @@ tbody tr:last-child td{border-bottom:none;}
   </div>
 </div>
 
+<!-- ============================================================= -->
+<!-- MODAL: AVISO CHAMATIVO · CLIENTES CHEGANDO AOS 18 ANOS         -->
+<!-- ============================================================= -->
+<div class="modal-overlay hidden" id="modalAlerta18">
+  <div class="modal modal-wide a18-modal">
+    <div class="a18-head">
+      <div class="a18-icon">
+        <svg width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-8a2 2 0 0 0-2-2H6a2 2 0 0 0-2 2v8"/><path d="M4 16s.5-1 2-1 2.5 2 4 2 2.5-2 4-2 2.5 2 4 2 2-1 2-1"/><path d="M2 21h20"/><path d="M7 8v3M12 8v3M17 8v3"/><path d="M7 4h.01M12 4h.01M17 4h.01"/></svg>
+      </div>
+      <div>
+        <h3>Clientes chegando aos 18 anos!</h3>
+        <p id="alerta18Sub">Prepare o contato para chamar estes clientes para tirar a carteira de motorista.</p>
+      </div>
+      <button class="modal-close" data-close="modalAlerta18" title="Fechar">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M18 6 6 18M6 6l12 12"/></svg>
+      </button>
+    </div>
+    <div class="modal-body" id="alerta18Body"></div>
+    <div class="modal-footer">
+      <button class="btn btn-secondary" data-close="modalAlerta18">Fechar</button>
+      <button class="btn btn-yellow" id="btnAlerta18IrTela">Abrir tela Clientes 18 anos</button>
+    </div>
+  </div>
+</div>
+
+<!-- ============================================================= -->
+<!-- MODAL: ENVIAR MENSAGEM DE 18 ANOS PELO WHATSAPP                -->
+<!-- ============================================================= -->
+<div class="modal-overlay hidden" id="modalMsg18">
+  <div class="modal">
+    <div class="modal-header">
+      <h3>Mensagem pelo WhatsApp · <span id="msg18ClienteNome"></span></h3>
+      <button class="modal-close" data-close="modalMsg18">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 6 6 18M6 6l12 12"/></svg>
+      </button>
+    </div>
+    <div class="modal-body">
+      <input type="hidden" id="msg18OrcId" />
+      <div class="field"><label>WhatsApp do cliente</label><input type="text" id="msg18Whats" placeholder="(00) 00000-0000" maxlength="15" /></div>
+      <div class="field">
+        <label>Mensagem (pode ajustar antes de enviar)</label>
+        <textarea id="msg18Texto" rows="8"></textarea>
+      </div>
+      <p class="small muted" style="margin:0;">Ao clicar em enviar, o WhatsApp abre com a mensagem pronta. O envio fica registrado na tela Clientes 18 anos.</p>
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-secondary" data-close="modalMsg18">Cancelar</button>
+      <button class="btn btn-whats" id="btnEnviarMsg18">Enviar no WhatsApp</button>
+    </div>
+  </div>
+</div>
+
+<!-- ============================================================= -->
+<!-- MODAL: EDITAR MENSAGEM PADRÃO DE 18 ANOS                       -->
+<!-- ============================================================= -->
+<div class="modal-overlay hidden" id="modalMsg18Padrao">
+  <div class="modal">
+    <div class="modal-header">
+      <h3>Mensagem padrão · Clientes 18 anos</h3>
+      <button class="modal-close" data-close="modalMsg18Padrao">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 6 6 18M6 6l12 12"/></svg>
+      </button>
+    </div>
+    <div class="modal-body">
+      <div class="field">
+        <label>Texto da mensagem</label>
+        <textarea id="msg18PadraoTexto" rows="9"></textarea>
+      </div>
+      <p class="small muted" style="margin:0;">Campos automáticos: <b>{primeiro_nome}</b>, <b>{cliente}</b> (nome completo), <b>{vendedor}</b>, <b>{empresa}</b> e <b>{usuario}</b> (quem está enviando). A mensagem padrão vale para todos os usuários desta empresa.</p>
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-secondary" id="btnMsg18Restaurar" type="button" style="margin-right:auto;">Restaurar texto original</button>
+      <button class="btn btn-secondary" data-close="modalMsg18Padrao">Cancelar</button>
+      <button class="btn btn-primary" id="btnSalvarMsg18Padrao">Salvar</button>
+    </div>
+  </div>
+</div>
+
+<!-- ============================================================= -->
+<!-- MODAL: ENVIAR COMUNICAÇÃO A UM USUÁRIO INTERNO                 -->
+<!-- ============================================================= -->
+<div class="modal-overlay hidden" id="modalComunicacao">
+  <div class="modal">
+    <div class="modal-header">
+      <h3>Enviar comunicação a um usuário</h3>
+      <button class="modal-close" data-close="modalComunicacao">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 6 6 18M6 6l12 12"/></svg>
+      </button>
+    </div>
+    <div class="modal-body">
+      <input type="hidden" id="comOrcId" />
+      <div class="field"><label>Cliente</label><input type="text" id="comCliente" disabled /></div>
+      <div class="field">
+        <label>Para (usuário)</label>
+        <select id="comDestinatario"></select>
+      </div>
+      <div class="field">
+        <label>Mensagem</label>
+        <textarea id="comMensagem" rows="5" placeholder="Ex.: Por favor, dê atenção a este cliente — ligar ainda hoje."></textarea>
+      </div>
+      <p class="small muted" style="margin:0;">O usuário escolhido recebe um aviso em tela suspensa assim que estiver com o sistema aberto.</p>
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-secondary" data-close="modalComunicacao">Cancelar</button>
+      <button class="btn btn-primary" id="btnEnviarComunicacao">Enviar</button>
+    </div>
+  </div>
+</div>
+
+<!-- ============================================================= -->
+<!-- MODAL: AVISO DE COMUNICAÇÃO RECEBIDA (tela suspensa)           -->
+<!-- ============================================================= -->
+<div class="modal-overlay hidden" id="modalAvisoComunicacao">
+  <div class="modal com-modal">
+    <div class="com-head">
+      <div class="a18-icon">
+        <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg>
+      </div>
+      <div>
+        <h3>Você recebeu uma comunicação</h3>
+        <p id="avisoComSub">Atenção a cliente solicitada por um colega.</p>
+      </div>
+      <button class="modal-close" data-close="modalAvisoComunicacao" title="Fechar (ver depois)">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M18 6 6 18M6 6l12 12"/></svg>
+      </button>
+    </div>
+    <div class="modal-body" id="avisoComBody"></div>
+    <div class="modal-footer">
+      <button class="btn btn-secondary" data-close="modalAvisoComunicacao">Ver depois</button>
+      <button class="btn btn-primary" id="btnComunicacaoTodasLidas">Ciente de todas</button>
+    </div>
+  </div>
+</div>
+
 <div class="modal-overlay hidden" id="modalAgendarProva">
   <div class="modal">
     <div class="modal-header">
@@ -2027,7 +2253,8 @@ try{
    automaticamente pela empresa selecionada no momento.
    ===================================================================== */
 const TENANT_TABLES = new Set([
-  'orcamentos','origens','vendedores','motivos_reprovacao','metas','observacoes_indicador'
+  'orcamentos','origens','vendedores','motivos_reprovacao','metas','observacoes_indicador',
+  'config_mensagens'
 ]);
 
 /* Escapa texto vindo do banco antes de jogar no HTML */
@@ -2429,7 +2656,7 @@ function limparDadosDaEmpresa(){
    'assinaturaContrato','cobrancaContrato','exames','conferencia','alunosReprovados','cobranca',
    'aulas','agendados','cobrancaCurso','provaEscritaAgendamento','provaEscritaAguardando',
    'provaEscritaReprovado','conferenciaCobranca','testePratico','resultadoTeste',
-   'testeVolanteResultado','clientesAprovados'].forEach(k=>{ if(Array.isArray(state[k])) state[k] = []; });
+   'testeVolanteResultado','clientesAprovados','clientes18'].forEach(k=>{ if(Array.isArray(state[k])) state[k] = []; });
 }
 
 async function trocarEmpresa(id){
@@ -2990,6 +3217,7 @@ async function deleteEmpresa(id){
 const VIEW_LIST = [
   { key:'orcamentos', label:'Leads' },
   { key:'leads-reprovados', label:'Leads reprovados' },
+  { key:'clientes-18', label:'Clientes 18 anos' },
   { key:'enviados', label:'Orçamento enviado' },
   { key:'aprovados', label:'Aprovados' },
   { key:'assinatura-contrato', label:'Assinatura de contrato' },
@@ -3053,6 +3281,7 @@ const state = {
   resultadoTeste: [],
   testeVolanteResultado: [],
   clientesAprovados: [],
+  clientes18: [],
   agendadosPeriodo: { ano: new Date().getFullYear(), mes: new Date().getMonth() + 1 },
   resultadoTestePeriodo: { ano: new Date().getFullYear(), mes: new Date().getMonth() + 1 },
   dashboardPeriodo: { ano: new Date().getFullYear(), mes: new Date().getMonth() + 1, dia: new Date().getDate() },
@@ -3260,7 +3489,10 @@ function canAccessView(view){
   if(!state.currentUser) return false;
   if(state.currentUser.isSuperAdmin) return true;
   if(view === 'cad-usuarios' || view === 'cad-empresas' || view === 'cad-backup') return false;
-  return state.currentUser.permissoes && state.currentUser.permissoes[view] === true;
+  const perms = state.currentUser.permissoes || {};
+  /* Tela nova: enquanto o administrador não marcar/desmarcar, segue a permissão da tela de Leads */
+  if(view === 'clientes-18' && perms['clientes-18'] === undefined) return perms['orcamentos'] === true;
+  return perms[view] === true;
 }
 
 function applyPermissionsToUI(){
@@ -3297,7 +3529,7 @@ document.getElementById('logoutBtn').addEventListener('click', ()=> fazerLogout(
    NAVEGAÇÃO
    ===================================================================== */
 const viewTitles = {
-  'dashboard':'Painel','orcamentos':'Leads','leads-reprovados':'Leads reprovados','enviados':'Orçamento enviado','aprovados':'Aprovados',
+  'dashboard':'Painel','orcamentos':'Leads','leads-reprovados':'Leads reprovados','clientes-18':'Clientes potenciais · 18 anos','enviados':'Orçamento enviado','aprovados':'Aprovados',
   'exames':'Exame médico e psico','conferencia':'Conferência de Resultados',
   'alunos-reprovados':'Reprovado no psico/médico','cobranca':'Cobrança','aulas':'Curso teórico',
   'agendados':'Curso Em Andamento','teste-pratico':'Agend. aulas práticas',
@@ -3332,6 +3564,7 @@ function goToView(view){
   if(view === 'dashboard') renderDashboard();
   if(view === 'orcamentos') renderOrcamentos();
   if(view === 'leads-reprovados') renderLeadsReprovados();
+  if(view === 'clientes-18') renderClientes18();
   if(view === 'enviados') renderEnviados();
   if(view === 'aprovados') renderAprovados();
   if(view === 'assinatura-contrato') renderAssinaturaContrato();
@@ -3443,6 +3676,8 @@ async function initApp(){
   await loadLookups();
   goToView('dashboard');
   await mostrarAlertaLigacoes();
+  await mostrarAlerta18();
+  iniciarComunicacoes();
 }
 
 /* =====================================================================
@@ -3971,6 +4206,7 @@ function drawOrcamentosTable(){
         <button title="Editar" data-edit="${o.id}">
           <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 3a2.85 2.85 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5Z"/></svg>
         </button>
+        <button title="Enviar comunicação a um usuário" data-comunic="${o.id}">${ICON_COMUNICACAO}</button>
         <button title="Excluir" class="danger" data-del="${o.id}">
           <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 6h18M8 6V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2m3 0-1 14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2L4 6"/></svg>
         </button>
@@ -3981,6 +4217,7 @@ function drawOrcamentosTable(){
   tbody.querySelectorAll('[data-edit]').forEach(b=> b.addEventListener('click', ()=> openOrcamentoModal(b.dataset.edit)));
   tbody.querySelectorAll('[data-del]').forEach(b=> b.addEventListener('click', ()=> deleteOrcamento(b.dataset.del)));
   tbody.querySelectorAll('[data-followup]').forEach(b=> b.addEventListener('click', ()=> openFollowupModal(b.dataset.followup)));
+  tbody.querySelectorAll('[data-comunic]').forEach(b=> b.addEventListener('click', ()=> openComunicacaoModal(b.dataset.comunic)));
   tbody.querySelectorAll('[data-situacao-select]').forEach(sel=>{
     sel.addEventListener('change', (e)=> quickChangeSituacao(sel.dataset.situacaoSelect, e.target.value));
   });
@@ -4313,8 +4550,13 @@ function openOrcamentoModal(id){
   const editing = !!id;
   document.getElementById('modalOrcamentoTitle').textContent = editing ? 'Editar Lead' : 'Novo Lead';
   document.getElementById('orcId').value = id || '';
+  document.getElementById('btnComunicacaoLead').classList.toggle('hidden', !editing);
   if(editing){
-    const o = state.orcamentos.find(x=>x.id===id) || state.leadsReprovados.find(x=>x.id===id);
+    const o = state.orcamentos.find(x=>x.id===id) || state.leadsReprovados.find(x=>x.id===id) || state.clientes18.find(x=>x.id===id);
+    orcMenorOriginal = o.menor_idade === true;
+    document.getElementById('orcMenor').checked = o.menor_idade === true;
+    document.getElementById('orcDataNascimento').value = o.data_nascimento || '';
+    document.getElementById('orcDataAviso18').value = o.data_aviso_18 || '';
     document.getElementById('orcDataAbertura').value = o.data_abertura || '';
     document.getElementById('orcCliente').value = o.cliente || '';
     document.getElementById('orcWhatsapp').value = o.whatsapp || '';
@@ -4330,6 +4572,10 @@ function openOrcamentoModal(id){
     document.getElementById('orcMotivo').value = o.motivo_reprovado_id || '';
     document.getElementById('orcDataFechamento').value = o.data_fechamento || '';
   } else {
+    orcMenorOriginal = false;
+    document.getElementById('orcMenor').checked = false;
+    document.getElementById('orcDataNascimento').value = '';
+    document.getElementById('orcDataAviso18').value = '';
     document.getElementById('orcDataAbertura').value = todayISO();
     document.getElementById('orcCliente').value = '';
     document.getElementById('orcWhatsapp').value = '';
@@ -4348,8 +4594,38 @@ function openOrcamentoModal(id){
   renderFollowupList();
   updateOrcSituacaoUI();
   updateOrcCarteiraUI();
+  updateOrcMenorUI();
   openModal('modalOrcamento');
 }
+
+/* ---------- Cliente menor de 18 anos (campos do lead) ---------- */
+let orcMenorOriginal = false;
+function updateOrcMenorUI(){
+  const menor = document.getElementById('orcMenor').checked;
+  document.getElementById('orcMenorCampos').classList.toggle('hidden', !menor);
+  const info = document.getElementById('orcMenorInfo');
+  const nasc = document.getElementById('orcDataNascimento').value;
+  const aviso = document.getElementById('orcDataAviso18').value;
+  info.classList.remove('ok');
+  if(!menor){ info.textContent = ''; return; }
+  if(!nasc){ info.textContent = 'Informe a data de nascimento para calcular quantos dias faltam para os 18 anos.'; return; }
+  const d18 = data18Anos(nasc);
+  const dias = diasEntre(todayISO(), d18);
+  let txt;
+  if(dias > 0) txt = 'Completa 18 anos em ' + fmtDate(d18) + ' · faltam ' + dias + ' dia' + (dias===1?'':'s') + '.';
+  else if(dias === 0) txt = 'Completa 18 anos HOJE (' + fmtDate(d18) + ').';
+  else { txt = 'Já completou 18 anos em ' + fmtDate(d18) + '.'; info.classList.add('ok'); }
+  txt += aviso ? ' Aviso em ' + fmtDate(aviso) + '.' : ' Sem data de aviso: o sistema avisa no dia em que completar 18 anos.';
+  info.textContent = txt;
+}
+['orcMenor','orcDataNascimento','orcDataAviso18'].forEach(id=>{
+  document.getElementById(id).addEventListener('change', updateOrcMenorUI);
+  document.getElementById(id).addEventListener('input', updateOrcMenorUI);
+});
+document.getElementById('btnComunicacaoLead').addEventListener('click', ()=>{
+  const id = document.getElementById('orcId').value;
+  if(id) openComunicacaoModal(id);
+});
 
 /* ---------- Follow-up (ligações) ---------- */
 /* Cadência: D1 é o dia 1; DN cai N-1 dias após o D1 (D2 = dia seguinte, D28 = 27 dias depois) */
@@ -4569,16 +4845,31 @@ document.getElementById('btnSalvarOrcamento').addEventListener('click', async ()
     payload.situacao_cliente = 'Aguardando Cliente';
   }
 
+  /* Cliente menor de 18 anos (só envia os campos quando marcado ou quando estava marcado antes) */
+  const menor = document.getElementById('orcMenor').checked;
+  const nascimento = document.getElementById('orcDataNascimento').value || null;
+  if(menor && !nascimento){ showToast('Informe a data de nascimento do cliente menor de 18 anos.', true); return; }
+  if(menor || orcMenorOriginal){
+    payload.menor_idade = menor;
+    payload.data_nascimento = menor ? nascimento : null;
+    payload.data_aviso_18 = menor ? (document.getElementById('orcDataAviso18').value || null) : null;
+  }
+
   let error;
   if(id){
     ({error} = await sb.from('orcamentos').update(payload).eq('id', id));
   } else {
     ({error} = await sb.from('orcamentos').insert(payload));
   }
-  if(error){ showToast('Erro ao salvar: '+error.message, true); return; }
+  if(error){
+    const faltaColuna = /menor_idade|data_nascimento|data_aviso_18/.test(error.message||'');
+    showToast(faltaColuna ? 'Erro ao salvar: rode o arquivo migracao_18anos_comunicacoes.sql no Supabase (SQL Editor).' : 'Erro ao salvar: '+error.message, true);
+    return;
+  }
   showToast('Orçamento salvo com sucesso.');
   closeModal('modalOrcamento');
   renderOrcamentos();
+  if(state.currentView === 'clientes-18') renderClientes18();
 });
 
 async function deleteOrcamento(id){
@@ -4826,6 +5117,8 @@ async function enviarParaAssinaturaContrato(id){
 const ICON_PHONE = '<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.13.96.36 1.9.7 2.81a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.91.34 1.85.57 2.81.7A2 2 0 0 1 22 16.92Z"/></svg>';
 const ICON_EDIT = '<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 3a2.85 2.83 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5Z"/><path d="M15 5l4 4"/></svg>';
 const ICON_REVERT = '<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 4v6h6"/><path d="M3.51 15a9 9 0 1 0 2.13-9.36L1 10"/></svg>';
+const ICON_COMUNICACAO = '<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/><path d="M8 9h8M8 13h5"/></svg>';
+const ICON_WHATS = '<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"/></svg>';
 async function revertParaEtapaAnterior(id, payload, refreshFns, confirmMsg){
   if(!confirm(confirmMsg || 'Reverter para a etapa anterior?')) return;
   await updatePipeline(id, payload, refreshFns);
@@ -5670,6 +5963,390 @@ function drawClientesAprovadosTable(){
   tbody.querySelectorAll('[data-revert]').forEach(b=> b.addEventListener('click', ()=> revertParaEtapaAnterior(b.dataset.revert, {etapa:'teste_volante_resultado', situacao_etapa:null}, [renderClientesAprovados, renderTesteVolanteResultado], 'Reverter para Resultado Teste de Volante?')));
 }
 document.getElementById('finSearch').addEventListener('input', drawClientesAprovadosTable);
+
+/* =====================================================================
+   CLIENTES MENORES DE 18 ANOS: datas, aviso chamativo e tela própria
+   ===================================================================== */
+function isoDeData(dt){
+  return dt.getFullYear()+'-'+String(dt.getMonth()+1).padStart(2,'0')+'-'+String(dt.getDate()).padStart(2,'0');
+}
+/* Data em que completa 18 anos */
+function data18Anos(nascISO){
+  if(!nascISO) return null;
+  const [a,m,d] = nascISO.split('-').map(Number);
+  return isoDeData(new Date(a+18, m-1, d));
+}
+/* Dias corridos entre duas datas ISO (positivo = ateISO no futuro) */
+function diasEntre(deISO, ateISO){
+  const [a1,m1,d1] = deISO.split('-').map(Number);
+  const [a2,m2,d2] = ateISO.split('-').map(Number);
+  return Math.round((Date.UTC(a2,m2-1,d2) - Date.UTC(a1,m1-1,d1)) / 86400000);
+}
+function diasPara18(nascISO){
+  const d18 = data18Anos(nascISO);
+  return d18 ? diasEntre(todayISO(), d18) : null;
+}
+function idadeAnos(nascISO){
+  if(!nascISO) return null;
+  const [a,m,d] = nascISO.split('-').map(Number);
+  const h = new Date();
+  let idade = h.getFullYear() - a;
+  if((h.getMonth()+1) < m || ((h.getMonth()+1) === m && h.getDate() < d)) idade--;
+  return idade;
+}
+/* Data do aviso: a escolhida no lead ou, se vazia, o próprio dia dos 18 anos */
+function dataAviso18(o){ return o.data_aviso_18 || data18Anos(o.data_nascimento); }
+
+/* ---------- Aviso chamativo ao abrir o sistema ---------- */
+async function mostrarAlerta18(){
+  if(!sb) return;
+  const { data, error } = await buscarTodos(()=> sb.from('orcamentos')
+    .select('id,cliente,whatsapp,vendedor_id,data_nascimento,data_aviso_18,msg_18_enviada_em')
+    .eq('menor_idade', true).is('msg_18_enviada_em', null));
+  if(error){ console.warn('Aviso de 18 anos:', error.message); return; }
+  const hoje = todayISO();
+  const itens = (data||[])
+    .filter(o=> o.data_nascimento && dataAviso18(o) <= hoje)
+    .map(o=> ({ o, dias: diasPara18(o.data_nascimento) }))
+    .sort((a,b)=> a.dias - b.dias);
+  if(!itens.length) return;
+
+  const qtdJa = itens.filter(i=> i.dias <= 0).length;
+  document.getElementById('alerta18Sub').textContent =
+    itens.length + ' cliente' + (itens.length===1?'':'s') + ' no aviso' +
+    (qtdJa ? ' · ' + qtdJa + ' já pode' + (qtdJa===1?'':'m') + ' tirar a carteira' : '') + '.';
+
+  document.getElementById('alerta18Body').innerHTML = '<div class="a18-grid">' + itens.map(({o,dias})=>{
+    const vend = (state.vendedores.find(v=>v.id===o.vendedor_id)||{}).nome || '—';
+    const d18 = data18Anos(o.data_nascimento);
+    let topo;
+    if(dias > 0) topo = `<div class="a18-dias">${dias}<small>dia${dias===1?'':'s'}</small></div><div class="a18-sub">para completar 18 anos</div>`;
+    else if(dias === 0) topo = `<div class="a18-dias">HOJE!</div><div class="a18-sub">completa 18 anos hoje</div>`;
+    else topo = `<div class="a18-dias">Já tem 18 anos</div><div class="a18-sub">pode tirar a carteira</div>`;
+    return `<div class="a18-card ${dias<=0?'ja18':''}">
+      ${topo}
+      <div class="a18-nome">${escapeHtml(o.cliente||'')}</div>
+      <div class="a18-det">WhatsApp: ${escapeHtml(o.whatsapp||'—')}</div>
+      <div class="a18-det">18 anos em ${fmtDate(d18)} · Vendedor: ${escapeHtml(vend)}</div>
+    </div>`;
+  }).join('') + '</div>';
+  document.getElementById('btnAlerta18IrTela').style.display = canAccessView('clientes-18') ? '' : 'none';
+  openModal('modalAlerta18');
+}
+document.getElementById('btnAlerta18IrTela').addEventListener('click', ()=>{
+  closeModal('modalAlerta18');
+  closeModal('modalAlertaLigacoes');
+  goToView('clientes-18');
+});
+
+/* ---------- Tela Clientes 18 anos ---------- */
+async function fetchClientes18(){
+  const { data, error } = await buscarTodos(()=> sb.from('orcamentos')
+    .select('*, vendedor:vendedores(id,nome)')
+    .eq('menor_idade', true));
+  if(error) return { erro: error.message, lista: [] };
+  return { erro: null, lista: data || [] };
+}
+async function renderClientes18(){
+  const r = await fetchClientes18();
+  state.clientes18 = r.lista;
+  if(r.erro){
+    document.getElementById('c18TableBody').innerHTML = `<tr class="empty-row"><td colspan="11">Não foi possível carregar (${escapeHtml(r.erro)}). Rode o arquivo <b>migracao_18anos_comunicacoes.sql</b> no Supabase (SQL Editor).</td></tr>`;
+    return;
+  }
+  drawClientes18Table();
+}
+function situacaoLead18(o){
+  if(o.situacao === 'Reprovado' || o.situacao_cliente === 'Reprovado') return '<span class="badge badge-red">Lead reprovado</span>';
+  const tela = telaDoRegistro(o);
+  if(tela) return `<span class="badge badge-blue">${escapeHtml(tela.label)}</span>`;
+  return '<span class="badge badge-gray">—</span>';
+}
+function lead18Editavel(o){
+  return o.situacao === 'Aberto' || o.situacao === 'Reprovado' || o.situacao_cliente === 'Reprovado';
+}
+function drawClientes18Table(){
+  const search = document.getElementById('c18Search').value.toLowerCase();
+  const fStatus = document.getElementById('c18FiltroStatus').value;
+  const rows = state.clientes18
+    .map(o=> Object.assign(o, { _dias: diasPara18(o.data_nascimento) }))
+    .filter(o=>{
+      const dias = o._dias;
+      if(fStatus === 'ja18' && !(dias !== null && dias <= 0)) return false;
+      if(fStatus === '30' && !(dias !== null && dias > 0 && dias <= 30)) return false;
+      if(fStatus === 'menor' && !(dias !== null && dias > 0)) return false;
+      if(fStatus === 'pendente' && o.msg_18_enviada_em) return false;
+      if(search){
+        const blob = `${o.cliente||''} ${o.whatsapp||''}`.toLowerCase();
+        if(!blob.includes(search)) return false;
+      }
+      return true;
+    })
+    .sort((a,b)=> (a._dias===null ? 99999 : a._dias) - (b._dias===null ? 99999 : b._dias));
+
+  const tbody = document.getElementById('c18TableBody');
+  if(!rows.length){
+    tbody.innerHTML = `<tr class="empty-row"><td colspan="11">Nenhum cliente encontrado. Marque "Cliente ainda não tem 18 anos" no cadastro do lead.</td></tr>`;
+    return;
+  }
+  tbody.innerHTML = rows.map(o=>{
+    const dias = o._dias;
+    let faltam;
+    if(dias === null) faltam = '<span class="muted small">—</span>';
+    else if(dias > 0) faltam = `<span class="badge ${dias<=30?'badge-yellow':'badge-gray'}">${dias} dia${dias===1?'':'s'}</span>`;
+    else if(dias === 0) faltam = '<span class="badge badge-green">Hoje!</span>';
+    else faltam = '<span class="badge badge-green">Já tem 18</span>';
+    const idade = idadeAnos(o.data_nascimento);
+    const msg = o.msg_18_enviada_em
+      ? `<span class="badge badge-green" title="${escapeHtml(o.msg_18_enviada_por ? 'Enviada por '+o.msg_18_enviada_por : '')}">Enviada ${fmtDate(dataLocalISO(o.msg_18_enviada_em))}</span>`
+      : '<span class="badge badge-gray">Não enviada</span>';
+    return `<tr>
+      <td>${escapeHtml(o.cliente||'')}</td>
+      <td>${escapeHtml(o.whatsapp||'—')}</td>
+      <td>${fmtDate(o.data_nascimento)}</td>
+      <td>${idade === null ? '—' : idade + ' anos'}</td>
+      <td>${fmtDate(data18Anos(o.data_nascimento))}</td>
+      <td>${faltam}</td>
+      <td>${o.data_nascimento ? fmtDate(dataAviso18(o)) : '—'}</td>
+      <td>${escapeHtml(o.vendedor?.nome||'—')}</td>
+      <td>${situacaoLead18(o)}</td>
+      <td>${msg}</td>
+      <td class="row-actions">
+        <button title="Enviar mensagem pelo WhatsApp" class="whats" data-msg18="${o.id}">${ICON_WHATS}</button>
+        <button title="Enviar comunicação a um usuário" data-comunic="${o.id}">${ICON_COMUNICACAO}</button>
+        ${lead18Editavel(o) ? `<button title="Editar lead" data-edit18="${o.id}">${ICON_EDIT}</button>` : ''}
+      </td>
+    </tr>`;
+  }).join('');
+  tbody.querySelectorAll('[data-msg18]').forEach(b=> b.addEventListener('click', ()=> openMsg18Modal(b.dataset.msg18)));
+  tbody.querySelectorAll('[data-comunic]').forEach(b=> b.addEventListener('click', ()=> openComunicacaoModal(b.dataset.comunic)));
+  tbody.querySelectorAll('[data-edit18]').forEach(b=> b.addEventListener('click', ()=> openOrcamentoModal(b.dataset.edit18)));
+}
+document.getElementById('c18Search').addEventListener('input', drawClientes18Table);
+document.getElementById('c18FiltroStatus').addEventListener('change', drawClientes18Table);
+
+/* ---------- Mensagem padrão (editável, gravada por empresa) ---------- */
+const MSG18_CHAVE = 'whats_18_anos';
+const MSG18_ORIGINAL =
+  'Olá, {primeiro_nome}! Tudo bem? 😊\n' +
+  'Aqui é da {empresa}. Vimos que você já completou 18 anos — parabéns! 🎉\n' +
+  'Agora você já pode tirar a sua Carteira de Motorista! 🚗\n' +
+  'Que tal começar sua habilitação com a gente? Posso te passar as condições?';
+function chaveLocalMsg18(){
+  return 'nacoes_msg18_' + (state.empresaAtual ? state.empresaAtual.id : 'unica');
+}
+async function carregarMsg18(){
+  try{
+    const { data, error } = await sb.from('config_mensagens').select('texto').eq('chave', MSG18_CHAVE).maybeSingle();
+    if(!error && data && data.texto) return data.texto;
+  }catch(e){}
+  return safeStorage('getItem', chaveLocalMsg18()) || MSG18_ORIGINAL;
+}
+async function salvarMsg18(texto){
+  const { error } = await sb.from('config_mensagens')
+    .upsert({ chave: MSG18_CHAVE, texto, updated_at: new Date().toISOString() }, { onConflict:'chave' });
+  safeStorage('setItem', chaveLocalMsg18(), texto);
+  return error;
+}
+function montarMsg18(tpl, o){
+  const nome = (o.cliente||'').trim();
+  const emp = state.empresaAtual || EMPRESA_FALLBACK;
+  const vendedor = o.vendedor?.nome || (state.vendedores.find(v=>v.id===o.vendedor_id)||{}).nome || '';
+  const usuario = state.currentUser ? (state.currentUser.nome || state.currentUser.usuario || '') : '';
+  return String(tpl||'')
+    .replace(/\{primeiro_nome\}/g, nome.split(/\s+/)[0] || '')
+    .replace(/\{cliente\}/g, nome)
+    .replace(/\{vendedor\}/g, vendedor)
+    .replace(/\{empresa\}/g, emp.nome || '')
+    .replace(/\{usuario\}/g, usuario);
+}
+document.getElementById('btnEditarMsg18').addEventListener('click', async ()=>{
+  document.getElementById('msg18PadraoTexto').value = await carregarMsg18();
+  openModal('modalMsg18Padrao');
+});
+document.getElementById('btnMsg18Restaurar').addEventListener('click', ()=>{
+  document.getElementById('msg18PadraoTexto').value = MSG18_ORIGINAL;
+});
+document.getElementById('btnSalvarMsg18Padrao').addEventListener('click', async ()=>{
+  const texto = document.getElementById('msg18PadraoTexto').value.trim();
+  if(!texto){ showToast('Escreva a mensagem padrão.', true); return; }
+  const error = await salvarMsg18(texto);
+  if(error) showToast('Mensagem guardada só neste computador (rode o migracao_18anos_comunicacoes.sql para valer para todos).', true);
+  else showToast('Mensagem padrão salva.');
+  closeModal('modalMsg18Padrao');
+});
+
+/* ---------- Envio pelo WhatsApp ---------- */
+async function openMsg18Modal(id){
+  const o = state.clientes18.find(x=>x.id===id);
+  if(!o) return;
+  document.getElementById('msg18OrcId').value = id;
+  document.getElementById('msg18ClienteNome').textContent = o.cliente || '';
+  document.getElementById('msg18Whats').value = o.whatsapp || '';
+  document.getElementById('msg18Texto').value = montarMsg18(await carregarMsg18(), o);
+  openModal('modalMsg18');
+}
+document.getElementById('msg18Whats').addEventListener('input', (e)=>{ e.target.value = maskPhone(e.target.value); });
+function numeroWhatsApp(txt){
+  let n = String(txt||'').replace(/\D/g,'');
+  if(n.length === 10 || n.length === 11) n = '55' + n;
+  return n.length >= 12 ? n : '';
+}
+document.getElementById('btnEnviarMsg18').addEventListener('click', async ()=>{
+  const id = document.getElementById('msg18OrcId').value;
+  const numero = numeroWhatsApp(document.getElementById('msg18Whats').value);
+  const texto = document.getElementById('msg18Texto').value.trim();
+  if(!numero){ showToast('Informe um WhatsApp válido com DDD.', true); return; }
+  if(!texto){ showToast('A mensagem está vazia.', true); return; }
+  /* abre o WhatsApp primeiro (o navegador só libera a janela no clique) */
+  window.open('https://wa.me/' + numero + '?text=' + encodeURIComponent(texto), '_blank');
+  const usuario = state.currentUser ? (state.currentUser.nome || state.currentUser.usuario || '') : '';
+  const { error } = await sb.from('orcamentos')
+    .update({ msg_18_enviada_em: new Date().toISOString(), msg_18_enviada_por: usuario || null })
+    .eq('id', id);
+  if(error) showToast('WhatsApp aberto, mas não foi possível registrar o envio: '+error.message, true);
+  else showToast('Mensagem enviada e registrada.');
+  closeModal('modalMsg18');
+  renderClientes18();
+});
+
+/* =====================================================================
+   COMUNICAÇÃO INTERNA: pedir para um usuário dar atenção a um cliente
+   ===================================================================== */
+function buscarRegistroPorId(id){
+  const listas = [state.orcamentos, state.clientes18, state.leadsReprovados, state.enviados, state.aprovados];
+  for(const l of listas){
+    const o = (l||[]).find(x=> x.id === id);
+    if(o) return o;
+  }
+  return null;
+}
+/* Usuários com login que podem receber comunicação (da empresa atual) */
+async function carregarUsuariosComunicacao(){
+  let lista = [];
+  const r = await sb.rpc('listar_usuarios_comunicacao');
+  if(!r.error){
+    lista = r.data || [];
+  } else {
+    /* sem a função no banco: só o administrador consegue ler a lista */
+    const r2 = await sb.from('usuarios').select('id,nome,usuario,auth_user_id,is_admin,empresas,ativo');
+    lista = (r2.data || []).filter(u=> u.ativo !== false && u.auth_user_id);
+  }
+  const empId = (state.multiEmpresaAtivo && state.empresaAtual) ? String(state.empresaAtual.id) : null;
+  const meuId = state.currentUser ? String(state.currentUser.id) : '';
+  return lista.filter(u=>{
+    if(String(u.id) === meuId) return false;
+    if(!empId || u.is_admin) return true;
+    const emps = Array.isArray(u.empresas) ? u.empresas.map(String) : [];
+    return emps.indexOf(empId) !== -1;
+  });
+}
+let comunicacaoUsuarios = [];
+async function openComunicacaoModal(id){
+  const o = buscarRegistroPorId(id);
+  if(!o){ showToast('Não foi possível localizar este cliente.', true); return; }
+  document.getElementById('comOrcId').value = id;
+  document.getElementById('comCliente').value = o.cliente || '';
+  document.getElementById('comMensagem').value = '';
+  const sel = document.getElementById('comDestinatario');
+  sel.innerHTML = '<option value="">Carregando usuários...</option>';
+  openModal('modalComunicacao');
+  try{
+    comunicacaoUsuarios = await carregarUsuariosComunicacao();
+  }catch(e){ comunicacaoUsuarios = []; }
+  sel.innerHTML = comunicacaoUsuarios.length
+    ? '<option value="">Selecione o usuário</option>' + comunicacaoUsuarios.map(u=>`<option value="${escapeHtml(String(u.id))}">${escapeHtml(u.nome || u.usuario || '')}</option>`).join('')
+    : '<option value="">Nenhum outro usuário disponível (rode o migracao_18anos_comunicacoes.sql)</option>';
+}
+document.getElementById('btnEnviarComunicacao').addEventListener('click', async ()=>{
+  const id = document.getElementById('comOrcId').value;
+  const destId = document.getElementById('comDestinatario').value;
+  const mensagem = document.getElementById('comMensagem').value.trim();
+  const dest = comunicacaoUsuarios.find(u=> String(u.id) === destId);
+  if(!dest){ showToast('Escolha o usuário que vai receber a comunicação.', true); return; }
+  if(!mensagem){ showToast('Escreva a mensagem.', true); return; }
+  const o = buscarRegistroPorId(id) || {};
+  const emp = (state.multiEmpresaAtivo && state.empresaAtual) ? state.empresaAtual : null;
+  const btn = document.getElementById('btnEnviarComunicacao');
+  btn.disabled = true;
+  const { error } = await sb.from('comunicacoes').insert({
+    empresa_id: emp ? String(emp.id) : null,
+    empresa_nome: emp ? emp.nome : null,
+    orcamento_id: String(id),
+    cliente: o.cliente || null,
+    whatsapp: o.whatsapp || null,
+    mensagem,
+    remetente_id: state.currentUser ? String(state.currentUser.id) : null,
+    remetente_nome: state.currentUser ? (state.currentUser.nome || state.currentUser.usuario) : null,
+    destinatario_id: String(dest.id),
+    destinatario_nome: dest.nome || dest.usuario || null,
+    destinatario_auth: dest.auth_user_id
+  });
+  btn.disabled = false;
+  if(error){
+    showToast(/comunicacoes/.test(error.message||'') ? 'Rode o arquivo migracao_18anos_comunicacoes.sql no Supabase (SQL Editor).' : 'Erro ao enviar: '+error.message, true);
+    return;
+  }
+  showToast('Comunicação enviada para ' + (dest.nome || dest.usuario) + '.');
+  closeModal('modalComunicacao');
+});
+
+/* ---------- Recebimento: tela suspensa para o usuário destinatário ---------- */
+let comunicTimer = null;
+let comunicMostradas = new Set();
+let comunicPendentes = [];
+function iniciarComunicacoes(){
+  if(comunicTimer) clearInterval(comunicTimer);
+  comunicMostradas = new Set();
+  verificarComunicacoes();
+  comunicTimer = setInterval(verificarComunicacoes, 60000);
+}
+async function verificarComunicacoes(){
+  if(!sb || !sb.auth || !state.currentUser){
+    if(comunicTimer){ clearInterval(comunicTimer); comunicTimer = null; }
+    return;
+  }
+  let uid = null;
+  try{
+    const { data } = await sb.auth.getSession();
+    uid = data && data.session && data.session.user ? data.session.user.id : null;
+  }catch(e){}
+  if(!uid) return;
+  const { data, error } = await sb.from('comunicacoes').select('*')
+    .eq('destinatario_auth', uid).is('lida_em', null).order('created_at', { ascending:false });
+  if(error) return;
+  comunicPendentes = data || [];
+  const novas = comunicPendentes.filter(c=> !comunicMostradas.has(c.id));
+  if(!novas.length) return;
+  comunicPendentes.forEach(c=> comunicMostradas.add(c.id));
+  desenharAvisoComunicacao();
+  openModal('modalAvisoComunicacao');
+}
+function desenharAvisoComunicacao(){
+  const n = comunicPendentes.length;
+  document.getElementById('avisoComSub').textContent = n + ' comunicação' + (n===1?'':'ões') + ' aguardando sua atenção.';
+  document.getElementById('avisoComBody').innerHTML = comunicPendentes.map(c=>{
+    const quando = c.created_at ? new Date(c.created_at).toLocaleString('pt-BR', { day:'2-digit', month:'2-digit', year:'numeric', hour:'2-digit', minute:'2-digit' }) : '';
+    return `<div class="com-card">
+      <div class="com-de">De <b>${escapeHtml(c.remetente_nome||'—')}</b> · ${escapeHtml(quando)}${c.empresa_nome ? ' · ' + escapeHtml(c.empresa_nome) : ''}</div>
+      <div class="com-cliente">Cliente: ${escapeHtml(c.cliente||'—')}${c.whatsapp ? ' · ' + escapeHtml(c.whatsapp) : ''}</div>
+      <div class="com-msg">${escapeHtml(c.mensagem||'')}</div>
+      <button class="btn btn-primary btn-sm" data-comlida="${escapeHtml(String(c.id))}">Ciente</button>
+    </div>`;
+  }).join('');
+  document.querySelectorAll('#avisoComBody [data-comlida]').forEach(b=> b.addEventListener('click', ()=> marcarComunicacoesLidas([b.dataset.comlida])));
+}
+async function marcarComunicacoesLidas(ids){
+  if(!ids.length){ closeModal('modalAvisoComunicacao'); return; }
+  const { error } = await sb.from('comunicacoes').update({ lida_em: new Date().toISOString() }).in('id', ids);
+  if(error){ showToast('Erro ao marcar como lida: '+error.message, true); return; }
+  comunicPendentes = comunicPendentes.filter(c=> ids.indexOf(String(c.id)) === -1);
+  if(!comunicPendentes.length){ closeModal('modalAvisoComunicacao'); showToast('Comunicação marcada como lida.'); return; }
+  desenharAvisoComunicacao();
+}
+document.getElementById('btnComunicacaoTodasLidas').addEventListener('click', ()=>{
+  marcarComunicacoesLidas(comunicPendentes.map(c=> String(c.id)));
+});
 
 /* =====================================================================
    CADASTROS SIMPLES (Vendedores / Origens / Motivos)
