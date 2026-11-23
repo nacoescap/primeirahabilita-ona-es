@@ -494,14 +494,33 @@ tbody tr:last-child td{border-bottom:none;}
 .perm-row input{width:16px;height:16px;accent-color:var(--blue-600);flex-shrink:0;}
 .perm-row label{font-size:13px;color:var(--text);cursor:pointer;}
 
-.gauge-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-bottom:14px;}
-.gauge-card{background:var(--surface);border-radius:10px;box-shadow:var(--shadow);border-top:3px solid var(--blue-600);padding:10px 12px 12px;text-align:center;}
-.gauge-title{font-size:10.5px;font-weight:700;color:var(--text-muted);letter-spacing:.3px;text-transform:uppercase;margin-bottom:2px;}
-.gauge-canvas-wrap{height:72px;position:relative;}
-.gauge-meta{font-size:11px;color:var(--text-muted);margin-top:2px;}
-.mini-chart-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;}
-.mini-chart-card{background:var(--surface);border-radius:10px;box-shadow:var(--shadow);padding:10px 12px;}
+.gauge-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin-bottom:16px;}
+.gauge-card{background:var(--surface);border-radius:12px;box-shadow:var(--shadow);border:1px solid #e8edf2;border-top:4px solid var(--blue-600);padding:12px 14px 14px;text-align:center;transition:border-color .3s;}
+.gauge-title{font-size:11px;font-weight:700;color:#475569;letter-spacing:.5px;text-transform:uppercase;margin-bottom:2px;}
+.gauge-canvas-wrap{position:relative;max-width:270px;margin:0 auto;}
+.gauge-canvas-wrap svg{width:100%;height:auto;display:block;}
+.gauge-meta{font-size:12px;color:var(--text-muted);margin-top:4px;display:flex;align-items:center;justify-content:center;gap:8px;flex-wrap:wrap;}
+.gauge-meta b{color:#0f172a;font-weight:700;}
+.mini-chart-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;}
+.mini-chart-card{background:var(--surface);border-radius:12px;box-shadow:var(--shadow);border:1px solid #e8edf2;padding:12px 14px 10px;}
 .mini-chart-title{font-size:10.5px;font-weight:700;color:var(--text-muted);margin-bottom:6px;text-transform:uppercase;letter-spacing:.2px;}
+
+/* ---------- Painel: cabeçalhos, exportação PNG/PDF, funis ---------- */
+.chart-head{display:flex;align-items:center;justify-content:space-between;gap:8px;margin-bottom:8px;flex-wrap:wrap;}
+.chart-head .mini-chart-title{margin-bottom:0;font-size:11px;color:#475569;letter-spacing:.4px;}
+.chart-head-right{display:flex;align-items:center;gap:6px;}
+.dash-section-head{display:flex;align-items:center;justify-content:space-between;gap:10px;margin:0 0 10px;flex-wrap:wrap;}
+.dash-section-head h3{margin:0;font-family:'Poppins',sans-serif;font-size:13.5px;font-weight:700;color:var(--blue-800);letter-spacing:.2px;}
+.dash-section-head small{font-weight:500;color:var(--text-muted);font-size:11.5px;margin-left:6px;font-family:'Inter',sans-serif;}
+.kpi-pill{display:inline-flex;align-items:center;gap:4px;padding:3px 9px;border-radius:999px;font-size:11px;font-weight:700;background:#eef6fb;color:var(--blue-700);white-space:nowrap;}
+.kpi-pill.y{background:#fdf6d8;color:#8a6400;}
+.exp-btns{display:inline-flex;border:1px solid var(--border);border-radius:7px;overflow:hidden;background:#fff;}
+.exp-btn{display:inline-flex;align-items:center;gap:4px;border:none;background:transparent;padding:4px 8px;font-size:10.5px;font-weight:700;color:var(--blue-800);cursor:pointer;letter-spacing:.3px;font-family:inherit;}
+.exp-btn + .exp-btn{border-left:1px solid var(--border);}
+.exp-btn:hover{background:#eef6fb;}
+.exp-btn:disabled{opacity:.5;cursor:wait;}
+.funil-wrap svg{width:100%;height:auto;display:block;}
+.funil-wrap .funil-row:hover .funil-bg{fill:#eef6fb;}
 
 /* ---------- Impressão / PDF dos indicadores ---------- */
 .print-header{display:none;}
@@ -608,7 +627,7 @@ tbody tr:last-child td{border-bottom:none;}
 .rel-vazio{font-size:12.5px;color:var(--text-muted);padding:6px 2px;}
 .rel-footer{margin-top:26px;padding-top:8px;border-top:2px solid var(--blue-800);display:flex;justify-content:space-between;font-size:10.5px;color:var(--text-muted);gap:10px;flex-wrap:wrap;}
 @media (max-width:800px){ .rel-kpis{grid-template-columns:repeat(2,1fr);} .rel-grid2{grid-template-columns:1fr;} .rel-header{flex-direction:column;align-items:flex-start;} .rel-info{text-align:left;} }
-.mini-chart-canvas-wrap{height:100px;position:relative;}
+.mini-chart-canvas-wrap{height:210px;position:relative;}
 @media (max-width:900px){ .mini-chart-grid{grid-template-columns:repeat(2,1fr);} }
 @media (max-width:700px){ .gauge-grid{grid-template-columns:1fr;} .mini-chart-grid{grid-template-columns:1fr;} }
 
@@ -942,38 +961,61 @@ tbody tr:last-child td{border-bottom:none;}
         <div class="stat-grid" id="dashboardStats"></div>
 
         <div class="view-scroll">
+          <div class="dash-section-head">
+            <h3>Metas do Período<small id="gaugePeriodoTxt"></small></h3>
+            <div class="exp-btns no-print"><button class="exp-btn" type="button" data-exp="gauges" data-fmt="png" title="Baixar imagem (PNG)">PNG</button><button class="exp-btn" type="button" data-exp="gauges" data-fmt="pdf" title="Baixar PDF">PDF</button></div>
+          </div>
           <div class="gauge-grid">
-            <div class="gauge-card">
+            <div class="gauge-card" id="gaugePropostasCard">
               <div class="gauge-title">Propostas Enviadas</div>
-              <div class="gauge-canvas-wrap"><canvas id="gaugePropostas"></canvas></div>
+              <div class="gauge-canvas-wrap" id="gaugePropostas"></div>
               <div class="gauge-meta" id="gaugePropostasMeta">—</div>
             </div>
-            <div class="gauge-card">
+            <div class="gauge-card" id="gaugeContatosCard">
               <div class="gauge-title">Contatos Realizados</div>
-              <div class="gauge-canvas-wrap"><canvas id="gaugeContatos"></canvas></div>
+              <div class="gauge-canvas-wrap" id="gaugeContatos"></div>
               <div class="gauge-meta" id="gaugeContatosMeta">—</div>
             </div>
-            <div class="gauge-card">
+            <div class="gauge-card" id="gaugeAprovadosCard">
               <div class="gauge-title">Aprovados</div>
-              <div class="gauge-canvas-wrap"><canvas id="gaugeAprovados"></canvas></div>
+              <div class="gauge-canvas-wrap" id="gaugeAprovados"></div>
               <div class="gauge-meta" id="gaugeAprovadosMeta">—</div>
             </div>
           </div>
 
           <div class="mini-chart-grid" style="grid-template-columns:repeat(3,1fr);">
-            <div class="mini-chart-card"><div class="mini-chart-title" id="miniQtdTitle">Qtd: Orç. x Aprov.</div><div class="mini-chart-canvas-wrap"><canvas id="chartQtd"></canvas></div></div>
-            <div class="mini-chart-card"><div class="mini-chart-title" id="miniValorTitle">Valor: Orç. x Aprov.</div><div class="mini-chart-canvas-wrap"><canvas id="chartValor"></canvas></div></div>
-            <div class="mini-chart-card"><div class="mini-chart-title">Aprovados (Ano)</div><div class="mini-chart-canvas-wrap"><canvas id="chartAnual"></canvas></div></div>
+            <div class="mini-chart-card">
+              <div class="chart-head"><div class="mini-chart-title" id="miniQtdTitle">Qtd: Orç. x Aprov.</div>
+                <div class="chart-head-right"><span class="kpi-pill" id="miniQtdPill">—</span><div class="exp-btns no-print"><button class="exp-btn" type="button" data-exp="qtd" data-fmt="png" title="Baixar imagem (PNG)">PNG</button><button class="exp-btn" type="button" data-exp="qtd" data-fmt="pdf" title="Baixar PDF">PDF</button></div></div>
+              </div>
+              <div class="mini-chart-canvas-wrap"><canvas id="chartQtd"></canvas></div>
+            </div>
+            <div class="mini-chart-card">
+              <div class="chart-head"><div class="mini-chart-title" id="miniValorTitle">Valor: Orç. x Aprov.</div>
+                <div class="chart-head-right"><span class="kpi-pill" id="miniValorPill">—</span><div class="exp-btns no-print"><button class="exp-btn" type="button" data-exp="valor" data-fmt="png" title="Baixar imagem (PNG)">PNG</button><button class="exp-btn" type="button" data-exp="valor" data-fmt="pdf" title="Baixar PDF">PDF</button></div></div>
+              </div>
+              <div class="mini-chart-canvas-wrap"><canvas id="chartValor"></canvas></div>
+            </div>
+            <div class="mini-chart-card">
+              <div class="chart-head"><div class="mini-chart-title">Aprovados (Ano)</div>
+                <div class="chart-head-right"><span class="kpi-pill y" id="miniAnualPill">—</span><div class="exp-btns no-print"><button class="exp-btn" type="button" data-exp="anual" data-fmt="png" title="Baixar imagem (PNG)">PNG</button><button class="exp-btn" type="button" data-exp="anual" data-fmt="pdf" title="Baixar PDF">PDF</button></div></div>
+              </div>
+              <div class="mini-chart-canvas-wrap"><canvas id="chartAnual"></canvas></div>
+            </div>
           </div>
 
           <div class="card" style="margin-top:16px;">
-            <div class="mini-chart-title" style="margin-bottom:10px;" id="funilOrigemTitle">Funil de Origem dos Leads</div>
-            <div style="position:relative;height:260px;"><canvas id="chartOrigem"></canvas></div>
+            <div class="chart-head"><div class="mini-chart-title" id="funilOrigemTitle">Funil de Origem dos Leads</div>
+              <div class="exp-btns no-print"><button class="exp-btn" type="button" data-exp="origem" data-fmt="png" title="Baixar imagem (PNG)">PNG</button><button class="exp-btn" type="button" data-exp="origem" data-fmt="pdf" title="Baixar PDF">PDF</button></div>
+            </div>
+            <div class="funil-wrap" id="funilOrigemWrap"></div>
           </div>
 
           <div class="card" style="margin-top:16px;">
-            <div class="mini-chart-title" style="margin-bottom:10px;">Funil de Etapas · Alunos por Fase</div>
-            <div style="position:relative;height:560px;"><canvas id="chartFunil"></canvas></div>
+            <div class="chart-head"><div class="mini-chart-title">Funil de Etapas · Alunos por Fase</div>
+              <div class="exp-btns no-print"><button class="exp-btn" type="button" data-exp="etapas" data-fmt="png" title="Baixar imagem (PNG)">PNG</button><button class="exp-btn" type="button" data-exp="etapas" data-fmt="pdf" title="Baixar PDF">PDF</button></div>
+            </div>
+            <div class="funil-wrap" id="funilEtapasWrap"></div>
           </div>
         </div>
       </section>
@@ -3971,62 +4013,48 @@ async function renderDashboard(){
     <div class="stat-card"><div class="label">Valor Aprovado no Período</div><div class="value">${fmtMoney(aprovValor)}</div></div>
   `;
 
-  destroyChart('qtd');
-  state.charts.qtd = new Chart(document.getElementById('chartQtd'), {
-    type: 'bar',
-    data: { labels: ['Leads', 'Aprovados'], datasets: [{ data: [totalQtd, aprovQtd], backgroundColor: verticalBarGradientMulti(['#1477a8','#f5c518']), borderRadius:5 }] },
-    options: { responsive:true, maintainAspectRatio:false, layout:{padding:{top:20}}, plugins:{ legend:{ display:false } }, scales:{ y:{ beginAtZero:true, suggestedMax: Math.max(totalQtd,aprovQtd,1)*1.25, ticks:{ precision:0, font:{size:12} } }, x:{ ticks:{ font:{size:12} } } } },
-    plugins: [BAR_VALUE_LABELS_PLUGIN]
-  });
-  const miniQtdTitle = document.getElementById('miniQtdTitle');
-  if(miniQtdTitle) miniQtdTitle.textContent = `Qtd: Orç. x Aprov. (${pctQtd.toFixed(0)}%)`;
-
-  destroyChart('valor');
-  state.charts.valor = new Chart(document.getElementById('chartValor'), {
-    type: 'bar',
-    data: { labels: ['Leads', 'Aprovados'], datasets: [{ data: [totalValor, aprovValor], backgroundColor: verticalBarGradientMulti(['#1477a8','#f5c518']), borderRadius:5, valueFormatter: fmtMoney }] },
-    options: { responsive:true, maintainAspectRatio:false, layout:{padding:{top:20}}, plugins:{ legend:{ display:false } }, scales:{ y:{ beginAtZero:true, suggestedMax: Math.max(totalValor,aprovValor,1)*1.25, ticks:{ callback:(v)=>fmtMoney(v), font:{size:11} } }, x:{ ticks:{ font:{size:12} } } } },
-    plugins: [BAR_VALUE_LABELS_PLUGIN]
-  });
-  const miniValorTitle = document.getElementById('miniValorTitle');
-  if(miniValorTitle) miniValorTitle.textContent = `Valor: Orç. x Aprov. (${pctValor.toFixed(0)}%)`;
-
+  const dimDash = daysInMonth(p.ano, p.mes);
+  const diaRefDash = Math.min(p.dia || dimDash, dimDash);
+  const mmDash = String(p.mes).padStart(2,'0');
   const origensAtivas = state.origens.filter(o=>o.ativo);
   const origemData = origensAtivas
     .map(o => ({ nome: o.nome, count: (orcamentosMes||[]).filter(r=>r.origem_id===o.id).length }))
     .sort((a,b)=> b.count - a.count);
-  destroyChart('origem');
-  const origemBg = horizontalBarGradientByIndex(i => CHART_PALETTE[i % CHART_PALETTE.length]);
-  state.charts.origem = new Chart(document.getElementById('chartOrigem'), {
-    type: 'bar',
-    data: { labels: origemData.map(o=>o.nome), datasets: [{ data: origemData.map(o=>o.count), backgroundColor: origemBg, borderRadius:4 }] },
-    options: {
-      indexAxis: 'y',
-      responsive:true, maintainAspectRatio:false,
-      layout:{ padding:{ right:40 } },
-      plugins:{ legend:{ display:false }, tooltip:{ callbacks:{ label:(c)=> c.parsed.x + ' lead' + (c.parsed.x===1?'':'s') } } },
-      scales:{ x:{ beginAtZero:true, suggestedMax: Math.max(...origemData.map(o=>o.count),1)*1.2, ticks:{ precision:0, font:{size:11} } }, y:{ ticks:{ font:{size:12} } } }
-    },
-    plugins: [BAR_VALUE_LABELS_PLUGIN]
+  const monthlyApproved = Array.from({length:12}, (_,i)=>{
+    const mm = String(i+1).padStart(2,'0');
+    return (aprovadosAno||[]).filter(r => r.data_aprovacao && r.data_aprovacao.slice(5,7)===mm).length;
   });
+
+  /* dados guardados para desenhar e exportar (PNG/PDF) */
+  state.dashData = {
+    mes: p.mes, ano: p.ano,
+    periodoTxt: `${MESES[p.mes-1]}/${p.ano}`,
+    gaugeSub: `Acumulado de 01/${mmDash} até ${String(diaRefDash).padStart(2,'0')}/${mmDash}/${p.ano}`,
+    totalQtd, aprovQtd, totalValor, aprovValor, pctQtd, pctValor,
+    monthlyApproved, origemData, etapas: null
+  };
+  const d = state.dashData;
+
+  destroyChart('qtd');
+  state.charts.qtd = new Chart(document.getElementById('chartQtd'), dashCfgQtd(d, false));
+  setTextDash('miniQtdPill', `Conversão ${pctQtd.toFixed(0)}%`);
+
+  destroyChart('valor');
+  state.charts.valor = new Chart(document.getElementById('chartValor'), dashCfgValor(d, false));
+  setTextDash('miniValorPill', `Conversão ${pctValor.toFixed(0)}%`);
+
+  destroyChart('anual');
+  state.charts.anual = new Chart(document.getElementById('chartAnual'), dashCfgAnual(d, false));
+  setTextDash('miniAnualPill', `Total ${monthlyApproved.reduce((s,v)=>s+v,0)}`);
+
   const funilOrigemTitle = document.getElementById('funilOrigemTitle');
   if(funilOrigemTitle){
     const totalOrigem = origemData.reduce((s,o)=> s + o.count, 0);
     funilOrigemTitle.textContent = `Funil de Origem dos Leads (${totalOrigem} no período)`;
   }
+  desenharFunilOrigem();
 
-  const monthlyApproved = Array.from({length:12}, (_,i)=>{
-    const mm = String(i+1).padStart(2,'0');
-    return (aprovadosAno||[]).filter(r => r.data_aprovacao && r.data_aprovacao.slice(5,7)===mm).length;
-  });
-  destroyChart('anual');
-  state.charts.anual = new Chart(document.getElementById('chartAnual'), {
-    type: 'bar',
-    data: { labels: MESES.map(m=>m.slice(0,3)), datasets: [{ label:'Aprovados', data: monthlyApproved, backgroundColor: verticalBarGradient('#f5c518'), borderRadius:4 }] },
-    options: { responsive:true, maintainAspectRatio:false, layout:{padding:{top:20}}, plugins:{ legend:{ display:false } }, scales:{ y:{ beginAtZero:true, suggestedMax: Math.max(...monthlyApproved,1)*1.25, ticks:{ precision:0, font:{size:11} } }, x:{ ticks:{ font:{size:11} } } } },
-    plugins: [BAR_VALUE_LABELS_PLUGIN]
-  });
-
+  setTextDash('gaugePeriodoTxt', '· ' + d.gaugeSub.toLowerCase());
   const [gaugeProp, gaugeCont, gaugeAprov] = await Promise.all([
     computeGaugeData('propostas', 'data_envio', q=>q.eq('situacao','Enviado ao Cliente')),
     computeGaugeData('contatos_realizados', 'data_abertura', q=>q),
@@ -4039,28 +4067,308 @@ async function renderDashboard(){
   await renderFunilEtapas();
 }
 
+function setTextDash(id, txt){ const el = document.getElementById(id); if(el) el.textContent = txt; }
+
+/* =====================================================================
+   PAINEL · GRÁFICOS DE BARRA (Chart.js)
+   ===================================================================== */
+function fmtMoneyCompacto(v){
+  v = Number(v)||0;
+  const a = Math.abs(v);
+  if(a >= 1e6) return 'R$ ' + (v/1e6).toLocaleString('pt-BR',{maximumFractionDigits:1}) + ' mi';
+  if(a >= 1e3) return 'R$ ' + (v/1e3).toLocaleString('pt-BR',{maximumFractionDigits:0}) + ' mil';
+  return 'R$ ' + v.toLocaleString('pt-BR',{maximumFractionDigits:0});
+}
+function fmtPctBR(v){ return (Number(v)||0).toLocaleString('pt-BR',{minimumFractionDigits:1, maximumFractionDigits:1}) + '%'; }
+
+/* Valor em cima de cada barra (formatador e tamanho vêm do próprio dataset) */
+const DASH_LABELS_PLUGIN = {
+  id: 'dashLabels',
+  afterDatasetsDraw(chart){
+    const ds = chart.data.datasets[0];
+    const meta = chart.getDatasetMeta(0);
+    if(!ds || meta.hidden) return;
+    const { ctx } = chart;
+    const size = ds.labelSize || 12;
+    const fmt = ds.valueFormatter || (v=>String(v));
+    meta.data.forEach((bar, i)=>{
+      const v = ds.data[i];
+      if(v === null || v === undefined) return;
+      ctx.save();
+      ctx.font = `700 ${size}px Inter, Arial, sans-serif`;
+      ctx.fillStyle = '#0f172a';
+      ctx.textAlign = 'center';
+      ctx.textBaseline = 'bottom';
+      ctx.fillText(fmt(v), bar.x, bar.y - Math.round(size*0.45));
+      ctx.restore();
+    });
+  }
+};
+/* Linha tracejada de média (gráfico anual) */
+const DASH_AVG_LINE_PLUGIN = {
+  id: 'dashAvgLine',
+  beforeDatasetsDraw(chart){
+    const ds = chart.data.datasets[0];
+    if(!ds || !(ds.avgLine > 0)) return;
+    const { ctx, chartArea, scales:{ y } } = chart;
+    const yy = y.getPixelForValue(ds.avgLine);
+    ctx.save();
+    ctx.strokeStyle = '#0d4a6e';
+    ctx.globalAlpha = .55;
+    ctx.lineWidth = (ds.labelSize||12) > 16 ? 2 : 1.2;
+    ctx.setLineDash([6,5]);
+    ctx.beginPath(); ctx.moveTo(chartArea.left, yy); ctx.lineTo(chartArea.right, yy); ctx.stroke();
+    ctx.restore();
+  },
+  afterDatasetsDraw(chart){
+    const ds = chart.data.datasets[0];
+    if(!ds || !(ds.avgLine > 0)) return;
+    const { ctx, chartArea, scales:{ y } } = chart;
+    const yy = y.getPixelForValue(ds.avgLine);
+    const size = Math.max(10, (ds.labelSize||12) - 2);
+    const txt = 'Média ' + ds.avgLine.toLocaleString('pt-BR',{maximumFractionDigits:1});
+    ctx.save();
+    ctx.font = `700 ${size}px Inter, Arial, sans-serif`;
+    const tw = ctx.measureText(txt).width + size;
+    const th = size + 8;
+    const bx = chartArea.left + 2, by = yy - th/2;
+    ctx.fillStyle = '#0d4a6e';
+    if(ctx.roundRect){ ctx.beginPath(); ctx.roundRect(bx, by, tw, th, th/2); ctx.fill(); } else ctx.fillRect(bx, by, tw, th);
+    ctx.fillStyle = '#fff';
+    ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
+    ctx.fillText(txt, bx + tw/2, by + th/2 + 0.5);
+    ctx.restore();
+  }
+};
+function dashBarOptions({ exp, max, tipFmt, yFmt, compacto }){
+  const fs = exp ? 17 : 11;
+  const yTicks = { color:'#94a3b8', font:{ size:fs, family:'Inter' }, padding:8, maxTicksLimit:5, precision:0 };
+  if(yFmt) yTicks.callback = (v)=> yFmt(v);
+  return {
+    responsive: !exp, maintainAspectRatio:false,
+    animation: exp ? false : { duration:700, easing:'easeOutQuart' },
+    layout:{ padding:{ top: exp ? 40 : 24, right:6, left:2 } },
+    plugins:{
+      legend:{ display:false },
+      tooltip:{
+        backgroundColor:'#0f172a', padding:10, cornerRadius:8, displayColors:false,
+        titleFont:{ family:'Inter', weight:'700', size:12 }, bodyFont:{ family:'Inter', size:12 },
+        callbacks:{ label:(c)=> tipFmt(c.parsed.y) }
+      }
+    },
+    scales:{
+      y:{ beginAtZero:true, suggestedMax: max*1.22, border:{ display:false }, grid:{ color:'#eef2f6', drawTicks:false }, ticks: yTicks },
+      x:{ border:{ display:false }, grid:{ display:false }, ticks:{ color:'#334155', maxRotation:0, autoSkip:false, font:{ size: exp ? 19 : (compacto ? 10.5 : 12), weight:'600', family:'Inter' } } }
+    }
+  };
+}
+function dashCfgQtd(d, exp){
+  return {
+    type:'bar',
+    data:{ labels:['Leads','Aprovados'], datasets:[{
+      data:[d.totalQtd, d.aprovQtd], backgroundColor: verticalBarGradientMulti(['#1477a8','#f5c518']),
+      borderRadius: exp ? 14 : 8, maxBarThickness: exp ? 240 : 110, categoryPercentage:.62, labelSize: exp ? 24 : 13
+    }]},
+    options: dashBarOptions({ exp, max: Math.max(d.totalQtd, d.aprovQtd, 1), tipFmt:(v)=> v + ' orçamento' + (v===1?'':'s') }),
+    plugins:[DASH_LABELS_PLUGIN]
+  };
+}
+function dashCfgValor(d, exp){
+  return {
+    type:'bar',
+    data:{ labels:['Leads','Aprovados'], datasets:[{
+      data:[d.totalValor, d.aprovValor], backgroundColor: verticalBarGradientMulti(['#1477a8','#f5c518']),
+      borderRadius: exp ? 14 : 8, maxBarThickness: exp ? 240 : 110, categoryPercentage:.62, labelSize: exp ? 24 : 13, valueFormatter: fmtMoney
+    }]},
+    options: dashBarOptions({ exp, max: Math.max(d.totalValor, d.aprovValor, 1), tipFmt:(v)=> fmtMoney(v), yFmt: fmtMoneyCompacto }),
+    plugins:[DASH_LABELS_PLUGIN]
+  };
+}
+function dashCfgAnual(d, exp){
+  const vals = d.monthlyApproved;
+  const comValor = vals.filter(v=> v>0);
+  const media = comValor.length ? comValor.reduce((s,v)=>s+v,0) / comValor.length : 0;
+  const cores = vals.map((_,i)=> i === d.mes-1 ? '#1477a8' : '#f5c518');
+  return {
+    type:'bar',
+    data:{ labels: MESES.map(m=>m.slice(0,3)), datasets:[{
+      label:'Aprovados', data: vals, backgroundColor: verticalBarGradientMulti(cores),
+      borderRadius: exp ? 10 : 5, maxBarThickness: exp ? 70 : 34, categoryPercentage:.72, labelSize: exp ? 20 : 11, avgLine: media
+    }]},
+    options: dashBarOptions({ exp, compacto:true, max: Math.max(...vals, 1), tipFmt:(v)=> v + ' aprovado' + (v===1?'':'s') }),
+    plugins:[DASH_AVG_LINE_PLUGIN, DASH_LABELS_PLUGIN]
+  };
+}
+
+/* =====================================================================
+   PAINEL · FUNIS (SVG)
+   ===================================================================== */
+const SVG_FONT_DASH = "Inter, 'Segoe UI', Arial, sans-serif";
+function funilSVG(cfg){
+  const itens = cfg.itens || [];
+  const W = Math.max(600, Math.round(cfg.largura || 1000));
+  const n = itens.length;
+  const rowH = cfg.rowH || 30;
+  const headH = 30, footH = cfg.rodape ? 44 : 8;
+  const H = headH + n*rowH + footH;
+  const gW = cfg.grupos ? 30 : 0;
+  const numW = 30;
+  const labW = Math.min(250, Math.max(175, W*0.22));
+  const rightW = 150;
+  const fx0 = gW + numW + labW + 12;
+  const fw = W - fx0 - rightW - 14;
+  const cx = fx0 + fw/2;
+  const max = Math.max(1, ...itens.map(i=> i.valor||0));
+  const total = itens.reduce((s,i)=> s + (i.valor||0), 0);
+  const barH = Math.round(rowH*0.64);
+  const geo = itens.map((it,i)=>{
+    const y = headH + i*rowH;
+    const w = it.valor > 0 ? Math.max(12, fw*(it.valor/max)) : 6;
+    return { y, my: y + rowH/2, by: y + (rowH-barH)/2, w, x: cx - w/2 };
+  });
+  const cores = [...new Set(itens.map(i=> i.cor))];
+  const gid = 'fg' + Math.random().toString(36).slice(2,8);
+  const maxChars = Math.floor(labW / 6.8);
+  const cortar = (t)=> t.length > maxChars ? t.slice(0, maxChars-1) + '…' : t;
+  const un = cfg.unidade || ['item','itens'];
+  const col = (t, x, anchor)=> `<text x="${x}" y="19" text-anchor="${anchor}" font-size="10.5" font-weight="700" fill="#64748b" letter-spacing=".6">${t}</text>`;
+
+  let s = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 ${W} ${H}" width="${W}" height="${H}" font-family="${SVG_FONT_DASH}">`;
+  s += `<defs>${cores.map((c,k)=> `<linearGradient id="${gid}${k}" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="${lightenHex(c,30)}"/><stop offset="1" stop-color="${c}"/></linearGradient>`).join('')}</defs>`;
+  s += `<rect x="0" y="0" width="${W}" height="${H}" fill="#ffffff"/>`;
+
+  /* cabeçalho das colunas */
+  s += col(escapeHtml(cfg.colLabel || 'ETAPA'), gW + numW + 2, 'start');
+  s += col('DISTRIBUIÇÃO', cx, 'middle');
+  s += col(escapeHtml(cfg.colQtd || 'QTD'), W - rightW + 62, 'end');
+  s += col('% DO TOTAL', W - 6, 'end');
+  s += `<line x1="0" x2="${W}" y1="${headH-3}" y2="${headH-3}" stroke="#e2e8f0" stroke-width="1"/>`;
+
+  /* fundo das linhas (com tooltip) */
+  itens.forEach((it,i)=>{
+    const pct = total ? it.valor/total*100 : 0;
+    s += `<g class="funil-row"><title>${escapeHtml(it.label)}: ${it.valor} ${it.valor===1?un[0]:un[1]} (${fmtPctBR(pct)})</title>`
+       + `<rect class="funil-bg" x="${gW+2}" y="${geo[i].y+1}" width="${W-gW-2}" height="${rowH-2}" rx="6" fill="${i%2 ? '#ffffff' : '#f8fafc'}"/></g>`;
+  });
+
+  /* faixas dos grupos de fases */
+  if(cfg.grupos){
+    let i = 0;
+    while(i < n){
+      let j = i;
+      while(j+1 < n && itens[j+1].grupo === itens[i].grupo) j++;
+      const gc = itens[i].grupoCor || '#1477a8';
+      const y1 = headH + i*rowH + 2, y2 = headH + (j+1)*rowH - 2;
+      s += `<rect x="2" y="${y1}" width="22" height="${y2-y1}" rx="6" fill="${gc}" fill-opacity=".13" pointer-events="none"/>`;
+      s += `<text transform="translate(13 ${(y1+y2)/2}) rotate(-90)" text-anchor="middle" dominant-baseline="central" font-size="9" font-weight="800" fill="${gc}" letter-spacing=".4" pointer-events="none">${escapeHtml(String(itens[i].grupo||'').toUpperCase())}</text>`;
+      i = j + 1;
+    }
+  }
+
+  /* conectores entre as barras (formato de funil) */
+  for(let i=0; i<n-1; i++){
+    const a = geo[i], b = geo[i+1];
+    s += `<polygon points="${a.x.toFixed(1)},${a.by+barH} ${(a.x+a.w).toFixed(1)},${a.by+barH} ${(b.x+b.w).toFixed(1)},${b.by} ${b.x.toFixed(1)},${b.by}" fill="${itens[i].valor ? itens[i].cor : '#cbd5e1'}" fill-opacity=".14" pointer-events="none"/>`;
+  }
+
+  /* barras, rótulos e valores */
+  itens.forEach((it,i)=>{
+    const g = geo[i];
+    const k = cores.indexOf(it.cor);
+    const pct = total ? it.valor/total*100 : 0;
+    const temValor = it.valor > 0;
+    s += `<g pointer-events="none">`;
+    s += `<circle cx="${gW+15}" cy="${g.my}" r="10" fill="${temValor ? it.cor : '#cbd5e1'}"/>`;
+    s += `<text x="${gW+15}" y="${g.my}" text-anchor="middle" dominant-baseline="central" font-size="10" font-weight="700" fill="${temValor ? corDeTextoSobre(it.cor) : '#ffffff'}">${i+1}</text>`;
+    s += `<text x="${gW+numW+2}" y="${g.my}" dominant-baseline="central" font-size="12.5" font-weight="${it.destaque ? 700 : 500}" fill="${temValor ? '#1e293b' : '#94a3b8'}">${escapeHtml(cortar(it.label))}</text>`;
+    s += `<rect x="${g.x.toFixed(1)}" y="${g.by}" width="${g.w.toFixed(1)}" height="${barH}" rx="${Math.min(5, g.w/2).toFixed(1)}" fill="${temValor ? `url(#${gid}${k})` : '#e2e8f0'}"/>`;
+    if(temValor && g.w > 70) s += `<text x="${cx}" y="${g.my}" text-anchor="middle" dominant-baseline="central" font-size="11" font-weight="700" fill="${corDeTextoSobre(it.cor)}" fill-opacity=".92">${it.valor}</text>`;
+    s += `<text x="${W-rightW+62}" y="${g.my}" text-anchor="end" dominant-baseline="central" font-size="14" font-weight="800" fill="${temValor ? '#0f172a' : '#94a3b8'}">${it.valor}</text>`;
+    s += `<rect x="${W-78}" y="${g.my-10}" width="74" height="20" rx="10" fill="${temValor ? lightenHex(it.cor, 84) : '#f1f5f9'}"/>`;
+    s += `<text x="${W-41}" y="${g.my}" text-anchor="middle" dominant-baseline="central" font-size="11" font-weight="700" fill="${temValor ? '#334155' : '#94a3b8'}">${fmtPctBR(pct)}</text>`;
+    s += `</g>`;
+  });
+
+  /* rodapé com totais */
+  if(cfg.rodape){
+    const yl = headH + n*rowH + 8;
+    s += `<line x1="0" x2="${W}" y1="${yl}" y2="${yl}" stroke="#e2e8f0" stroke-width="1"/>`;
+    s += `<text x="${gW+4}" y="${yl+22}" font-size="12.5" fill="#64748b">`
+       + cfg.rodape.map(([l,v], idx)=> `${idx ? '<tspan fill="#cbd5e1">   |   </tspan>' : ''}${escapeHtml(l)}: <tspan font-weight="700" fill="#0f172a">${escapeHtml(String(v))}</tspan>`).join('')
+       + `</text>`;
+  }
+  s += `</svg>`;
+  return s;
+}
+
+/* ---- Funil de Origem dos Leads ---- */
+function funilOrigemCfg(largura){
+  const d = state.dashData;
+  const lista = (d && d.origemData) || [];
+  const itens = lista.map((o,i)=> ({ label:o.nome, valor:o.count, cor: CHART_PALETTE[i % CHART_PALETTE.length] }));
+  const total = itens.reduce((s,i)=> s + i.valor, 0);
+  const top = itens[0];
+  return {
+    itens, largura, rowH:34, colLabel:'ORIGEM', colQtd:'LEADS', unidade:['lead','leads'],
+    rodape: [
+      ['Total de leads no período', total],
+      ['Principal origem', top && top.valor ? `${top.label} (${fmtPctBR(top.valor/total*100)})` : '—'],
+      ['Origens com leads', `${itens.filter(i=>i.valor>0).length} de ${itens.length}`]
+    ]
+  };
+}
+function desenharFunilOrigem(){
+  const el = document.getElementById('funilOrigemWrap');
+  if(!el) return;
+  const cfg = funilOrigemCfg(el.clientWidth || 1000);
+  el.innerHTML = cfg.itens.length ? funilSVG(cfg) : '<p class="muted" style="margin:6px 2px;">Nenhuma origem ativa cadastrada.</p>';
+}
+
+/* ---- Funil de Etapas ---- */
 const FUNIL_ETAPAS = [
-  { label:'Leads', filtro:q=>q.eq('situacao','Aberto') },
-  { label:'Orçamento enviado', filtro:q=>q.eq('situacao','Enviado ao Cliente').eq('situacao_cliente','Aguardando Cliente') },
-  { label:'Aprovados', filtro:q=>q.eq('situacao_cliente','Aprovado').is('etapa', null) },
-  { label:'Assinatura de contrato', filtro:q=>q.eq('etapa','assinatura_contrato') },
-  { label:'Cobrança (contrato)', filtro:q=>q.eq('etapa','cobranca_contrato') },
-  { label:'Exame médico e psico', filtro:q=>q.eq('etapa','exames') },
-  { label:'Conferência de resultados', filtro:q=>q.eq('etapa','conferencia') },
-  { label:'Reprovado no psico/médico', filtro:q=>q.eq('etapa','reprovados') },
-  { label:'Cobrança', filtro:q=>q.eq('etapa','cobranca') },
-  { label:'Curso teórico', filtro:q=>q.eq('etapa','aulas') },
-  { label:'Curso teórico concluído', filtro:q=>q.eq('etapa','agendados') },
-  { label:'Cobrança (curso)', filtro:q=>q.eq('etapa','cobranca_curso') },
-  { label:'Agend. prova escrita', filtro:q=>q.eq('etapa','prova_escrita_agendamento') },
-  { label:'Aguardando result. prova', filtro:q=>q.eq('etapa','prova_escrita_aguardando') },
-  { label:'Reprovado na prova escrita', filtro:q=>q.eq('etapa','prova_escrita_reprovado') },
-  { label:'Conferência de cobrança', filtro:q=>q.eq('etapa','conferencia_cobranca') },
-  { label:'Agend. aulas práticas', filtro:q=>q.eq('etapa','teste_pratico') },
-  { label:'Agend. teste de volante', filtro:q=>q.eq('etapa','resultado_teste') },
-  { label:'Resultado teste de volante', filtro:q=>q.eq('etapa','teste_volante_resultado') },
-  { label:'Alunos aprovados', filtro:q=>q.eq('etapa','aprovado_final') }
+  { grupo:'Comercial', label:'Leads', filtro:q=>q.eq('situacao','Aberto') },
+  { grupo:'Comercial', label:'Orçamento enviado', filtro:q=>q.eq('situacao','Enviado ao Cliente').eq('situacao_cliente','Aguardando Cliente') },
+  { grupo:'Comercial', label:'Aprovados', filtro:q=>q.eq('situacao_cliente','Aprovado').is('etapa', null) },
+  { grupo:'Contrato', label:'Assinatura de contrato', filtro:q=>q.eq('etapa','assinatura_contrato') },
+  { grupo:'Contrato', label:'Cobrança (contrato)', filtro:q=>q.eq('etapa','cobranca_contrato') },
+  { grupo:'Exames', label:'Exame médico e psico', filtro:q=>q.eq('etapa','exames') },
+  { grupo:'Exames', label:'Conferência de resultados', filtro:q=>q.eq('etapa','conferencia') },
+  { grupo:'Exames', label:'Reprovado no psico/médico', filtro:q=>q.eq('etapa','reprovados') },
+  { grupo:'Curso teórico', label:'Cobrança', filtro:q=>q.eq('etapa','cobranca') },
+  { grupo:'Curso teórico', label:'Curso teórico', filtro:q=>q.eq('etapa','aulas') },
+  { grupo:'Curso teórico', label:'Curso teórico concluído', filtro:q=>q.eq('etapa','agendados') },
+  { grupo:'Curso teórico', label:'Cobrança (curso)', filtro:q=>q.eq('etapa','cobranca_curso') },
+  { grupo:'Prova escrita', label:'Agend. prova escrita', filtro:q=>q.eq('etapa','prova_escrita_agendamento') },
+  { grupo:'Prova escrita', label:'Aguardando result. prova', filtro:q=>q.eq('etapa','prova_escrita_aguardando') },
+  { grupo:'Prova escrita', label:'Reprovado na prova escrita', filtro:q=>q.eq('etapa','prova_escrita_reprovado') },
+  { grupo:'Prova escrita', label:'Conferência de cobrança', filtro:q=>q.eq('etapa','conferencia_cobranca') },
+  { grupo:'Prática', label:'Agend. aulas práticas', filtro:q=>q.eq('etapa','teste_pratico') },
+  { grupo:'Prática', label:'Agend. teste de volante', filtro:q=>q.eq('etapa','resultado_teste') },
+  { grupo:'Prática', label:'Resultado teste de volante', filtro:q=>q.eq('etapa','teste_volante_resultado') },
+  { grupo:'Prática', label:'Alunos aprovados', filtro:q=>q.eq('etapa','aprovado_final') }
 ];
+const FUNIL_GRUPO_COR = { 'Comercial':'#0d4a6e', 'Contrato':'#11618c', 'Exames':'#1477a8', 'Curso teórico':'#0891b2', 'Prova escrita':'#0d9488', 'Prática':'#1f9d55' };
+function funilEtapasCfg(largura){
+  const counts = (state.dashData && state.dashData.etapas) || [];
+  const itens = FUNIL_ETAPAS.map((f,i)=>{
+    const reprov = /^Reprovado/.test(f.label);
+    const final = f.label === 'Alunos aprovados';
+    const gc = FUNIL_GRUPO_COR[f.grupo] || '#1477a8';
+    return { label:f.label, valor: counts[i]||0, grupo:f.grupo, grupoCor:gc, cor: reprov ? '#d64545' : (final ? '#f5c518' : gc), destaque: final };
+  });
+  const total = itens.reduce((s,i)=> s + i.valor, 0);
+  const reprovados = itens.filter(i=> /^Reprovado/.test(i.label)).reduce((s,i)=> s + i.valor, 0);
+  const concluidos = itens[itens.length-1].valor;
+  return {
+    itens, largura, rowH:30, grupos:true, colLabel:'ETAPA', colQtd:'ALUNOS', unidade:['aluno','alunos'],
+    rodape: [ ['Total nas etapas', total], ['Reprovados', reprovados], ['Alunos aprovados', concluidos] ]
+  };
+}
+function desenharFunilEtapas(){
+  const el = document.getElementById('funilEtapasWrap');
+  if(!el) return;
+  el.innerHTML = funilSVG(funilEtapasCfg(el.clientWidth || 1000));
+}
 async function renderFunilEtapas(){
   const counts = await Promise.all(FUNIL_ETAPAS.map(async (fase)=>{
     let query = sb.from('orcamentos').select('*',{count:'exact',head:true});
@@ -4069,25 +4377,8 @@ async function renderFunilEtapas(){
     if(error){ console.error('Erro ao contar etapa '+fase.label, error); return 0; }
     return count || 0;
   }));
-  destroyChart('funil');
-  const bg = horizontalBarGradientByIndex(i => {
-    const label = FUNIL_ETAPAS[i].label;
-    if(label==='Reprovado no psico/médico' || label==='Reprovado na prova escrita') return '#d64545';
-    if(label==='Alunos aprovados') return '#f5c518';
-    return '#1477a8';
-  });
-  state.charts.funil = new Chart(document.getElementById('chartFunil'), {
-    type: 'bar',
-    data: { labels: FUNIL_ETAPAS.map(f=>f.label), datasets: [{ data: counts, backgroundColor: bg, borderRadius:4 }] },
-    options: {
-      indexAxis: 'y',
-      responsive:true, maintainAspectRatio:false,
-      layout:{ padding:{ right:40 } },
-      plugins:{ legend:{ display:false }, tooltip:{ callbacks:{ label:(c)=> c.parsed.x + ' aluno' + (c.parsed.x===1?'':'s') } } },
-      scales:{ x:{ beginAtZero:true, suggestedMax: Math.max(...counts,1)*1.15, ticks:{ precision:0, font:{size:12} } }, y:{ ticks:{ font:{size:12} } } }
-    },
-    plugins: [BAR_VALUE_LABELS_PLUGIN]
-  });
+  if(state.dashData) state.dashData.etapas = counts;
+  desenharFunilEtapas();
 }
 
 async function computeGaugeData(indicador, dataField, filtroFn){
@@ -4107,42 +4398,306 @@ async function computeGaugeData(indicador, dataField, filtroFn){
   return { real, meta, pct };
 }
 
+/* =====================================================================
+   PAINEL · VELOCÍMETROS (SVG)
+   Escala 0–120% com faixas: <30 vermelho · 30–60 laranja · 60–100 azul · ≥100 verde
+   ===================================================================== */
+const GAUGE_MAX = 120;
+const GAUGE_TITULOS = { gaugeProp:'Propostas Enviadas', gaugeCont:'Contatos Realizados', gaugeAprov:'Aprovados' };
+function gaugeCor(pct){ return pct >= 100 ? '#1f9d55' : (pct >= 60 ? '#1477a8' : (pct >= 30 ? '#e08e0b' : '#d64545')); }
+function gaugePolar(cx, cy, r, v){
+  const a = Math.PI * (1 - Math.min(Math.max(v,0), GAUGE_MAX) / GAUGE_MAX);
+  return [cx + r*Math.cos(a), cy - r*Math.sin(a)];
+}
+function gaugeArco(cx, cy, r, v1, v2){
+  const [x1,y1] = gaugePolar(cx,cy,r,v1), [x2,y2] = gaugePolar(cx,cy,r,v2);
+  return `M${x1.toFixed(2)} ${y1.toFixed(2)} A${r} ${r} 0 0 1 ${x2.toFixed(2)} ${y2.toFixed(2)}`;
+}
+/* desenha o velocímetro num quadro de 240 x 172 */
+function gaugeSVGInterno(pct, animar){
+  const cx = 120, cy = 124;
+  const cor = gaugeCor(pct);
+  const v = Math.max(0, Math.min(pct, GAUGE_MAX));
+  const ang = v / GAUGE_MAX * 180;
+  const gid = 'gg' + Math.random().toString(36).slice(2,8);
+  let s = `<defs><linearGradient id="${gid}" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="${lightenHex(cor,40)}"/><stop offset="1" stop-color="${cor}"/></linearGradient>`
+        + `<filter id="${gid}s" x="-50%" y="-50%" width="200%" height="200%"><feDropShadow dx="0" dy="1" stdDeviation="1.3" flood-color="#0f172a" flood-opacity=".35"/></filter></defs>`;
+  /* faixas de desempenho */
+  [[0,30,'#d64545'],[30,60,'#e08e0b'],[60,100,'#1477a8'],[100,120,'#1f9d55']].forEach(([a,b,c])=>{
+    s += `<path d="${gaugeArco(cx,cy,104,a,b)}" fill="none" stroke="${c}" stroke-width="5" stroke-opacity=".85"/>`;
+  });
+  /* trilho + progresso */
+  s += `<path d="${gaugeArco(cx,cy,88,0,GAUGE_MAX)}" fill="none" stroke="#eef2f6" stroke-width="18"/>`;
+  if(v > 0) s += `<path d="${gaugeArco(cx,cy,88,0,v)}" fill="none" stroke="url(#${gid})" stroke-width="18"/>`;
+  /* marcações */
+  for(let t=0; t<=GAUGE_MAX; t+=5){
+    const maior = t % 20 === 0;
+    const [x1,y1] = gaugePolar(cx,cy, maior ? 68 : 72, t), [x2,y2] = gaugePolar(cx,cy,77,t);
+    s += `<line x1="${x1.toFixed(2)}" y1="${y1.toFixed(2)}" x2="${x2.toFixed(2)}" y2="${y2.toFixed(2)}" stroke="${maior ? '#64748b' : '#cbd5e1'}" stroke-width="${maior ? 1.6 : 1}"/>`;
+    if(maior){
+      const [lx,ly] = gaugePolar(cx,cy,58,t);
+      s += `<text x="${lx.toFixed(2)}" y="${ly.toFixed(2)}" text-anchor="middle" dominant-baseline="central" font-size="8.5" font-weight="600" fill="#64748b">${t}</text>`;
+    }
+  }
+  /* marca da meta (100%) */
+  const [m1x,m1y] = gaugePolar(cx,cy,78,100), [m2x,m2y] = gaugePolar(cx,cy,108,100);
+  s += `<line x1="${m1x.toFixed(2)}" y1="${m1y.toFixed(2)}" x2="${m2x.toFixed(2)}" y2="${m2y.toFixed(2)}" stroke="#1f9d55" stroke-width="2.4" stroke-linecap="round"/>`;
+  /* ponteiro */
+  const estilo = animar
+    ? `transform-origin:${cx}px ${cy}px;transform:rotate(0deg);transition:transform 1s cubic-bezier(.25,1.1,.4,1);`
+    : `transform-origin:${cx}px ${cy}px;transform:rotate(${ang.toFixed(2)}deg);`;
+  s += `<g class="gauge-needle" data-ang="${ang.toFixed(2)}" style="${estilo}" filter="url(#${gid}s)">`
+     + `<polygon points="${cx-80},${cy} ${cx},${cy-5} ${cx+12},${cy} ${cx},${cy+5}" fill="#1e293b"/></g>`;
+  s += `<circle cx="${cx}" cy="${cy}" r="9" fill="#1e293b"/><circle cx="${cx}" cy="${cy}" r="3.5" fill="#ffffff"/>`;
+  /* percentual */
+  s += `<text x="${cx}" y="${cy+36}" text-anchor="middle" font-size="25" font-weight="800" fill="${cor}">${Math.round(pct)}%</text>`;
+  return s;
+}
+function gaugeSVG(pct, animar){
+  return `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 240 172" font-family="${SVG_FONT_DASH}">${gaugeSVGInterno(pct, animar)}</svg>`;
+}
+/* painel com os três velocímetros (usado na exportação PNG/PDF) */
+function gaugesPainelSVG(){
+  const g = state.dashGauges || {};
+  const keys = ['gaugeProp','gaugeCont','gaugeAprov'];
+  const W = 1200, H = 390;
+  let s = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 ${W} ${H}" width="${W}" height="${H}" font-family="${SVG_FONT_DASH}">`;
+  s += `<rect x="0" y="0" width="${W}" height="${H}" fill="#ffffff"/>`;
+  keys.forEach((k,i)=>{
+    const d = g[k] || { pct:0, real:0, meta:0 };
+    const cor = gaugeCor(d.pct);
+    const x0 = i*400, mx = x0 + 200;
+    const ok = d.pct >= 100;
+    s += `<rect x="${x0+10}" y="8" width="380" height="372" rx="14" fill="#ffffff" stroke="#e2e8f0" stroke-width="1.5"/>`;
+    s += `<rect x="${x0+40}" y="8" width="320" height="5" rx="2.5" fill="${cor}"/>`;
+    s += `<text x="${mx}" y="46" text-anchor="middle" font-size="15" font-weight="700" fill="#475569" letter-spacing="1">${escapeHtml(GAUGE_TITULOS[k].toUpperCase())}</text>`;
+    s += `<g transform="translate(${mx-150} 62) scale(1.25)">${gaugeSVGInterno(d.pct, false)}</g>`;
+    s += `<text x="${mx}" y="308" text-anchor="middle" font-size="15" fill="#64748b">Realizado <tspan font-weight="800" fill="#0f172a">${d.real}</tspan>   ·   Meta <tspan font-weight="800" fill="#0f172a">${d.meta}</tspan></text>`;
+    s += `<rect x="${mx-75}" y="324" width="150" height="28" rx="14" fill="${ok ? '#e6f6ec' : '#fdecec'}"/>`;
+    s += `<text x="${mx}" y="338" text-anchor="middle" dominant-baseline="central" font-size="13" font-weight="700" fill="${ok ? '#1f9d55' : '#d64545'}">${ok ? 'OK' : 'Abaixo da meta'}</text>`;
+  });
+  s += `</svg>`;
+  return s;
+}
+
 function renderGauge(canvasId, chartKey, pct, real, meta, metaElId){
   destroyChart(chartKey);
-  const clamped = Math.max(0, Math.min(pct, 100));
-  const color = pct >= 100 ? '#1f9d55' : (pct >= 60 ? '#1477a8' : (pct >= 30 ? '#e08e0b' : '#d64545'));
-  state.charts[chartKey] = new Chart(document.getElementById(canvasId), {
-    type: 'doughnut',
-    data: { datasets: [{ data: [clamped, 100-clamped], backgroundColor: [color, '#eef1f4'], borderWidth:0 }] },
-    options: {
-      responsive:true, maintainAspectRatio:false,
-      circumference:180, rotation:270, cutout:'72%',
-      plugins:{ legend:{ display:false }, tooltip:{ enabled:false } }
-    },
-    plugins: [{
-      id: 'centerText_'+chartKey,
-      afterDraw(chart){
-        const { ctx, chartArea } = chart;
-        if(!chartArea) return;
-        const cx = (chartArea.left + chartArea.right) / 2;
-        const cy = chartArea.bottom - 2;
-        ctx.save();
-        ctx.textAlign = 'center';
-        ctx.fillStyle = '#1f2937';
-        ctx.font = "700 15px Poppins, sans-serif";
-        ctx.fillText(Math.round(pct) + '%', cx, cy - 2);
-        ctx.restore();
-      }
-    }]
-  });
+  if(!state.dashGauges) state.dashGauges = {};
+  state.dashGauges[chartKey] = { pct, real, meta };
+  const wrap = document.getElementById(canvasId);
+  if(wrap){
+    wrap.innerHTML = gaugeSVG(pct, true);
+    const agulha = wrap.querySelector('.gauge-needle');
+    if(agulha) requestAnimationFrame(()=> requestAnimationFrame(()=>{ agulha.style.transform = `rotate(${agulha.dataset.ang}deg)`; }));
+  }
+  const card = document.getElementById(canvasId + 'Card');
+  if(card) card.style.borderTopColor = gaugeCor(pct);
   const metaEl = document.getElementById(metaElId);
   if(metaEl){
     const statusHtml = pct >= 100
       ? '<span class="badge badge-green">OK</span>'
       : '<span class="badge badge-red">Abaixo da meta</span>';
-    metaEl.innerHTML = `${real} / ${meta} ${statusHtml}`;
+    metaEl.innerHTML = `<span>Realizado <b>${real}</b> · Meta <b>${meta}</b></span> ${statusHtml}`;
   }
 }
+
+/* =====================================================================
+   PAINEL · EXPORTAÇÃO INDIVIDUAL (PNG / PDF)
+   ===================================================================== */
+const DASH_EXPORT = {
+  gauges: { titulo:()=> 'Metas do Período', sub:(d)=> d.gaugeSub, arquivo:'metas-do-periodo',
+            conteudo:()=> svgParaImagem(gaugesPainelSVG()) },
+  qtd:    { titulo:()=> 'Quantidade · Orçamentos x Aprovados', sub:(d)=> `${d.periodoTxt} · Conversão ${d.pctQtd.toFixed(0)}%`, arquivo:'qtd-orcamentos-x-aprovados',
+            conteudo:(d)=> chartParaImagem(dashCfgQtd(d, true), 1200, 560) },
+  valor:  { titulo:()=> 'Valor · Orçamentos x Aprovados', sub:(d)=> `${d.periodoTxt} · Conversão ${d.pctValor.toFixed(0)}%`, arquivo:'valor-orcamentos-x-aprovados',
+            conteudo:(d)=> chartParaImagem(dashCfgValor(d, true), 1200, 560) },
+  anual:  { titulo:(d)=> `Aprovados por Mês · ${d.ano}`, sub:(d)=> `Total no ano: ${d.monthlyApproved.reduce((s,v)=>s+v,0)} · Destaque: ${MESES[d.mes-1]}`, arquivo:'aprovados-por-mes',
+            conteudo:(d)=> chartParaImagem(dashCfgAnual(d, true), 1200, 560) },
+  origem: { titulo:()=> 'Funil de Origem dos Leads', sub:(d)=> `Período: ${d.periodoTxt}`, arquivo:'funil-origem-leads',
+            conteudo:()=>{ const c = funilOrigemCfg(1200); if(!c.itens.length) throw new Error('Nenhuma origem para exportar.'); return svgParaImagem(funilSVG(c)); } },
+  etapas: { titulo:()=> 'Funil de Etapas · Alunos por Fase', sub:()=> 'Posição atual dos alunos em cada etapa', arquivo:'funil-etapas-alunos',
+            conteudo:(d)=>{ if(!d.etapas) throw new Error('Aguarde o funil terminar de carregar.'); return svgParaImagem(funilSVG(funilEtapasCfg(1200))); } }
+};
+
+function svgParaImagem(svg){
+  return new Promise((res, rej)=>{
+    const m = svg.match(/viewBox="0 0 ([\d.]+) ([\d.]+)"/);
+    const w = m ? Number(m[1]) : 1200, h = m ? Number(m[2]) : 600;
+    const img = new Image();
+    img.onload = ()=> res({ img, w, h });
+    img.onerror = ()=> rej(new Error('Falha ao converter o gráfico em imagem.'));
+    img.src = 'data:image/svg+xml;charset=utf-8,' + encodeURIComponent(svg);
+  });
+}
+function chartParaImagem(config, w, h){
+  return new Promise((res, rej)=>{
+    if(typeof Chart === 'undefined'){ rej(new Error('Gráficos indisponíveis (sem conexão).')); return; }
+    const holder = document.createElement('div');
+    holder.style.cssText = `position:fixed;left:-10000px;top:0;width:${w}px;height:${h}px;pointer-events:none;`;
+    const cv = document.createElement('canvas');
+    cv.width = w; cv.height = h; cv.style.width = w+'px'; cv.style.height = h+'px';
+    holder.appendChild(cv);
+    document.body.appendChild(holder);
+    config.options = Object.assign({}, config.options, { responsive:false, maintainAspectRatio:false, animation:false, devicePixelRatio:2 });
+    const ch = new Chart(cv, config);
+    setTimeout(()=>{
+      try{
+        const img = new Image();
+        img.onload = ()=>{ ch.destroy(); holder.remove(); res({ img, w, h }); };
+        img.onerror = ()=>{ ch.destroy(); holder.remove(); rej(new Error('Falha ao gerar a imagem do gráfico.')); };
+        img.src = ch.toBase64Image('image/png', 1);
+      }catch(e){ ch.destroy(); holder.remove(); rej(e); }
+    }, 60);
+  });
+}
+function carregarImagemCors(url){
+  return new Promise((res)=>{
+    if(!url){ res(null); return; }
+    const img = new Image();
+    let feito = false;
+    const fim = (v)=>{ if(!feito){ feito = true; res(v); } };
+    img.crossOrigin = 'anonymous';
+    img.onload = ()=> fim(img);
+    img.onerror = ()=> fim(null);
+    setTimeout(()=> fim(null), 4000);
+    img.src = url;
+  });
+}
+function cssVarDash(nome, padrao){
+  const v = getComputedStyle(document.documentElement).getPropertyValue(nome).trim();
+  return v || padrao;
+}
+async function montarCanvasExport(titulo, subtitulo, conteudo, semLogo){
+  const emp = state.empresaAtual || EMPRESA_FALLBACK;
+  const corPri = cssVarDash('--blue-800', '#0d4a6e');
+  const usuario = state.currentUser ? (state.currentUser.nome || state.currentUser.usuario) : '';
+  const PAD = 40, HEAD = 108, FOOT = 50;
+  const W = conteudo.w + PAD*2;
+  const H = HEAD + 22 + conteudo.h + 22 + FOOT;
+  const R = 2;
+  const cv = document.createElement('canvas');
+  cv.width = W*R; cv.height = H*R;
+  const ctx = cv.getContext('2d');
+  ctx.scale(R, R);
+  ctx.fillStyle = '#ffffff'; ctx.fillRect(0, 0, W, H);
+
+  /* marca */
+  let x = PAD;
+  const logo = semLogo ? null : await carregarImagemCors(emp.logo_url);
+  if(logo && logo.naturalWidth){
+    const lh = 58, lw = Math.min(180, logo.naturalWidth * (lh / logo.naturalHeight));
+    ctx.drawImage(logo, x, 22, lw, lh);
+    x += lw + 16;
+  } else {
+    const bg = emp.cor_secundaria || '#f5c518';
+    ctx.fillStyle = bg;
+    if(ctx.roundRect){ ctx.beginPath(); ctx.roundRect(x, 24, 54, 54, 12); ctx.fill(); } else ctx.fillRect(x, 24, 54, 54);
+    ctx.fillStyle = corDeTextoSobre(bg);
+    ctx.font = "800 20px Poppins, Inter, Arial, sans-serif";
+    ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
+    ctx.fillText(emp.sigla || (emp.nome||'?').slice(0,2).toUpperCase(), x + 27, 52);
+    x += 70;
+  }
+  ctx.textAlign = 'left'; ctx.textBaseline = 'alphabetic';
+  ctx.fillStyle = corPri; ctx.font = "800 22px Poppins, Inter, Arial, sans-serif";
+  ctx.fillText(emp.nome || '', x, 50);
+  ctx.fillStyle = '#64748b'; ctx.font = "500 13px Inter, Arial, sans-serif";
+  ctx.fillText('Gestão de Vendas', x, 72);
+
+  /* título / período */
+  ctx.textAlign = 'right';
+  ctx.fillStyle = corPri; ctx.font = "700 21px Poppins, Inter, Arial, sans-serif";
+  ctx.fillText(titulo, W - PAD, 44);
+  ctx.fillStyle = '#1e293b'; ctx.font = "600 13.5px Inter, Arial, sans-serif";
+  ctx.fillText(subtitulo || '', W - PAD, 66);
+  ctx.fillStyle = '#64748b'; ctx.font = "400 12px Inter, Arial, sans-serif";
+  ctx.fillText('Gerado em ' + agoraFormatado(), W - PAD, 86);
+  ctx.fillStyle = corPri; ctx.fillRect(PAD, HEAD - 6, W - PAD*2, 3);
+
+  /* gráfico */
+  ctx.drawImage(conteudo.img, PAD, HEAD + 22, conteudo.w, conteudo.h);
+
+  /* rodapé */
+  const yf = H - FOOT + 12;
+  ctx.fillStyle = '#e2e8f0'; ctx.fillRect(PAD, yf, W - PAD*2, 1);
+  ctx.fillStyle = '#64748b'; ctx.font = "400 11.5px Inter, Arial, sans-serif"; ctx.textAlign = 'center';
+  ctx.fillText(`${emp.nome||''} · Gestão de Vendas · ${titulo} · Gerado ${usuario ? 'por '+usuario+' ' : ''}em ${agoraFormatado()}`, W/2, yf + 24);
+
+  try{ cv.toDataURL('image/png'); }
+  catch(e){ if(!semLogo) return montarCanvasExport(titulo, subtitulo, conteudo, true); throw e; }
+  return cv;
+}
+let _jsPdfPromise = null;
+function carregarJsPDF(){
+  if(window.jspdf && window.jspdf.jsPDF) return Promise.resolve(window.jspdf.jsPDF);
+  if(!_jsPdfPromise){
+    _jsPdfPromise = new Promise((res, rej)=>{
+      const sc = document.createElement('script');
+      sc.src = 'https://cdn.jsdelivr.net/npm/jspdf@2.5.1/dist/jspdf.umd.min.js';
+      sc.onload = ()=> (window.jspdf && window.jspdf.jsPDF) ? res(window.jspdf.jsPDF) : rej(new Error('Gerador de PDF indisponível.'));
+      sc.onerror = ()=>{ _jsPdfPromise = null; rej(new Error('Não foi possível carregar o gerador de PDF (verifique a conexão).')); };
+      document.head.appendChild(sc);
+    });
+  }
+  return _jsPdfPromise;
+}
+function slugDash(t){
+  return String(t||'').normalize('NFD').replace(/[̀-ͯ]/g,'').toLowerCase().replace(/[^a-z0-9]+/g,'-').replace(/^-+|-+$/g,'');
+}
+function baixarDataUrl(dataUrl, nome){
+  const a = document.createElement('a');
+  a.href = dataUrl; a.download = nome;
+  document.body.appendChild(a); a.click(); a.remove();
+}
+async function exportarGraficoDash(key, fmt){
+  const def = DASH_EXPORT[key];
+  const d = state.dashData;
+  if(!def || !d) throw new Error('Aguarde o painel terminar de carregar.');
+  const conteudo = await def.conteudo(d);
+  const titulo = def.titulo(d);
+  const canvas = await montarCanvasExport(titulo, def.sub(d), conteudo);
+  const emp = state.empresaAtual || EMPRESA_FALLBACK;
+  const nome = [def.arquivo, slugDash(emp.nome), `${d.ano}-${String(d.mes).padStart(2,'0')}`].filter(Boolean).join('_');
+  if(fmt === 'png'){
+    baixarDataUrl(canvas.toDataURL('image/png'), nome + '.png');
+    return;
+  }
+  const jsPDF = await carregarJsPDF();
+  const paisagem = canvas.width >= canvas.height;
+  const pdf = new jsPDF({ orientation: paisagem ? 'landscape' : 'portrait', unit:'mm', format:'a4', compress:true });
+  const pw = pdf.internal.pageSize.getWidth(), ph = pdf.internal.pageSize.getHeight();
+  const m = 8;
+  const r = Math.min((pw - 2*m) / canvas.width, (ph - 2*m) / canvas.height);
+  const w = canvas.width * r, h = canvas.height * r;
+  pdf.setProperties({ title: titulo, creator: (emp.nome||'') + ' · Gestão de Vendas' });
+  pdf.addImage(canvas.toDataURL('image/jpeg', 0.95), 'JPEG', (pw - w)/2, m, w, h);
+  pdf.save(nome + '.pdf');
+}
+document.getElementById('view-dashboard').addEventListener('click', async (e)=>{
+  const b = e.target.closest('[data-exp]');
+  if(!b) return;
+  const grupo = b.parentElement ? b.parentElement.querySelectorAll('button') : [b];
+  grupo.forEach(x=> x.disabled = true);
+  try{
+    showToast(b.dataset.fmt === 'pdf' ? 'Gerando PDF...' : 'Gerando imagem...');
+    await exportarGraficoDash(b.dataset.exp, b.dataset.fmt);
+  }catch(err){
+    console.error(err);
+    showToast(err.message || 'Erro ao exportar o gráfico.', true);
+  }finally{
+    grupo.forEach(x=> x.disabled = false);
+  }
+});
+/* redesenha os funis ao redimensionar a janela (mantém textos no tamanho certo) */
+let _funilResizeT = null;
+window.addEventListener('resize', ()=>{
+  clearTimeout(_funilResizeT);
+  _funilResizeT = setTimeout(()=>{
+    if(!state.dashData || state.currentView !== 'dashboard') return;
+    desenharFunilOrigem();
+    if(state.dashData.etapas) desenharFunilEtapas();
+  }, 250);
+});
 
 /* =====================================================================
    ORÇAMENTOS
