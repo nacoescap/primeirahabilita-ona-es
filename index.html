@@ -466,14 +466,81 @@ tbody tr:last-child td{border-bottom:none;}
 #orcTableBody .fu-prox.hoje{background:var(--success);}
 #orcTableBody .fu-prox.atrasada{background:var(--danger);}
 
-/* Aviso de ligações ao abrir o sistema */
-.alerta-lig-sec{margin-bottom:18px;}
-.alerta-lig-sec:last-child{margin-bottom:0;}
-.alerta-lig-titulo{display:flex;align-items:center;gap:8px;font-weight:700;font-size:13.5px;color:#fff;padding:8px 12px;border-radius:8px 8px 0 0;}
-.alerta-lig-titulo.atrasada{background:var(--danger);}
-.alerta-lig-titulo.hoje{background:var(--success);}
-.alerta-lig-sec table{min-width:0;font-size:12.8px;border:1px solid var(--border);border-top:none;}
-.alerta-lig-sec thead th{position:static;background:#f3f6f8;color:var(--text-muted);}
+/* Aviso de ligações ao abrir o sistema (painel de follow-up) */
+.modal.lig-modal{max-width:1240px;height:92vh;max-height:92vh;}
+.lig-modal .modal-header{padding:14px 20px;}
+.lig-modal .modal-header h3{display:flex;align-items:center;gap:10px;}
+.lig-sub{display:block;font-size:12px;font-weight:500;color:var(--text-muted);margin-top:2px;font-family:'Inter',sans-serif;}
+.lig-modal .modal-body{padding:0;display:flex;flex-direction:column;overflow:hidden;}
+.lig-top{padding:14px 20px 12px;border-bottom:1px solid var(--border);background:#fbfcfd;}
+.lig-kpis{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-bottom:12px;}
+.lig-kpi{background:#fff;border:1px solid var(--border);border-left:4px solid var(--blue-600);border-radius:10px;padding:9px 12px;}
+.lig-kpi .l{font-size:10.5px;font-weight:700;color:var(--text-muted);text-transform:uppercase;letter-spacing:.4px;}
+.lig-kpi .v{font-family:'Poppins',sans-serif;font-size:21px;font-weight:700;color:var(--blue-800);line-height:1.2;}
+.lig-kpi.r{border-left-color:var(--danger);} .lig-kpi.r .v{color:var(--danger);}
+.lig-kpi.g{border-left-color:var(--success);} .lig-kpi.g .v{color:var(--success);}
+.lig-kpi.y{border-left-color:#e08e0b;} .lig-kpi.y .v{color:#b86e00;}
+.lig-filtros{display:flex;gap:8px;flex-wrap:wrap;align-items:center;}
+.lig-tabs{display:inline-flex;background:#eef2f6;border-radius:9px;padding:3px;gap:2px;}
+.lig-tab{border:none;background:transparent;padding:6px 12px;border-radius:7px;font-size:12.5px;font-weight:700;color:var(--text-muted);cursor:pointer;font-family:inherit;display:inline-flex;gap:6px;align-items:center;}
+.lig-tab .n{background:#dbe3ea;color:#334155;border-radius:999px;padding:0 7px;font-size:11px;line-height:18px;}
+.lig-tab.sel{background:#fff;color:var(--blue-800);box-shadow:0 1px 3px rgba(15,23,42,.12);}
+.lig-tab.sel[data-tab="atrasada"] .n{background:var(--danger);color:#fff;}
+.lig-tab.sel[data-tab="hoje"] .n{background:var(--success);color:#fff;}
+.lig-tab.sel[data-tab="todas"] .n{background:var(--blue-700);color:#fff;}
+.lig-filtros input,.lig-filtros select{padding:7px 10px;border:1.5px solid var(--border);border-radius:8px;font-size:13px;font-family:inherit;background:#fff;}
+.lig-filtros input{flex:1;min-width:200px;}
+.lig-scroll{flex:1;overflow:auto;}
+.lig-table{width:100%;min-width:1040px;border-collapse:separate;border-spacing:0;font-size:12.8px;}
+.lig-table thead th{position:sticky;top:0;z-index:2;background:#f3f6f8;color:var(--text-muted);text-align:left;font-size:10.8px;text-transform:uppercase;letter-spacing:.4px;padding:9px 10px;border-bottom:1px solid var(--border);white-space:nowrap;}
+.lig-table td{padding:9px 10px;border-bottom:1px solid #eef2f5;vertical-align:middle;}
+.lig-table tbody tr.lig-row:hover td{background:#f7fbfd;}
+.lig-table tr.lig-grupo td{background:#fff;padding:10px 12px 6px;font-weight:800;font-size:12px;letter-spacing:.4px;text-transform:uppercase;border-bottom:2px solid currentColor;}
+.lig-table tr.lig-grupo.atrasada td{color:var(--danger);}
+.lig-table tr.lig-grupo.hoje td{color:var(--success);}
+.lig-table tr.lig-grupo.feita td{color:var(--blue-700);}
+.lig-cli{font-weight:700;color:#0f172a;}
+.lig-ult{font-size:11.5px;color:var(--text-muted);margin-top:2px;max-width:330px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+.lig-wa{display:flex;align-items:center;gap:6px;white-space:nowrap;}
+.lig-ic{display:inline-flex;align-items:center;justify-content:center;width:26px;height:26px;border-radius:7px;border:1px solid var(--border);background:#fff;color:var(--blue-700);cursor:pointer;text-decoration:none;}
+.lig-ic:hover{border-color:var(--blue-600);background:#eef6fb;}
+.lig-ic.wa{color:#1fa855;}
+.lig-ic.wa:hover{border-color:#25d366;background:#e9f9ef;}
+.lig-et{display:inline-block;min-width:38px;text-align:center;font-weight:800;font-size:12px;color:#fff;background:var(--blue-700);border-radius:6px;padding:2px 6px;}
+.lig-prog{display:flex;gap:2px;margin-top:4px;}
+.lig-prog i{width:7px;height:4px;border-radius:2px;background:#dbe3ea;}
+.lig-prog i.f{background:var(--blue-600);}
+.lig-prog i.p{background:#e08e0b;}
+.lig-atr{display:inline-block;border-radius:999px;padding:2px 9px;font-size:11.5px;font-weight:700;white-space:nowrap;}
+.lig-atr.a1{background:#fdf1cd;color:#8a6400;}
+.lig-atr.a2{background:#fde5cf;color:#a24f00;}
+.lig-atr.a3{background:var(--danger-bg);color:var(--danger);}
+.lig-atr.hj{background:var(--success-bg);color:var(--success);}
+.lig-tela{display:inline-block;background:#eef2f6;color:#334155;border-radius:6px;padding:2px 8px;font-size:11.5px;font-weight:600;white-space:nowrap;}
+.lig-acoes{display:flex;gap:6px;justify-content:flex-end;white-space:nowrap;}
+.lig-feita{font-size:12px;font-weight:700;color:var(--success);text-align:right;max-width:230px;margin-left:auto;line-height:1.35;}
+.lig-feita small{display:block;font-weight:500;color:var(--text-muted);}
+tr.lig-row.done td{background:#f6fbf8;}
+tr.lig-row.aberto td{background:#eef6fb;}
+tr.lig-det td{background:#f8fbfd;padding:0 10px 14px;border-bottom:2px solid var(--blue-600);}
+.lig-det-grid{display:grid;grid-template-columns:1fr 1.25fr;gap:16px;padding-top:12px;}
+.lig-det-box{background:#fff;border:1px solid var(--border);border-radius:10px;padding:12px 14px;}
+.lig-det-box h4{margin:0 0 8px;font-size:11px;text-transform:uppercase;letter-spacing:.4px;color:var(--text-muted);}
+.lig-hist{max-height:190px;overflow:auto;}
+.lig-hist-item{display:flex;gap:8px;padding:6px 0;border-bottom:1px dashed #e5ebf0;font-size:12.5px;}
+.lig-hist-item:last-child{border-bottom:none;}
+.lig-hist-item .d{color:var(--text-muted);white-space:nowrap;font-size:11.5px;min-width:70px;}
+.lig-form-row{display:flex;gap:10px;align-items:flex-end;flex-wrap:wrap;margin-bottom:8px;}
+.lig-form-row label{display:block;font-size:11px;font-weight:700;color:var(--text-muted);margin-bottom:3px;}
+.lig-form-row input[type=date]{padding:7px 8px;border:1.5px solid var(--border);border-radius:8px;font-size:13px;font-family:inherit;}
+.lig-det textarea{width:100%;min-height:70px;padding:8px 10px;border:1.5px solid var(--border);border-radius:8px;font-size:13px;font-family:inherit;resize:vertical;box-sizing:border-box;}
+.lig-det textarea:focus,.lig-form-row input:focus,.lig-filtros input:focus,.lig-filtros select:focus{outline:none;border-color:var(--blue-600);}
+.lig-rapidas{display:flex;gap:6px;flex-wrap:wrap;margin:6px 0 10px;}
+.lig-rapidas button{border:1px dashed var(--border);background:#fff;border-radius:999px;padding:3px 10px;font-size:11.5px;color:#334155;cursor:pointer;font-family:inherit;}
+.lig-rapidas button:hover{border-color:var(--blue-600);color:var(--blue-800);}
+.lig-det-acoes{display:flex;gap:8px;justify-content:space-between;flex-wrap:wrap;align-items:flex-end;border-top:1px solid #eef2f5;padding-top:10px;margin-top:4px;}
+.lig-vazio{padding:40px 20px;text-align:center;color:var(--text-muted);font-size:13.5px;}
+@media (max-width:800px){ .lig-kpis{grid-template-columns:repeat(2,1fr);} .lig-det-grid{grid-template-columns:1fr;} }
 
 .inline-select{
   padding:6px 9px;border:1.5px solid var(--border);border-radius:999px;font-size:12px;font-weight:700;
@@ -521,6 +588,36 @@ tbody tr:last-child td{border-bottom:none;}
 .exp-btn:disabled{opacity:.5;cursor:wait;}
 .funil-wrap svg{width:100%;height:auto;display:block;}
 .funil-wrap .funil-row:hover .funil-bg{fill:#eef6fb;}
+
+
+/* ---------- Leads reprovados: gráficos e lançamentos ---------- */
+.repr-hint{font-weight:500;text-transform:none;letter-spacing:0;color:#94a3b8;font-size:10.5px;}
+.repr-motivos{display:flex;align-items:center;gap:18px;min-height:250px;}
+.repr-donut{flex:0 0 190px;}
+.repr-donut svg{width:190px;height:190px;display:block;}
+.repr-donut .md-seg{cursor:pointer;transition:stroke-width .15s, opacity .15s;}
+.repr-donut .md-seg:hover{stroke-width:34;}
+.repr-lista{flex:1;min-width:0;max-height:250px;overflow:auto;}
+.repr-item{display:grid;grid-template-columns:12px 1fr 38px 46px;align-items:center;gap:8px;padding:6px 8px;border-radius:8px;cursor:pointer;font-size:12.5px;}
+.repr-item:hover{background:#fdf3f3;}
+.repr-item .dot{width:12px;height:12px;border-radius:4px;}
+.repr-item .nm{font-weight:600;color:#1e293b;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+.repr-item .bar{grid-column:2 / 3;height:5px;background:#eef2f6;border-radius:3px;overflow:hidden;margin-top:-2px;}
+.repr-item .bar i{display:block;height:100%;border-radius:3px;}
+.repr-item .q{font-weight:800;color:#0f172a;text-align:right;}
+.repr-item .p{font-size:11px;font-weight:700;color:#475569;text-align:right;background:#f1f5f9;border-radius:999px;padding:1px 6px;}
+.repr-vazio{flex:1;text-align:center;color:var(--text-muted);font-size:13px;}
+.rd-etapa{display:inline-block;border-radius:6px;padding:2px 8px;font-size:11.5px;font-weight:600;white-space:nowrap;}
+.rd-etapa.l{background:#e2f0f7;color:var(--blue-700);}
+.rd-etapa.e{background:#fdf1cd;color:#9a6c00;}
+.rd-motivo{display:inline-flex;align-items:center;gap:6px;font-weight:600;color:#334155;max-width:165px;line-height:1.3;white-space:normal;}
+#reprDetScroll td{white-space:normal;}
+#reprDetScroll .lig-table{font-size:12.3px;min-width:1100px;}
+#reprDetScroll .lig-table td,#reprDetScroll .lig-table th{padding-left:8px;padding-right:8px;}
+.rd-motivo i{width:9px;height:9px;border-radius:3px;flex-shrink:0;}
+.lig-table tfoot td{position:sticky;bottom:0;background:#f3f6f8;font-weight:800;border-top:2px solid var(--blue-800);padding:9px 10px;}
+.rd-acoes{display:flex;gap:4px;justify-content:flex-end;}
+@media (max-width:900px){ .repr-grid{grid-template-columns:1fr !important;} .repr-motivos{flex-direction:column;} }
 
 /* ---------- Impressão / PDF dos indicadores ---------- */
 .print-header{display:none;}
@@ -1053,17 +1150,18 @@ tbody tr:last-child td{border-bottom:none;}
           <select id="leadReprFiltroAno"></select>
           <div class="spacer"></div>
         </div>
-        <div class="mini-chart-grid" style="grid-template-columns:1fr 1.4fr;margin-bottom:16px;">
+        <div class="mini-chart-grid repr-grid" style="grid-template-columns:1.15fr 1fr;margin-bottom:16px;">
           <div class="mini-chart-card">
-            <div class="mini-chart-title">Motivos de Reprovação</div>
-            <div class="mini-chart-canvas-wrap" style="height:180px;">
-              <canvas id="chartMotivosReprovacao"></canvas>
-              <p id="motivosReprEmptyMsg" class="muted small hidden" style="text-align:center;margin-top:60px;">Nenhum lead reprovado no período selecionado.</p>
+            <div class="chart-head"><div class="mini-chart-title">Motivos de Reprovação <span class="repr-hint">· clique para detalhar</span></div>
+              <div class="chart-head-right"><span class="kpi-pill" id="motivosReprPill" style="background:#fdecec;color:#b42323;">—</span><div class="exp-btns no-print"><button class="exp-btn" type="button" data-rexp="motivos" data-fmt="png" title="Baixar imagem (PNG)">PNG</button><button class="exp-btn" type="button" data-rexp="motivos" data-fmt="pdf" title="Baixar PDF">PDF</button></div></div>
             </div>
+            <div id="motivosReprWrap" class="repr-motivos"></div>
           </div>
           <div class="mini-chart-card">
-            <div class="mini-chart-title">Leads Reprovados por Mês</div>
-            <div class="mini-chart-canvas-wrap" style="height:180px;"><canvas id="chartReprovadosPorMes"></canvas></div>
+            <div class="chart-head"><div class="mini-chart-title">Leads Reprovados por Mês <span class="repr-hint">· clique na barra</span></div>
+              <div class="chart-head-right"><span class="kpi-pill" id="reprMesPill" style="background:#fdecec;color:#b42323;">—</span><div class="exp-btns no-print"><button class="exp-btn" type="button" data-rexp="mes" data-fmt="png" title="Baixar imagem (PNG)">PNG</button><button class="exp-btn" type="button" data-rexp="mes" data-fmt="pdf" title="Baixar PDF">PDF</button></div></div>
+            </div>
+            <div class="mini-chart-canvas-wrap" style="height:250px;"><canvas id="chartReprovadosPorMes"></canvas></div>
           </div>
         </div>
         <div class="toolbar">
@@ -1523,6 +1621,21 @@ tbody tr:last-child td{border-bottom:none;}
 
 <!-- ============================================================= -->
 <!-- MODAL: IMPRIMIR / PDF (retrato ou paisagem)                    -->
+<!-- ============================================================= -->
+<!-- MODAL: LANÇAMENTOS DOS GRÁFICOS DE LEADS REPROVADOS            -->
+<!-- ============================================================= -->
+<div class="modal-overlay hidden" id="modalReprDet">
+  <div class="modal modal-wide lig-modal">
+    <div class="modal-header">
+      <h3><span><span id="reprDetTitulo">Lançamentos</span><span class="lig-sub" id="reprDetSub"></span></span></h3>
+      <button class="modal-close" data-close="modalReprDet" title="Fechar">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 6 6 18M6 6l12 12"/></svg>
+      </button>
+    </div>
+    <div class="modal-body" id="reprDetBody"></div>
+  </div>
+</div>
+
 <!-- ============================================================= -->
 <div class="modal-overlay hidden" id="modalImprimir">
   <div class="modal" style="max-width:420px;">
@@ -2107,9 +2220,9 @@ tbody tr:last-child td{border-bottom:none;}
 <!-- MODAL: AVISO DE LIGAÇÕES (ao abrir o sistema; fecha só no X)   -->
 <!-- ============================================================= -->
 <div class="modal-overlay hidden" id="modalAlertaLigacoes">
-  <div class="modal modal-wide" style="max-width:820px;">
+  <div class="modal modal-wide lig-modal">
     <div class="modal-header">
-      <h3>Ligações para hoje e atrasadas</h3>
+      <h3><span>Ligações para hoje e atrasadas<span class="lig-sub" id="alertaLigSub">Follow-up da cadência D1 a D28</span></span></h3>
       <button class="modal-close" data-close="modalAlertaLigacoes" title="Fechar (confirmo que li)">
         <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 6 6 18M6 6l12 12"/></svg>
       </button>
@@ -3731,6 +3844,19 @@ function telaDoRegistro(o){
   if(o.situacao === 'Enviado ao Cliente' && o.situacao_cliente !== 'Reprovado') return { key:'enviados', label:'Orçamento enviado' };
   return null;
 }
+const alertaLig = { itens:[], tab:'todas', busca:'', vendedor:'', tela:'', aberto:null };
+const LIG_ICON_TEL = '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 16.9v3a2 2 0 0 1-2.2 2 19.8 19.8 0 0 1-8.6-3.1 19.5 19.5 0 0 1-6-6A19.8 19.8 0 0 1 2.1 4.2 2 2 0 0 1 4.1 2h3a2 2 0 0 1 2 1.7c.1.9.4 1.8.7 2.7a2 2 0 0 1-.5 2.1L8 9.8a16 16 0 0 0 6 6l1.3-1.3a2 2 0 0 1 2.1-.4c.9.3 1.8.6 2.7.7a2 2 0 0 1 1.7 2z"/></svg>';
+const LIG_ICON_WA = '<svg width="15" height="15" viewBox="0 0 24 24" fill="currentColor"><path d="M17.5 14.4c-.3-.1-1.8-.9-2-1-.3-.1-.5-.1-.7.1-.2.3-.8 1-.9 1.2-.2.2-.3.2-.6.1-.3-.1-1.3-.5-2.4-1.5-.9-.8-1.5-1.8-1.7-2.1-.2-.3 0-.5.1-.6l.4-.5c.2-.2.2-.3.3-.5.1-.2 0-.4 0-.5l-.9-2.2c-.2-.6-.5-.5-.7-.5h-.6c-.2 0-.5.1-.8.4-.3.3-1 1-1 2.5s1.1 2.9 1.2 3.1c.1.2 2.1 3.2 5.1 4.5.7.3 1.3.5 1.7.6.7.2 1.4.2 1.9.1.6-.1 1.8-.7 2-1.4.2-.7.2-1.3.2-1.4-.1-.1-.3-.2-.6-.3zM12 21.8c-1.8 0-3.5-.5-5-1.4l-.4-.2-3.7 1 1-3.6-.2-.4C2.7 15.6 2.2 13.8 2.2 12 2.2 6.6 6.6 2.2 12 2.2c2.6 0 5.1 1 6.9 2.9 1.8 1.8 2.9 4.3 2.9 6.9 0 5.4-4.4 9.8-9.8 9.8zm8.4-18.2C18.1 1.3 15.1 0 12 0 5.4 0 .1 5.3.1 11.9c0 2.1.6 4.2 1.6 6L0 24l6.3-1.6c1.8 1 3.7 1.5 5.7 1.5 6.6 0 11.9-5.3 11.9-11.9 0-3.2-1.2-6.2-3.5-8.4z"/></svg>';
+
+function ligStatus(prox){
+  if(!prox || !prox.data) return 'feita';
+  const hoje = todayISO();
+  if(prox.data < hoje) return 'atrasada';
+  if(prox.data === hoje) return 'hoje';
+  return 'feita';
+}
+function ligNomeVendedor(id){ return (state.vendedores.find(v=>v.id===id)||{}).nome || '—'; }
+
 async function mostrarAlertaLigacoes(){
   if(!sb) return;
   const linhas = [];
@@ -3745,45 +3871,253 @@ async function mostrarAlertaLigacoes(){
     if(!data || data.length < passo) break;
     de += passo;
   }
-  const hoje = todayISO();
-  const atrasadas = [], doDia = [];
+  const itens = [];
   linhas.forEach(o=>{
     const tela = telaDoRegistro(o);
     if(!tela || !canAccessView(tela.key)) return;
-    const prox = proximaLigacao(parseFollowups(o.followup));
+    const lista = parseFollowups(o.followup);
+    const prox = proximaLigacao(lista);
     if(!prox || !prox.data) return;
-    const item = { o, prox, tela };
-    if(prox.data < hoje) atrasadas.push(item);
-    else if(prox.data === hoje) doDia.push(item);
+    const status = ligStatus(prox);
+    if(status === 'feita') return;
+    itens.push({ o, lista, prox, tela, status, msg:null });
   });
-  if(!atrasadas.length && !doDia.length) return;
-  atrasadas.sort((a,b)=> a.prox.data.localeCompare(b.prox.data));
-  doDia.sort((a,b)=> (a.o.cliente||'').localeCompare(b.o.cliente||'','pt-BR'));
-
-  const tabela = (itens, mostrarAtraso)=> `<table><thead><tr>
-      <th>Cliente</th><th>WhatsApp</th><th>Ligação</th><th>Data</th>${mostrarAtraso?'<th>Atraso</th>':''}<th>Tela</th><th>Vendedor</th>
-    </tr></thead><tbody>
-    ${itens.map(({o,prox,tela})=>`<tr>
-      <td>${escapeHtml(o.cliente||'')}</td>
-      <td>${escapeHtml(o.whatsapp||'—')}</td>
-      <td><b>${prox.etapa}</b></td>
-      <td>${fmtDate(prox.data)}</td>
-      ${mostrarAtraso?`<td>${leadTimeDias(prox.data+'T00:00:00')} dia(s)</td>`:''}
-      <td>${escapeHtml(tela.label)}</td>
-      <td>${escapeHtml((state.vendedores.find(v=>v.id===o.vendedor_id)||{}).nome||'—')}</td>
-    </tr>`).join('')}
-    </tbody></table>`;
-
-  let h = '';
-  if(atrasadas.length){
-    h += `<div class="alerta-lig-sec"><div class="alerta-lig-titulo atrasada">Atrasadas (${atrasadas.length})</div>${tabela(atrasadas, true)}</div>`;
-  }
-  if(doDia.length){
-    h += `<div class="alerta-lig-sec"><div class="alerta-lig-titulo hoje">Para hoje · ${fmtDate(hoje)} (${doDia.length})</div>${tabela(doDia, false)}</div>`;
-  }
-  document.getElementById('alertaLigacoesBody').innerHTML = h;
+  if(!itens.length) return;
+  alertaLig.itens = itens;
+  alertaLig.tab = 'todas'; alertaLig.busca = ''; alertaLig.vendedor = ''; alertaLig.tela = ''; alertaLig.aberto = null;
+  montarAlertaLigacoes();
   openModal('modalAlertaLigacoes');
 }
+
+function montarAlertaLigacoes(){
+  const body = document.getElementById('alertaLigacoesBody');
+  const vendIds = [...new Set(alertaLig.itens.map(i=> i.o.vendedor_id).filter(Boolean))];
+  const vendOpts = vendIds.map(id=> ({ id, nome: ligNomeVendedor(id) })).sort((a,b)=> a.nome.localeCompare(b.nome,'pt-BR'));
+  const telas = [...new Set(alertaLig.itens.map(i=> i.tela.label))].sort((a,b)=> a.localeCompare(b,'pt-BR'));
+  body.innerHTML = `
+    <div class="lig-top">
+      <div class="lig-kpis" id="ligKpis"></div>
+      <div class="lig-filtros">
+        <div class="lig-tabs" id="ligTabs"></div>
+        <input type="text" id="ligBusca" placeholder="Buscar cliente ou WhatsApp..." />
+        <select id="ligVend"><option value="">Vendedor: Todos</option>${vendOpts.map(v=>`<option value="${v.id}">${escapeHtml(v.nome)}</option>`).join('')}</select>
+        <select id="ligTela"><option value="">Tela: Todas</option>${telas.map(t=>`<option value="${escapeHtml(t)}">${escapeHtml(t)}</option>`).join('')}</select>
+      </div>
+    </div>
+    <div class="lig-scroll" id="ligScroll"></div>`;
+  document.getElementById('ligBusca').addEventListener('input', (e)=>{ alertaLig.busca = e.target.value; renderAlertaLigTabela(); });
+  document.getElementById('ligVend').addEventListener('change', (e)=>{ alertaLig.vendedor = e.target.value; renderAlertaLigTabela(); });
+  document.getElementById('ligTela').addEventListener('change', (e)=>{ alertaLig.tela = e.target.value; renderAlertaLigTabela(); });
+  renderAlertaLigTabela();
+}
+
+function renderAlertaLigResumo(){
+  const pend = alertaLig.itens.filter(i=> i.status !== 'feita');
+  const atr = pend.filter(i=> i.status === 'atrasada');
+  const hj = pend.filter(i=> i.status === 'hoje');
+  const feitas = alertaLig.itens.filter(i=> i.status === 'feita').length;
+  const dias = atr.map(i=> leadTimeDias(i.prox.data+'T00:00:00'));
+  const media = dias.length ? Math.round(dias.reduce((s,v)=>s+v,0)/dias.length) : 0;
+  document.getElementById('ligKpis').innerHTML = `
+    <div class="lig-kpi r"><div class="l">Atrasadas</div><div class="v">${atr.length}</div></div>
+    <div class="lig-kpi g"><div class="l">Para hoje · ${fmtDate(todayISO())}</div><div class="v">${hj.length}</div></div>
+    <div class="lig-kpi y"><div class="l">Atraso médio / maior</div><div class="v">${media} <span style="font-size:13px;font-weight:600;">dia(s)</span> · ${dias.length ? Math.max(...dias) : 0}</div></div>
+    <div class="lig-kpi"><div class="l">Tratadas nesta tela</div><div class="v">${feitas}</div></div>`;
+  const tabs = [['todas','Todas', alertaLig.itens.length], ['atrasada','Atrasadas', atr.length], ['hoje','Para hoje', hj.length], ['feita','Tratadas', feitas]];
+  document.getElementById('ligTabs').innerHTML = tabs.map(([k,l,n])=>
+    `<button type="button" class="lig-tab ${alertaLig.tab===k?'sel':''}" data-tab="${k}">${l}<span class="n">${n}</span></button>`).join('');
+  document.getElementById('alertaLigSub').textContent =
+    `${atr.length} atrasada(s) · ${hj.length} para hoje${feitas ? ' · '+feitas+' tratada(s) nesta tela' : ''}`;
+}
+
+function ligFiltrados(){
+  const b = alertaLig.busca.trim().toLowerCase();
+  const bDig = b.replace(/\D/g,'');
+  return alertaLig.itens.filter(i=>{
+    if(alertaLig.tab === 'todas' ? false : i.status !== alertaLig.tab) return false;
+    if(alertaLig.vendedor && String(i.o.vendedor_id) !== alertaLig.vendedor) return false;
+    if(alertaLig.tela && i.tela.label !== alertaLig.tela) return false;
+    if(b){
+      const nomeOk = (i.o.cliente||'').toLowerCase().includes(b);
+      const foneOk = bDig && String(i.o.whatsapp||'').replace(/\D/g,'').includes(bDig);
+      if(!nomeOk && !foneOk) return false;
+    }
+    return true;
+  });
+}
+
+function ligLinhaHTML(i){
+  const o = i.o;
+  const ult = ultimaLigacaoRealizada(i.lista);
+  const num = numeroWhatsApp(o.whatsapp);
+  const idxEt = FOLLOWUP_ETAPAS.indexOf(i.prox ? i.prox.etapa : '');
+  const feitasN = i.lista.filter(ligacaoRealizada).length;
+  const prog = FOLLOWUP_ETAPAS.map((_,k)=> `<i class="${k < idxEt ? 'f' : (k === idxEt ? 'p' : '')}"></i>`).join('');
+  let atraso = '';
+  if(i.status === 'atrasada'){
+    const d = leadTimeDias(i.prox.data+'T00:00:00');
+    atraso = `<span class="lig-atr ${d >= 15 ? 'a3' : (d >= 4 ? 'a2' : 'a1')}">${d} dia(s)</span>`;
+  } else if(i.status === 'hoje') atraso = '<span class="lig-atr hj">Hoje</span>';
+  const aberto = alertaLig.aberto === o.id;
+  const acoes = i.status === 'feita'
+    ? `<div class="lig-feita">✓ ${escapeHtml(i.msg || 'Registrada')}${i.msgSub ? `<small>${escapeHtml(i.msgSub)}</small>` : ''}</div>`
+    : `<div class="lig-acoes">
+         <button type="button" class="btn ${aberto ? 'btn-secondary' : 'btn-primary'} btn-sm" data-lig-abrir="${o.id}">${aberto ? 'Fechar' : 'Registrar ligação'}</button>
+       </div>`;
+  return `<tr class="lig-row ${i.status==='feita'?'done':''} ${aberto?'aberto':''}" data-id="${o.id}">
+    <td><div class="lig-cli">${escapeHtml(o.cliente||'—')}</div>
+      <div class="lig-ult" title="${ult ? escapeHtml(ult.etapa+' · '+fmtDate(ult.data)+' · '+ult.observacao) : ''}">${ult ? `Última: <b>${ult.etapa}</b> ${fmtDate(ult.data)} — ${escapeHtml(ult.observacao)}` : 'Nenhuma ligação realizada ainda'}</div></td>
+    <td><div class="lig-wa">${escapeHtml(o.whatsapp||'—')}
+      ${num ? `<a class="lig-ic wa" href="https://wa.me/${num}" target="_blank" rel="noopener" title="Abrir conversa no WhatsApp">${LIG_ICON_WA}</a>
+               <a class="lig-ic" href="tel:+${num}" title="Ligar">${LIG_ICON_TEL}</a>` : ''}</div></td>
+    <td>${i.prox ? `<span class="lig-et">${i.prox.etapa}</span>` : '—'}<div class="lig-prog" title="${feitasN} ligação(ões) realizada(s) de ${FOLLOWUP_ETAPAS.length}">${prog}</div></td>
+    <td style="white-space:nowrap;">${i.prox ? fmtDate(i.prox.data) : '—'}</td>
+    <td>${atraso || '—'}</td>
+    <td><span class="lig-tela">${escapeHtml(i.tela.label)}</span></td>
+    <td style="white-space:nowrap;">${escapeHtml(ligNomeVendedor(o.vendedor_id))}</td>
+    <td>${acoes}</td>
+  </tr>${aberto ? ligDetalheHTML(i) : ''}`;
+}
+
+function ligDetalheHTML(i){
+  const feitas = i.lista.filter(ligacaoRealizada);
+  const hist = feitas.length
+    ? feitas.slice().reverse().map(f=> `<div class="lig-hist-item"><span class="lig-et" style="min-width:34px;">${f.etapa}</span><span class="d">${fmtDate(f.data)}</span><span>${escapeHtml(f.observacao)}</span></div>`).join('')
+    : '<div class="lig-vazio" style="padding:14px 6px;">Nenhuma ligação realizada ainda.</div>';
+  const idx = FOLLOWUP_ETAPAS.indexOf(i.prox.etapa);
+  const seguinte = FOLLOWUP_ETAPAS[idx+1];
+  const d1 = i.lista.find(f=> f.etapa==='D1');
+  const base = i.prox.etapa === 'D1' ? todayISO() : (d1 && d1.data ? d1.data : todayISO());
+  const prevSeg = seguinte ? `Depois desta, a próxima será <b>${seguinte}</b> em <b>${fmtDate(addDiasISO(base, etapaOffset(seguinte)))}</b>.` : 'Esta é a última ligação da cadência (D28).';
+  const rapidas = ['Não atendeu','Caixa postal','Pediu para retornar depois','Vai pensar','Enviado mensagem no WhatsApp','Sem interesse no momento'];
+  return `<tr class="lig-det"><td colspan="8">
+    <div class="lig-det-grid">
+      <div class="lig-det-box"><h4>Histórico de ligações (${feitas.length})</h4><div class="lig-hist">${hist}</div></div>
+      <div class="lig-det-box">
+        <h4>Registrar ligação ${i.prox.etapa} · prevista para ${fmtDate(i.prox.data)}</h4>
+        <div class="lig-form-row">
+          <div><label>Data da ligação</label><input type="date" id="ligData" value="${todayISO()}" max="${todayISO()}" /></div>
+        </div>
+        <label style="display:block;font-size:11px;font-weight:700;color:var(--text-muted);margin-bottom:3px;">O que foi conversado *</label>
+        <textarea id="ligObs" placeholder="Descreva o retorno do cliente..."></textarea>
+        <div class="lig-rapidas">${rapidas.map(r=>`<button type="button" data-lig-rapida="${escapeHtml(r)}">${escapeHtml(r)}</button>`).join('')}</div>
+        <div style="font-size:11.5px;color:var(--text-muted);">${prevSeg}</div>
+        <div class="lig-det-acoes">
+          <div class="lig-form-row" style="margin:0;">
+            <div><label>Reagendar ${i.prox.etapa} para</label><input type="date" id="ligReag" value="${addDiasISO(todayISO(),1)}" min="${todayISO()}" /></div>
+            <button type="button" class="btn btn-secondary btn-sm" data-lig-reagendar="${i.o.id}">Reagendar</button>
+          </div>
+          <button type="button" class="btn btn-primary" data-lig-salvar="${i.o.id}">Salvar ligação</button>
+        </div>
+      </div>
+    </div>
+  </td></tr>`;
+}
+
+function renderAlertaLigTabela(){
+  renderAlertaLigResumo();
+  const wrap = document.getElementById('ligScroll');
+  const lista = ligFiltrados();
+  if(!lista.length){
+    wrap.innerHTML = `<div class="lig-vazio">${alertaLig.tab==='feita' ? 'Nenhuma ligação tratada nesta tela ainda.' : 'Nenhuma ligação encontrada com esses filtros.'}</div>`;
+    return;
+  }
+  const ordem = { atrasada:0, hoje:1, feita:2 };
+  lista.sort((a,b)=> (ordem[a.status]-ordem[b.status])
+    || (a.status==='atrasada' ? a.prox.data.localeCompare(b.prox.data) : (a.o.cliente||'').localeCompare(b.o.cliente||'','pt-BR')));
+  const titulos = { atrasada:'Atrasadas', hoje:'Para hoje · '+fmtDate(todayISO()), feita:'Tratadas nesta tela' };
+  let h = `<table class="lig-table"><thead><tr>
+      <th>Cliente / última ligação</th><th>WhatsApp</th><th>Ligação</th><th>Prevista</th><th>Atraso</th><th>Tela</th><th>Vendedor</th><th style="text-align:right;">Ação</th>
+    </tr></thead><tbody>`;
+  let grupo = null;
+  lista.forEach(i=>{
+    if(i.status !== grupo){
+      grupo = i.status;
+      const n = lista.filter(x=> x.status===grupo).length;
+      h += `<tr class="lig-grupo ${grupo}"><td colspan="8">${titulos[grupo]} (${n})</td></tr>`;
+    }
+    h += ligLinhaHTML(i);
+  });
+  h += '</tbody></table>';
+  wrap.innerHTML = h;
+  const obs = document.getElementById('ligObs');
+  if(obs) obs.focus();
+}
+
+async function salvarLigacaoAlerta(id, modo){
+  const item = alertaLig.itens.find(i=> String(i.o.id) === String(id));
+  if(!item) return;
+  const obs = (document.getElementById('ligObs')||{}).value || '';
+  const dataLig = (document.getElementById('ligData')||{}).value || todayISO();
+  const dataReag = (document.getElementById('ligReag')||{}).value || '';
+  if(modo === 'registrar' && !obs.trim()){ showToast('Descreva o que foi conversado na ligação.', true); return; }
+  if(modo === 'reagendar' && !dataReag){ showToast('Informe a nova data.', true); return; }
+
+  /* relê o follow-up atual para não sobrescrever alterações feitas em outra tela */
+  const { data: atual, error: errLer } = await sb.from('orcamentos').select('followup').eq('id', item.o.id).maybeSingle();
+  if(errLer){ showToast('Erro ao ler follow-up: '+errLer.message, true); return; }
+  const lista = parseFollowups(atual ? atual.followup : item.o.followup);
+  const prox = proximaLigacao(lista);
+  if(!prox){ showToast('Esta ligação já foi registrada em outra tela.', true); return; }
+  const etapa = prox.etapa;
+  if(modo === 'registrar'){ prox.observacao = obs.trim(); prox.data = dataLig; }
+  else prox.data = dataReag;
+  if(etapa === 'D1') reprogramarCadencia(lista);
+  normalizarFollowups(lista);
+  const json = lista.length ? JSON.stringify(lista) : null;
+  const { error } = await sb.from('orcamentos').update({ followup: json, updated_at: new Date().toISOString() }).eq('id', item.o.id);
+  if(error){ showToast('Erro ao salvar: '+error.message, true); return; }
+
+  item.o.followup = json;
+  item.lista = lista;
+  item.prox = proximaLigacao(lista);
+  const st = ligStatus(item.prox);
+  if(modo === 'registrar'){
+    item.status = 'feita';
+    item.msg = `${etapa} registrada`;
+    item.msgSub = item.prox ? `Próxima: ${item.prox.etapa} em ${fmtDate(item.prox.data)}` : 'Cadência concluída';
+    showToast(`Ligação ${etapa} registrada.`);
+  } else {
+    item.status = st;
+    if(st === 'feita'){ item.msg = `${etapa} reagendada`; item.msgSub = `Para ${fmtDate(item.prox.data)}`; }
+    showToast(`Ligação ${etapa} reagendada para ${fmtDate(dataReag)}.`);
+  }
+  alertaLig.aberto = null;
+  renderAlertaLigTabela();
+}
+
+document.getElementById('alertaLigacoesBody').addEventListener('click', (e)=>{
+  const tab = e.target.closest('[data-tab]');
+  if(tab){ alertaLig.tab = tab.dataset.tab; alertaLig.aberto = null; renderAlertaLigTabela(); return; }
+  const abrir = e.target.closest('[data-lig-abrir]');
+  if(abrir){
+    const id = abrir.dataset.ligAbrir;
+    alertaLig.aberto = String(alertaLig.aberto) === id ? null : (alertaLig.itens.find(i=> String(i.o.id)===id) || {o:{}}).o.id;
+    renderAlertaLigTabela();
+    return;
+  }
+  const rapida = e.target.closest('[data-lig-rapida]');
+  if(rapida){
+    const ta = document.getElementById('ligObs');
+    if(ta){ ta.value = ta.value.trim() ? ta.value.trim() + ' · ' + rapida.dataset.ligRapida : rapida.dataset.ligRapida; ta.focus(); }
+    return;
+  }
+  const btnS = e.target.closest('[data-lig-salvar]');
+  const btnR = e.target.closest('[data-lig-reagendar]');
+  const b = btnS || btnR;
+  if(b){
+    b.disabled = true;
+    salvarLigacaoAlerta(btnS ? btnS.dataset.ligSalvar : btnR.dataset.ligReagendar, btnS ? 'registrar' : 'reagendar')
+      .finally(()=>{ if(document.body.contains(b)) b.disabled = false; });
+  }
+});
+document.getElementById('alertaLigacoesBody').addEventListener('keydown', (e)=>{
+  if(e.target.id === 'ligObs' && e.key === 'Enter' && (e.ctrlKey || e.metaKey)){
+    const b = document.querySelector('[data-lig-salvar]');
+    if(b) b.click();
+  }
+});
+
 /* Ao fechar o aviso no X, leva para a tela de Leads */
 document.querySelector('#modalAlertaLigacoes .modal-close').addEventListener('click', ()=>{
   if(canAccessView('orcamentos')) goToView('orcamentos');
@@ -4874,81 +5208,283 @@ function leadsReprovadosFiltrados(aplicarMes){
     return true;
   });
 }
-function drawMotivosReprovacaoChart(){
+/* ---------- Gráfico: motivos de reprovação (rosca SVG clicável) ---------- */
+function reprMotivoDe(o){ return (o.motivo && o.motivo.nome) || 'Sem motivo informado'; }
+function reprDataRef(o){ return o.updated_at || o.data_abertura; }
+function reprPeriodoTxt(){
+  const fMes = Number(document.getElementById('leadReprFiltroMes').value || 0);
+  const fAno = document.getElementById('leadReprFiltroAno').value;
+  return fMes ? `${MESES[fMes-1]}/${fAno}` : `Ano de ${fAno}`;
+}
+function motivosReprDados(){
   const rows = leadsReprovadosFiltrados(true);
   const counts = {};
-  rows.forEach(o=>{
-    const nome = o.motivo?.nome || 'Sem motivo informado';
-    counts[nome] = (counts[nome]||0) + 1;
+  rows.forEach(o=>{ const n = reprMotivoDe(o); counts[n] = (counts[n]||0) + 1; });
+  const itens = Object.keys(counts).map(nome=> ({ nome, valor: counts[nome] }))
+    .sort((a,b)=> b.valor - a.valor || a.nome.localeCompare(b.nome,'pt-BR'));
+  /* "Sem motivo informado" sempre em cinza; os demais seguem a paleta */
+  let k = 0;
+  itens.forEach(it=>{ it.cor = it.nome === 'Sem motivo informado' ? '#94a3b8' : REPR_PALETA[(k++) % REPR_PALETA.length]; });
+  return { itens, total: rows.length };
+}
+const REPR_PALETA = ['#d64545','#1477a8','#e08e0b','#8b5cf6','#0d9488','#f5c518','#db2777','#0891b2','#1f9d55','#64748b'];
+/* rosca em quadro 220x220; segmentos com data-motivo para o clique */
+function motivosDonutSVGInterno(itens, total, cx, cy, R, esp){
+  const C = 2*Math.PI*R;
+  const gap = itens.filter(i=>i.valor>0).length > 1 ? 2 : 0;
+  let acum = 0, s = `<circle cx="${cx}" cy="${cy}" r="${R}" fill="none" stroke="#f1f5f9" stroke-width="${esp}"/>`;
+  itens.forEach(it=>{
+    if(!it.valor) return;
+    const len = C * it.valor / total;
+    const pct = it.valor/total*100;
+    s += `<circle class="md-seg" data-motivo="${escapeHtml(it.nome)}" cx="${cx}" cy="${cy}" r="${R}" fill="none" stroke="${it.cor}" stroke-width="${esp}"
+      stroke-dasharray="${Math.max(len-gap,0.5).toFixed(2)} ${(C-Math.max(len-gap,0.5)).toFixed(2)}" stroke-dashoffset="${(-acum).toFixed(2)}"
+      transform="rotate(-90 ${cx} ${cy})"><title>${escapeHtml(it.nome)}: ${it.valor} lead${it.valor===1?'':'s'} (${fmtPctBR(pct)})</title></circle>`;
+    acum += len;
   });
-  const labels = Object.keys(counts);
-  const data = Object.values(counts);
-  const total = data.reduce((a,b)=>a+b,0);
+  s += `<text x="${cx}" y="${cy-4}" text-anchor="middle" font-size="${R*0.42}" font-weight="800" fill="#0f172a">${total}</text>`;
+  s += `<text x="${cx}" y="${cy + R*0.26}" text-anchor="middle" font-size="${R*0.14}" font-weight="700" fill="#64748b" letter-spacing=".6">REPROVADOS</text>`;
+  return s;
+}
+function drawMotivosReprovacaoChart(){
   destroyChart('motivosRepr');
-  const emptyMsg = document.getElementById('motivosReprEmptyMsg');
-  const canvas = document.getElementById('chartMotivosReprovacao');
-  if(total === 0){
-    if(emptyMsg) emptyMsg.classList.remove('hidden');
-    canvas.classList.add('hidden');
+  const wrap = document.getElementById('motivosReprWrap');
+  if(!wrap) return;
+  const { itens, total } = motivosReprDados();
+  const pill = document.getElementById('motivosReprPill');
+  if(pill) pill.textContent = `${total} no período`;
+  if(!total){
+    wrap.innerHTML = '<div class="repr-vazio">Nenhum lead reprovado no período selecionado.</div>';
     return;
   }
-  if(emptyMsg) emptyMsg.classList.add('hidden');
-  canvas.classList.remove('hidden');
-  state.charts.motivosRepr = new Chart(canvas, {
-    type: 'pie',
-    data: { labels, datasets: [{ data, backgroundColor: pieSliceGradients(CHART_PALETTE), borderColor:'#fff', borderWidth:2 }] },
-    options: {
-      responsive:true, maintainAspectRatio:false,
-      layout:{ padding:8 },
-      plugins:{
-        legend:{
-          position:'bottom',
-          labels:{
-            boxWidth:12, font:{size:12,weight:'600'}, padding:10,
-            generateLabels(chart){
-              return chart.data.labels.map((label,i)=>{
-                const val = chart.data.datasets[0].data[i];
-                const pct = total ? Math.round((val/total)*100) : 0;
-                return {
-                  text: `${label} — ${val} (${pct}%)`,
-                  fillStyle: CHART_PALETTE[i % CHART_PALETTE.length],
-                  strokeStyle:'#fff', lineWidth:1, index:i
-                };
-              });
-            }
-          }
-        },
-        tooltip:{ callbacks:{ label:(c)=> `${c.label}: ${c.parsed} lead${c.parsed===1?'':'s'}` } }
-      }
-    },
-    plugins:[PIE_VALUE_LABELS_PLUGIN]
-  });
+  const svg = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 220 220" font-family="${SVG_FONT_DASH}">${motivosDonutSVGInterno(itens, total, 110, 110, 84, 28)}</svg>`;
+  const lista = itens.map(it=>{
+    const pct = it.valor/total*100;
+    return `<div class="repr-item" data-motivo="${escapeHtml(it.nome)}" title="Ver lançamentos: ${escapeHtml(it.nome)}">
+      <span class="dot" style="background:${it.cor}"></span>
+      <span class="nm">${escapeHtml(it.nome)}</span>
+      <span class="q">${it.valor}</span>
+      <span class="p">${Math.round(pct)}%</span>
+      <span></span><span class="bar"><i style="width:${pct.toFixed(1)}%;background:${it.cor}"></i></span>
+    </div>`;
+  }).join('');
+  wrap.innerHTML = `<div class="repr-donut">${svg}</div><div class="repr-lista">${lista}</div>`;
 }
-function drawReprovadosPorMesChart(){
+/* versão completa (rosca + legenda) para PNG/PDF */
+function motivosReprExportSVG(){
+  const { itens, total } = motivosReprDados();
+  if(!total) throw new Error('Nenhum lead reprovado no período para exportar.');
+  const W = 1200, rowH = 46, listaH = itens.length*rowH;
+  const H = Math.max(440, listaH + 70);
+  const cx = 230, cy = H/2, R = 170;
+  let s = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 ${W} ${H}" width="${W}" height="${H}" font-family="${SVG_FONT_DASH}"><rect width="${W}" height="${H}" fill="#fff"/>`;
+  s += motivosDonutSVGInterno(itens, total, cx, cy, R, 56);
+  const x0 = 480, y0 = (H - listaH)/2 + 10;
+  s += `<text x="${x0}" y="${y0-16}" font-size="12" font-weight="700" fill="#64748b" letter-spacing=".6">MOTIVO</text>`;
+  s += `<text x="${W-120}" y="${y0-16}" text-anchor="end" font-size="12" font-weight="700" fill="#64748b" letter-spacing=".6">LEADS</text>`;
+  s += `<text x="${W-20}" y="${y0-16}" text-anchor="end" font-size="12" font-weight="700" fill="#64748b" letter-spacing=".6">%</text>`;
+  const barW = W - 140 - (x0 + 30);
+  itens.forEach((it,i)=>{
+    const y = y0 + i*rowH, pct = it.valor/total*100;
+    if(i % 2 === 0) s += `<rect x="${x0-10}" y="${y-6}" width="${W-x0}" height="${rowH-4}" rx="8" fill="#f8fafc"/>`;
+    s += `<rect x="${x0}" y="${y+2}" width="16" height="16" rx="4" fill="${it.cor}"/>`;
+    s += `<text x="${x0+28}" y="${y+15}" font-size="16" font-weight="600" fill="#1e293b">${escapeHtml(it.nome)}</text>`;
+    s += `<rect x="${x0+28}" y="${y+24}" width="${barW}" height="6" rx="3" fill="#eef2f6"/>`;
+    s += `<rect x="${x0+28}" y="${y+24}" width="${Math.max(3, barW*pct/100).toFixed(1)}" height="6" rx="3" fill="${it.cor}"/>`;
+    s += `<text x="${W-120}" y="${y+20}" text-anchor="end" font-size="19" font-weight="800" fill="#0f172a">${it.valor}</text>`;
+    s += `<text x="${W-20}" y="${y+20}" text-anchor="end" font-size="16" font-weight="700" fill="#475569">${fmtPctBR(pct)}</text>`;
+  });
+  return s + '</svg>';
+}
+
+/* ---------- Gráfico: reprovados por mês (barras clicáveis) ---------- */
+function reprMesCounts(){
   const fAno = Number(document.getElementById('leadReprFiltroAno').value);
   const counts = new Array(12).fill(0);
   state.leadsReprovados.forEach(o=>{
-    const ref = o.updated_at || o.data_abertura;
+    const ref = reprDataRef(o);
     if(!ref) return;
     const d = new Date(ref);
     if(d.getFullYear() === fAno) counts[d.getMonth()]++;
   });
-  destroyChart('reprPorMes');
-  state.charts.reprPorMes = new Chart(document.getElementById('chartReprovadosPorMes'), {
-    type: 'bar',
-    data: { labels: MESES.map(m=>m.slice(0,3)), datasets: [{ data: counts, backgroundColor: verticalBarGradient('#d64545'), borderRadius:5, maxBarThickness:42 }] },
-    options: {
-      responsive:true, maintainAspectRatio:false,
-      layout:{ padding:{ top:26 } },
-      plugins:{ legend:{ display:false }, tooltip:{ callbacks:{ label:(c)=> c.parsed.y + ' lead' + (c.parsed.y===1?'':'s') } } },
-      scales:{
-        y:{ beginAtZero:true, suggestedMax: Math.max(...counts, 1) + 1, ticks:{ precision:0, font:{size:11} } },
-        x:{ ticks:{ font:{size:11} } }
-      }
-    },
-    plugins:[BAR_VALUE_LABELS_PLUGIN]
-  });
+  return counts;
 }
+function reprMesCfg(counts, exp){
+  const mesSel = Number(document.getElementById('leadReprFiltroMes').value || 0);
+  const comValor = counts.filter(v=> v>0);
+  const media = comValor.length ? comValor.reduce((s,v)=>s+v,0) / comValor.length : 0;
+  const cores = counts.map((_,i)=> mesSel && i === mesSel-1 ? '#9f1d1d' : '#d64545');
+  const options = dashBarOptions({ exp, compacto:true, max: Math.max(...counts, 1), tipFmt:(v)=> v + ' lead' + (v===1?'':'s') + ' reprovado' + (v===1?'':'s') });
+  if(!exp){
+    options.onClick = (evt, els)=>{ if(els && els.length) abrirReprDetalhe({ tipo:'mes', mes: els[0].index + 1 }); };
+    options.onHover = (evt, els)=>{ evt.native.target.style.cursor = els && els.length ? 'pointer' : 'default'; };
+    options.plugins.tooltip.callbacks.footer = ()=> 'Clique para ver os lançamentos';
+    options.plugins.tooltip.footerFont = { family:'Inter', size:11, weight:'500' };
+    options.plugins.tooltip.footerColor = '#94a3b8';
+  }
+  return {
+    type:'bar',
+    data:{ labels: MESES.map(m=>m.slice(0,3)), datasets:[{
+      data: counts, backgroundColor: verticalBarGradientMulti(cores),
+      borderRadius: exp ? 10 : 5, maxBarThickness: exp ? 70 : 38, categoryPercentage:.72, labelSize: exp ? 20 : 11, avgLine: media
+    }]},
+    options,
+    plugins:[DASH_AVG_LINE_PLUGIN, DASH_LABELS_PLUGIN]
+  };
+}
+function drawReprovadosPorMesChart(){
+  const counts = reprMesCounts();
+  destroyChart('reprPorMes');
+  state.charts.reprPorMes = new Chart(document.getElementById('chartReprovadosPorMes'), reprMesCfg(counts, false));
+  const pill = document.getElementById('reprMesPill');
+  if(pill) pill.textContent = `Total ${counts.reduce((s,v)=>s+v,0)} em ${document.getElementById('leadReprFiltroAno').value}`;
+}
+
+/* ---------- Tela de lançamentos (ao clicar nos gráficos) ---------- */
+const reprDet = { filtro:null, rows:[], busca:'', origem:'', vendedor:'' };
+function abrirReprDetalhe(filtro){
+  const fAno = Number(document.getElementById('leadReprFiltroAno').value);
+  let rows, titulo, sub;
+  if(filtro.tipo === 'motivo'){
+    rows = leadsReprovadosFiltrados(true).filter(o=> reprMotivoDe(o) === filtro.motivo);
+    titulo = `Motivo: ${filtro.motivo}`;
+    sub = `Leads reprovados · ${reprPeriodoTxt()}`;
+  } else {
+    rows = state.leadsReprovados.filter(o=>{
+      const ref = reprDataRef(o); if(!ref) return false;
+      const d = new Date(ref);
+      return d.getFullYear() === fAno && d.getMonth()+1 === filtro.mes;
+    });
+    titulo = `Reprovados em ${MESES[filtro.mes-1]}/${fAno}`;
+    sub = 'Todos os motivos';
+  }
+  rows = rows.slice().sort((a,b)=> String(reprDataRef(b)||'').localeCompare(String(reprDataRef(a)||'')));
+  Object.assign(reprDet, { filtro, rows, busca:'', origem:'', vendedor:'' });
+  document.getElementById('reprDetTitulo').textContent = titulo;
+  document.getElementById('reprDetSub').textContent = `${sub} · ${rows.length} lançamento${rows.length===1?'':'s'}`;
+  const origens = [...new Set(rows.map(o=> o.origem?.nome).filter(Boolean))].sort((a,b)=>a.localeCompare(b,'pt-BR'));
+  const vends = [...new Set(rows.map(o=> o.vendedor?.nome).filter(Boolean))].sort((a,b)=>a.localeCompare(b,'pt-BR'));
+  document.getElementById('reprDetBody').innerHTML = `
+    <div class="lig-top">
+      <div class="lig-kpis" id="reprDetKpis"></div>
+      <div class="lig-filtros">
+        <input type="text" id="reprDetBusca" placeholder="Buscar cliente, CPF ou WhatsApp..." />
+        <select id="reprDetOrigem"><option value="">Origem: Todas</option>${origens.map(n=>`<option>${escapeHtml(n)}</option>`).join('')}</select>
+        <select id="reprDetVend"><option value="">Vendedor: Todos</option>${vends.map(n=>`<option>${escapeHtml(n)}</option>`).join('')}</select>
+      </div>
+    </div>
+    <div class="lig-scroll" id="reprDetScroll"></div>`;
+  document.getElementById('reprDetBusca').addEventListener('input', (e)=>{ reprDet.busca = e.target.value; renderReprDetalhe(); });
+  document.getElementById('reprDetOrigem').addEventListener('change', (e)=>{ reprDet.origem = e.target.value; renderReprDetalhe(); });
+  document.getElementById('reprDetVend').addEventListener('change', (e)=>{ reprDet.vendedor = e.target.value; renderReprDetalhe(); });
+  renderReprDetalhe();
+  openModal('modalReprDet');
+}
+function reprTop(rows, fn){
+  const c = {};
+  rows.forEach(o=>{ const k = fn(o); if(k) c[k] = (c[k]||0) + 1; });
+  const top = Object.entries(c).sort((a,b)=> b[1]-a[1])[0];
+  return top ? `${top[0]} (${top[1]})` : '—';
+}
+function renderReprDetalhe(){
+  const b = reprDet.busca.trim().toLowerCase();
+  const rows = reprDet.rows.filter(o=>{
+    if(reprDet.origem && o.origem?.nome !== reprDet.origem) return false;
+    if(reprDet.vendedor && o.vendedor?.nome !== reprDet.vendedor) return false;
+    if(b && !`${o.cliente||''} ${o.cpf||''} ${o.whatsapp||''}`.toLowerCase().includes(b)) return false;
+    return true;
+  });
+  const valor = rows.reduce((s,o)=> s + (Number(o.valor)||0), 0);
+  const porMotivo = reprDet.filtro.tipo === 'mes';
+  document.getElementById('reprDetKpis').innerHTML = `
+    <div class="lig-kpi r"><div class="l">Leads reprovados</div><div class="v">${rows.length}</div></div>
+    <div class="lig-kpi y"><div class="l">Valor em orçamentos</div><div class="v" style="font-size:18px;">${fmtMoney(valor)}</div></div>
+    <div class="lig-kpi"><div class="l">Principal origem</div><div class="v" style="font-size:15px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">${escapeHtml(reprTop(rows, o=> o.origem?.nome))}</div></div>
+    <div class="lig-kpi"><div class="l">${porMotivo ? 'Principal motivo' : 'Principal vendedor'}</div><div class="v" style="font-size:15px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">${escapeHtml(porMotivo ? reprTop(rows, reprMotivoDe) : reprTop(rows, o=> o.vendedor?.nome))}</div></div>`;
+  const wrap = document.getElementById('reprDetScroll');
+  if(!rows.length){ wrap.innerHTML = '<div class="lig-vazio">Nenhum lançamento encontrado com esses filtros.</div>'; return; }
+  const corMotivo = {};
+  motivosReprDados().itens.forEach(it=> corMotivo[it.nome] = it.cor);
+  wrap.innerHTML = `<table class="lig-table"><thead><tr>
+      <th>#</th><th>Reprovado em</th><th>Abertura</th><th>Cliente</th><th>WhatsApp</th><th>CPF</th><th>Origem</th><th>Vendedor</th><th>Motivo</th><th>Etapa</th><th style="text-align:right;">Valor</th><th style="text-align:right;">Ações</th>
+    </tr></thead><tbody>
+    ${rows.map((o,i)=>{
+      const num = numeroWhatsApp(o.whatsapp);
+      const mot = reprMotivoDe(o);
+      const ref = reprDataRef(o);
+      return `<tr class="lig-row">
+        <td style="color:#94a3b8;font-weight:700;">${i+1}</td>
+        <td style="white-space:nowrap;">${ref ? fmtDate(dataLocalISO(ref)) : '—'}</td>
+        <td style="white-space:nowrap;">${fmtDate(o.data_abertura)}</td>
+        <td class="lig-cli">${escapeHtml(o.cliente||'—')}</td>
+        <td><div class="lig-wa">${escapeHtml(o.whatsapp||'—')}${num ? `<a class="lig-ic wa" href="https://wa.me/${num}" target="_blank" rel="noopener" title="Abrir conversa no WhatsApp">${LIG_ICON_WA}</a>` : ''}</div></td>
+        <td style="white-space:nowrap;">${escapeHtml(o.cpf||'—')}</td>
+        <td>${escapeHtml(o.origem?.nome||'—')}</td>
+        <td>${escapeHtml(o.vendedor?.nome||'—')}</td>
+        <td><span class="rd-motivo"><i style="background:${corMotivo[mot]||'#94a3b8'}"></i>${escapeHtml(mot)}</span></td>
+        <td>${o.situacao === 'Reprovado' ? '<span class="rd-etapa l">Lead</span>' : '<span class="rd-etapa e" title="Reprovado na tela Orçamento enviado">Orç. enviado</span>'}</td>
+        <td style="text-align:right;white-space:nowrap;font-weight:600;">${o.valor ? fmtMoney(o.valor) : '—'}</td>
+        <td><div class="rd-acoes row-actions">
+          <button title="Editar" data-rd-edit="${o.id}"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 3a2.85 2.85 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5Z"/></svg></button>
+          <button title="Reabrir como Lead" data-rd-reabrir="${o.id}"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 4v6h6"/><path d="M3.51 15a9 9 0 1 0 2.13-9.36L1 10"/></svg></button>
+        </div></td>
+      </tr>`;
+    }).join('')}
+    </tbody><tfoot><tr><td colspan="10">Total: ${rows.length} lead${rows.length===1?'':'s'} reprovado${rows.length===1?'':'s'}</td><td style="text-align:right;white-space:nowrap;">${fmtMoney(valor)}</td><td></td></tr></tfoot></table>`;
+}
+document.getElementById('reprDetBody').addEventListener('click', (e)=>{
+  const ed = e.target.closest('[data-rd-edit]');
+  if(ed){ openOrcamentoModal(ed.dataset.rdEdit); return; }
+  const re = e.target.closest('[data-rd-reabrir]');
+  if(re){ closeModal('modalReprDet'); reabrirLead(re.dataset.rdReabrir); }
+});
+document.getElementById('motivosReprWrap').addEventListener('click', (e)=>{
+  const el = e.target.closest('[data-motivo]');
+  if(el) abrirReprDetalhe({ tipo:'motivo', motivo: el.getAttribute('data-motivo') });
+});
+
+/* ---------- Exportação PNG / PDF dos gráficos de reprovados ---------- */
+async function exportarGraficoRepr(key, fmt){
+  const fAno = document.getElementById('leadReprFiltroAno').value;
+  const fMes = Number(document.getElementById('leadReprFiltroMes').value || 0);
+  let conteudo, titulo, sub, arquivo;
+  if(key === 'motivos'){
+    const { total } = motivosReprDados();
+    conteudo = await svgParaImagem(motivosReprExportSVG());
+    titulo = 'Motivos de Reprovação';
+    sub = `Período: ${reprPeriodoTxt()} · ${total} lead${total===1?'':'s'} reprovado${total===1?'':'s'}`;
+    arquivo = 'motivos-reprovacao';
+  } else {
+    const counts = reprMesCounts();
+    conteudo = await chartParaImagem(reprMesCfg(counts, true), 1200, 560);
+    titulo = `Leads Reprovados por Mês · ${fAno}`;
+    sub = `Total no ano: ${counts.reduce((s,v)=>s+v,0)}${fMes ? ' · Destaque: '+MESES[fMes-1] : ''}`;
+    arquivo = 'leads-reprovados-por-mes';
+  }
+  const canvas = await montarCanvasExport(titulo, sub, conteudo);
+  const emp = state.empresaAtual || EMPRESA_FALLBACK;
+  const nome = [arquivo, slugDash(emp.nome), fMes ? `${fAno}-${String(fMes).padStart(2,'0')}` : fAno].join('_');
+  if(fmt === 'png'){ baixarDataUrl(canvas.toDataURL('image/png'), nome + '.png'); return; }
+  const jsPDF = await carregarJsPDF();
+  const pdf = new jsPDF({ orientation: canvas.width >= canvas.height ? 'landscape' : 'portrait', unit:'mm', format:'a4', compress:true });
+  const pw = pdf.internal.pageSize.getWidth(), ph = pdf.internal.pageSize.getHeight(), m = 8;
+  const r = Math.min((pw-2*m)/canvas.width, (ph-2*m)/canvas.height);
+  pdf.setProperties({ title: titulo });
+  pdf.addImage(canvas.toDataURL('image/jpeg', 0.95), 'JPEG', (pw - canvas.width*r)/2, m, canvas.width*r, canvas.height*r);
+  pdf.save(nome + '.pdf');
+}
+document.getElementById('view-leads-reprovados').addEventListener('click', async (e)=>{
+  const b = e.target.closest('[data-rexp]');
+  if(!b) return;
+  const grupo = b.parentElement.querySelectorAll('button');
+  grupo.forEach(x=> x.disabled = true);
+  try{
+    showToast(b.dataset.fmt === 'pdf' ? 'Gerando PDF...' : 'Gerando imagem...');
+    await exportarGraficoRepr(b.dataset.rexp, b.dataset.fmt);
+  }catch(err){ console.error(err); showToast(err.message || 'Erro ao exportar o gráfico.', true); }
+  finally{ grupo.forEach(x=> x.disabled = false); }
+});
+
 function drawLeadsReprovadosTable(){
   const search = document.getElementById('leadReprSearch').value.toLowerCase();
   const rows = leadsReprovadosFiltrados(true).filter(o=>{
