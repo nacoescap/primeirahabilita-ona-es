@@ -568,6 +568,165 @@ tr.lig-det td{background:#f8fbfd;padding:0 10px 14px;border-bottom:2px solid var
 .gauge-canvas-wrap svg{width:100%;height:auto;display:block;}
 .gauge-meta{font-size:12px;color:var(--text-muted);margin-top:4px;display:flex;align-items:center;justify-content:center;gap:8px;flex-wrap:wrap;}
 .gauge-meta b{color:#0f172a;font-weight:700;}
+.gauge-card{position:relative;}
+.gauge-modo{position:absolute;top:8px;right:10px;padding:2px;z-index:1;}
+.gauge-modo button{padding:4px 10px;font-size:11.5px;}
+.gauge-card .gauge-title{margin-top:30px;}
+@media print{ .gauge-card .gauge-title{margin-top:0;} }
+
+/* ---------- Cadastro de metas · visão anual ---------- */
+.ma-yearnav{display:flex;align-items:center;gap:6px;}
+.ma-yearnav .btn{min-width:34px;font-size:16px;line-height:1;}
+.ma-yearnav select{font-weight:700;color:var(--blue-800);}
+.ma-ind-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:14px;margin-bottom:16px;}
+.ma-ind{position:relative;display:flex;align-items:center;gap:14px;width:100%;text-align:left;font:inherit;color:inherit;cursor:pointer;
+  background:var(--surface);border:1.5px solid var(--border);border-radius:var(--radius);padding:15px 18px;box-shadow:var(--shadow);
+  transition:border-color .15s, box-shadow .15s;}
+.ma-ind:hover{border-color:var(--blue-600);}
+.ma-ind.active{border-color:var(--blue-700);box-shadow:0 0 0 3px rgba(20,119,168,.14), var(--shadow);}
+.ma-ind-ico{width:44px;height:44px;border-radius:12px;display:flex;align-items:center;justify-content:center;flex-shrink:0;background:var(--bg);color:var(--blue-700);transition:background .15s,color .15s;}
+.ma-ind.active .ma-ind-ico{background:var(--blue-700);color:#fff;}
+.ma-ind-ico svg{width:22px;height:22px;}
+.ma-ind-nome{font-weight:700;font-size:14px;color:var(--text);}
+.ma-ind-sub{font-size:12px;color:var(--text-muted);margin-top:3px;font-variant-numeric:tabular-nums;}
+.ma-ind-sub b{color:var(--text);font-weight:700;}
+.ma-ind-sel{position:absolute;top:10px;right:12px;font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.4px;color:var(--blue-700);opacity:0;}
+.ma-ind.active .ma-ind-sel{opacity:1;}
+.ma-top{display:grid;grid-template-columns:minmax(0,1.1fr) minmax(0,1fr);gap:14px;margin-bottom:16px;}
+.ma-panel{background:var(--surface);border-radius:var(--radius);box-shadow:var(--shadow);border:1px solid #e8edf2;padding:16px 18px;min-width:0;}
+.ma-panel-head{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:4px;}
+.ma-panel h4{margin:0;font-size:12px;font-weight:700;color:var(--blue-800);text-transform:uppercase;letter-spacing:.5px;}
+.ma-hint{font-size:12px;color:var(--text-muted);margin:2px 0 12px;}
+.ma-quick{display:flex;flex-wrap:wrap;gap:10px;align-items:flex-end;}
+.ma-quick-label{width:100%;font-size:12.5px;font-weight:600;color:var(--text);}
+.ma-quick + .ma-quick{margin-top:14px;padding-top:14px;border-top:1px dashed var(--border);}
+.ma-field{display:flex;flex-direction:column;gap:4px;min-width:0;}
+.ma-field > label{font-size:10.5px;font-weight:700;color:var(--text-muted);text-transform:uppercase;letter-spacing:.4px;}
+.ma-input{display:flex;align-items:center;border:1.5px solid var(--border);border-radius:var(--radius-sm);background:#fff;overflow:hidden;transition:border-color .15s, box-shadow .15s, background .15s;}
+.ma-input:focus-within{border-color:var(--blue-600);box-shadow:0 0 0 3px rgba(20,119,168,.12);}
+.ma-input > span{padding-left:10px;font-size:12px;font-weight:700;color:var(--text-muted);white-space:nowrap;}
+.ma-input input,.ma-input select{border:none;outline:none;padding:9px 10px;font-size:14px;width:100%;min-width:0;background:transparent;font-variant-numeric:tabular-nums;}
+.ma-input.changed{border-color:var(--warning);background:#fffcf5;}
+.ma-quick .ma-field{width:150px;}
+.ma-quick .ma-field.wide{width:230px;}
+.ma-kpis{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:10px;margin:10px 0 12px;}
+.ma-kpi{background:var(--bg);border-radius:10px;padding:10px 12px;min-width:0;}
+.ma-kpi span{display:block;font-size:10.5px;font-weight:700;color:var(--text-muted);text-transform:uppercase;letter-spacing:.4px;}
+.ma-kpi b{display:block;font-family:'Poppins',system-ui,sans-serif;font-size:16px;color:var(--text);margin-top:3px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;font-variant-numeric:tabular-nums;}
+.ma-chart svg{width:100%;height:auto;display:block;}
+.ma-meses{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:14px;}
+.ma-mes{background:var(--surface);border-radius:12px;box-shadow:var(--shadow);border:1px solid #e8edf2;border-top:4px solid #d5dde6;padding:13px 15px 11px;transition:border-color .2s, box-shadow .2s;min-width:0;}
+.ma-mes.preenchido{border-top-color:var(--blue-600);}
+.ma-mes.alterado{border-top-color:var(--warning);}
+.ma-mes.atual{box-shadow:0 0 0 2px var(--yellow-500), var(--shadow);}
+.ma-mes-head{display:flex;align-items:center;justify-content:space-between;gap:8px;}
+.ma-mes-titulo{display:flex;align-items:baseline;gap:8px;min-width:0;}
+.ma-mes-num{font-size:11px;font-weight:700;color:var(--text-muted);font-variant-numeric:tabular-nums;}
+.ma-mes-nome{font-family:'Poppins',system-ui,sans-serif;font-weight:600;font-size:15px;color:var(--blue-800);}
+.ma-tag{font-size:10px;font-weight:700;padding:3px 8px;border-radius:999px;text-transform:uppercase;letter-spacing:.3px;white-space:nowrap;}
+.ma-tag.atual{background:#fff6d1;color:#8a6500;}
+.ma-tag.alt{background:var(--warning-bg);color:var(--warning);}
+.ma-tag.passado{background:var(--bg);color:var(--text-muted);}
+.ma-mes-sub{font-size:11.5px;color:var(--text-muted);margin:2px 0 10px;}
+.ma-mes .ma-field + .ma-field{margin-top:8px;}
+.ma-mes-foot{margin-top:10px;padding-top:8px;border-top:1px dashed var(--border);font-size:11.5px;color:var(--text-muted);display:flex;justify-content:space-between;gap:8px;flex-wrap:wrap;font-variant-numeric:tabular-nums;}
+.ma-mes-foot b{color:var(--text);font-weight:600;}
+.ma-footer{display:flex;align-items:center;gap:18px;flex-wrap:wrap;margin-top:14px;background:var(--surface);border-radius:var(--radius);border:1px solid #e8edf2;box-shadow:0 -2px 14px rgba(13,74,110,.08);padding:12px 18px;}
+.ma-tot{display:flex;gap:26px;flex-wrap:wrap;}
+.ma-tot div{font-size:10.5px;font-weight:700;color:var(--text-muted);text-transform:uppercase;letter-spacing:.4px;}
+.ma-tot b{display:block;font-family:'Poppins',system-ui,sans-serif;font-size:17px;color:var(--text);text-transform:none;letter-spacing:0;font-variant-numeric:tabular-nums;}
+.ma-status{display:flex;align-items:center;gap:7px;font-size:12.5px;font-weight:600;}
+.ma-status i{width:8px;height:8px;border-radius:50%;background:currentColor;display:inline-block;}
+.ma-status.dirty{color:var(--warning);}
+.ma-status.ok{color:var(--success);}
+@media (max-width:1350px){ .ma-meses{grid-template-columns:repeat(3,minmax(0,1fr));} }
+@media (max-width:1100px){ .ma-top{grid-template-columns:1fr;} }
+@media (max-width:900px){ .ma-meses{grid-template-columns:repeat(2,minmax(0,1fr));} .ma-ind-grid{grid-template-columns:1fr;} .ma-kpis{grid-template-columns:repeat(2,minmax(0,1fr));} }
+@media (max-width:560px){ .ma-meses{grid-template-columns:1fr;} }
+/* ---------- Cadastro de metas (mensal, dia a dia) ---------- */
+.mt-mesnav{display:flex;align-items:center;gap:6px;}
+.mt-mesnav .btn{min-width:34px;font-size:16px;line-height:1;}
+.mt-mesnav select{font-weight:700;color:var(--blue-800);}
+.mt-table{overflow:visible;margin-top:2px;}
+.mt-table thead th{top:0;}
+.mt-table thead th:first-child{border-top-left-radius:var(--radius);}
+.mt-table thead th:last-child{border-top-right-radius:var(--radius);}
+.mt-table td{padding:6px 12px;vertical-align:middle;font-variant-numeric:tabular-nums;}
+.mt-table td.mt-dia{font-weight:700;color:var(--blue-800);width:60px;}
+.mt-table td.mt-sem{color:var(--text-muted);width:130px;}
+.mt-table td.mt-acum{color:var(--text-muted);font-size:12.8px;}
+.mt-table .ma-input{max-width:190px;}
+.mt-table .ma-input input{padding:7px 9px;font-size:13.5px;}
+.mt-table tr.weekend .ma-input{background:#fff8f8;}
+.mt-table tr.hoje td{background:#fffbe6;}
+.mt-table tr.hoje td.mt-dia{box-shadow:inset 4px 0 0 var(--yellow-500);}
+.mt-hoje-tag{display:inline-block;margin-left:6px;font-size:9.5px;font-weight:700;text-transform:uppercase;letter-spacing:.3px;background:#fff6d1;color:#8a6500;padding:2px 6px;border-radius:999px;vertical-align:middle;}
+.mt-fds-tag{font-size:10px;font-weight:700;color:var(--danger);margin-left:6px;text-transform:uppercase;letter-spacing:.3px;}
+
+/* ---------- Velocímetro: editar meta no próprio card ---------- */
+.gauge-edit{position:absolute;top:8px;left:10px;z-index:1;display:inline-flex;align-items:center;gap:5px;
+  border:1.5px solid var(--border);background:#fff;color:var(--blue-700);border-radius:7px;padding:4px 9px;
+  font-size:11.5px;font-weight:600;cursor:pointer;transition:background .15s,border-color .15s;}
+.gauge-edit:hover{background:var(--bg);border-color:var(--blue-600);}
+.gauge-edit svg{width:13px;height:13px;}
+.gm-periodo{display:flex;align-items:center;gap:10px;background:var(--bg);border-radius:10px;padding:10px 14px;margin-bottom:16px;font-size:13px;color:var(--text-muted);}
+.gm-periodo b{color:var(--text);}
+.gm-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px;}
+.gm-atual{font-size:11.5px;color:var(--text-muted);margin-top:5px;font-variant-numeric:tabular-nums;}
+.gm-atual b{color:var(--text);}
+.gm-info{margin-top:16px;font-size:12.3px;color:var(--text-muted);line-height:1.5;background:#f8fafc;border:1px dashed var(--border);border-radius:10px;padding:10px 12px;}
+.gm-link{background:none;border:none;color:var(--blue-700);font-weight:600;cursor:pointer;padding:0;font-size:inherit;text-decoration:underline;}
+@media (max-width:560px){ .gm-grid{grid-template-columns:1fr;} }
+#toastMsg{pointer-events:none;}
+
+/* ---------- Clientes 18 anos · Gantt ---------- */
+.c18-gantt-wrap{background:var(--surface);}
+.c18g{--gn:270px;position:relative;font-size:12.5px;}
+.c18g-head,.c18g-row{display:flex;}
+.c18g-head{position:sticky;top:0;z-index:4;background:var(--blue-800);color:#fff;}
+.c18g-name{flex:0 0 var(--gn);width:var(--gn);position:sticky;left:0;z-index:3;background:#fff;border-right:1px solid var(--border);padding:8px 12px;display:flex;align-items:center;gap:8px;min-width:0;}
+.c18g-head .c18g-name{background:var(--blue-800);font-weight:600;font-size:12.3px;text-transform:uppercase;letter-spacing:.3px;border-right-color:rgba(255,255,255,.15);}
+.c18g-track{flex:1;position:relative;min-width:0;}
+.c18g-meses{display:flex;height:100%;}
+.c18g-mes{flex:1;border-left:1px solid rgba(255,255,255,.15);padding:7px 6px 6px;text-align:center;min-width:0;}
+.c18g-mes b{display:block;font-size:11.5px;font-weight:700;text-transform:capitalize;white-space:nowrap;}
+.c18g-mes span{display:inline-block;margin-top:3px;font-size:10px;font-weight:700;padding:1px 7px;border-radius:999px;background:rgba(255,255,255,.14);white-space:nowrap;}
+.c18g-mes span.tem{background:var(--yellow-500);color:#161616;}
+.c18g-mes.atual{background:rgba(255,255,255,.1);}
+.c18g-body{position:relative;}
+.c18g-grid{position:absolute;top:0;bottom:0;left:var(--gn);right:0;display:flex;pointer-events:none;z-index:0;}
+.c18g-grid div{flex:1;border-left:1px solid #eef1f4;}
+.c18g-grid div.atual{background:rgba(245,197,24,.06);}
+.c18g-hoje{position:absolute;top:0;bottom:0;width:0;border-left:2px dashed var(--danger);z-index:1;pointer-events:none;}
+.c18g-hoje span{position:sticky;top:0;display:inline-block;transform:translateX(-50%);background:var(--danger);color:#fff;font-size:9.5px;font-weight:700;padding:1px 6px;border-radius:999px;text-transform:uppercase;letter-spacing:.3px;}
+.c18g-row{border-bottom:1px solid #eef1f4;min-height:44px;}
+.c18g-row:hover .c18g-name,.c18g-row:hover{background:#f6fafc;}
+.c18g-row .c18g-track{z-index:2;}
+.c18g-nome{font-weight:600;color:var(--text);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+.c18g-det{font-size:11px;color:var(--text-muted);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+.c18g-txt{flex:1;min-width:0;}
+.c18g-name .row-actions{flex-shrink:0;}
+.c18g-bar{position:absolute;top:50%;height:16px;margin-top:-8px;border-radius:999px;background:linear-gradient(90deg,rgba(20,119,168,.25),var(--blue-600));}
+.c18g-bar.prox{background:linear-gradient(90deg,rgba(224,142,11,.25),var(--warning));}
+.c18g-bar.corte{border-top-right-radius:0;border-bottom-right-radius:0;}
+.c18g-marco{position:absolute;top:50%;width:14px;height:14px;margin:-7px 0 0 -7px;transform:rotate(45deg);border-radius:3px;background:var(--success);box-shadow:0 0 0 2px #fff,0 1px 4px rgba(15,23,42,.3);}
+.c18g-marco.prox{background:var(--warning);}
+.c18g-marco.futuro{background:var(--blue-700);}
+.c18g-aviso{position:absolute;top:50%;width:8px;height:8px;margin:-4px 0 0 -4px;border-radius:50%;background:#fff;border:2px solid var(--yellow-600);z-index:1;}
+.c18g-lbl{position:absolute;top:50%;transform:translateY(-50%);font-size:11px;font-weight:700;white-space:nowrap;margin-left:11px;padding:2px 7px;border-radius:6px;background:rgba(255,255,255,.94);color:var(--text);}
+.c18g-lbl.esq{transform:translate(-100%,-50%);margin-left:-11px;}
+.c18g-lbl.ok{color:var(--success);}
+.c18g-lbl.prox{color:#9a6c00;}
+.c18g-lbl.fora{color:var(--blue-800);margin-left:-6px;border:1px solid #cfe2ee;box-shadow:0 1px 3px rgba(15,23,42,.12);}
+.c18g-leg{display:flex;flex-wrap:wrap;gap:16px;align-items:center;font-size:12px;color:var(--text-muted);margin:-6px 0 12px;}
+.c18g-leg i{display:inline-block;vertical-align:middle;margin-right:6px;}
+.c18g-leg .l-bar{width:26px;height:10px;border-radius:999px;background:linear-gradient(90deg,rgba(20,119,168,.25),var(--blue-600));}
+.c18g-leg .l-bar.prox{background:linear-gradient(90deg,rgba(224,142,11,.25),var(--warning));}
+.c18g-leg .l-marco{width:10px;height:10px;transform:rotate(45deg);border-radius:2px;background:var(--success);}
+.c18g-leg .l-aviso{width:8px;height:8px;border-radius:50%;border:2px solid var(--yellow-600);}
+.c18g-leg .l-hoje{width:0;height:14px;border-left:2px dashed var(--danger);}
+.c18g-vazio{padding:28px;text-align:center;color:var(--text-muted);}
+@media print{ .c18g-name,.c18g-head{position:static;} } /* o aviso não bloqueia cliques nos botões que ficam embaixo dele */
 .mini-chart-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;}
 .mini-chart-card{background:var(--surface);border-radius:12px;box-shadow:var(--shadow);border:1px solid #e8edf2;padding:12px 14px 10px;}
 .mini-chart-title{font-size:10.5px;font-weight:700;color:var(--text-muted);margin-bottom:6px;text-transform:uppercase;letter-spacing:.2px;}
@@ -1003,6 +1162,10 @@ tr.lig-det td{background:#f8fbfd;padding:0 10px 14px;border-bottom:2px solid var
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="6"/><circle cx="12" cy="12" r="2"/></svg>
           <span>Metas</span>
         </div>
+        <div class="nav-item hidden" data-view="cad-metas-anual"><!-- tela oculta: remova "hidden" para reexibir -->
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/><path d="M8 14h.01M12 14h.01M16 14h.01M8 18h.01M12 18h.01M16 18h.01"/></svg>
+          <span>Metas Anuais</span>
+        </div>
         <div class="nav-item" data-view="cad-backup">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><path d="M7 10l5 5 5-5"/><path d="M12 15V3"/></svg>
           <span>Backup</span>
@@ -1064,16 +1227,31 @@ tr.lig-det td{background:#f8fbfd;padding:0 10px 14px;border-bottom:2px solid var
           </div>
           <div class="gauge-grid">
             <div class="gauge-card" id="gaugePropostasCard">
+              <button type="button" class="gauge-edit no-print" data-gauge-edit="propostas" title="Alterar a meta deste indicador"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 20h9"/><path d="M16.5 3.5a2.1 2.1 0 0 1 3 3L7 19l-4 1 1-4Z"/></svg>Editar meta</button>
+              <div class="segmented gauge-modo no-print" data-gauge-modo="propostas" title="Ver por valor ou por quantidade">
+                <button type="button" data-modo="valor" >Valor</button>
+                <button type="button" data-modo="qtd" class="active">Qtd</button>
+              </div>
               <div class="gauge-title">Propostas Enviadas</div>
               <div class="gauge-canvas-wrap" id="gaugePropostas"></div>
               <div class="gauge-meta" id="gaugePropostasMeta">—</div>
             </div>
             <div class="gauge-card" id="gaugeContatosCard">
+              <button type="button" class="gauge-edit no-print" data-gauge-edit="contatos_realizados" title="Alterar a meta deste indicador"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 20h9"/><path d="M16.5 3.5a2.1 2.1 0 0 1 3 3L7 19l-4 1 1-4Z"/></svg>Editar meta</button>
+              <div class="segmented gauge-modo no-print" data-gauge-modo="contatos_realizados" title="Ver por valor ou por quantidade">
+                <button type="button" data-modo="valor" >Valor</button>
+                <button type="button" data-modo="qtd" class="active">Qtd</button>
+              </div>
               <div class="gauge-title">Contatos Realizados</div>
               <div class="gauge-canvas-wrap" id="gaugeContatos"></div>
               <div class="gauge-meta" id="gaugeContatosMeta">—</div>
             </div>
             <div class="gauge-card" id="gaugeAprovadosCard">
+              <button type="button" class="gauge-edit no-print" data-gauge-edit="aprovados" title="Alterar a meta deste indicador"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 20h9"/><path d="M16.5 3.5a2.1 2.1 0 0 1 3 3L7 19l-4 1 1-4Z"/></svg>Editar meta</button>
+              <div class="segmented gauge-modo no-print" data-gauge-modo="aprovados" title="Ver por valor ou por quantidade">
+                <button type="button" data-modo="valor" class="active">Valor</button>
+                <button type="button" data-modo="qtd" >Qtd</button>
+              </div>
               <div class="gauge-title">Aprovados</div>
               <div class="gauge-canvas-wrap" id="gaugeAprovados"></div>
               <div class="gauge-meta" id="gaugeAprovadosMeta">—</div>
@@ -1191,10 +1369,28 @@ tr.lig-det td{background:#f8fbfd;padding:0 10px 14px;border-bottom:2px solid var
             <option value="menor">Ainda menores de 18</option>
             <option value="pendente">Mensagem ainda não enviada</option>
           </select>
+          <div class="segmented" id="c18Modo" title="Forma de visualizar">
+            <button type="button" data-modo="tabela">Tabela</button>
+            <button type="button" data-modo="gantt" class="active">Gantt</button>
+          </div>
+          <select id="c18Horizonte" title="Período exibido no gráfico">
+            <option value="6">Próximos 6 meses</option>
+            <option value="12" selected>Próximos 12 meses</option>
+            <option value="24">Próximos 24 meses</option>
+            <option value="36">Próximos 36 meses</option>
+          </select>
           <div class="spacer"></div>
           <button class="btn btn-secondary" id="btnEditarMsg18" type="button">Editar mensagem padrão</button>
         </div>
-        <div class="table-wrap">
+        <div class="c18g-leg" id="c18Legenda">
+          <span><i class="l-bar"></i>Tempo até completar 18</span>
+          <span><i class="l-bar prox"></i>Completa em até 30 dias</span>
+          <span><i class="l-marco"></i>Dia dos 18 anos</span>
+          <span><i class="l-aviso"></i>Data do aviso</span>
+          <span><i class="l-hoje"></i>Hoje</span>
+        </div>
+        <div class="table-wrap c18-gantt-wrap" id="c18GanttWrap"></div>
+        <div class="table-wrap hidden" id="c18TabelaWrap">
           <table>
             <thead><tr>
               <th>Cliente</th><th>WhatsApp</th><th>Nascimento</th><th>Idade</th><th>Completa 18 em</th><th>Faltam</th>
@@ -1509,9 +1705,95 @@ tr.lig-det td{background:#f8fbfd;padding:0 10px 14px;border-bottom:2px solid var
       <!-- ============ CADASTRO: METAS ============ -->
       <section class="view list-view" id="view-cad-metas">
         <div class="toolbar" id="metasToolbar"></div>
-        <p class="helper-text">Defina a meta de quantidade e/ou valor para cada dia do mês selecionado. Use "Distribuir total" para preencher automaticamente os dias úteis a partir de uma meta mensal.</p>
-        <div class="table-wrap"><table><thead><tr><th>Dia</th><th>Dia da Semana</th><th>Meta Qtd.</th><th>Meta Valor (R$)</th></tr></thead><tbody id="metasTableBody"></tbody></table></div>
-        <div style="margin-top:14px;"><button class="btn btn-primary" id="btnSalvarMetas">Salvar Metas</button></div>
+        <div class="view-scroll">
+          <div class="ma-ind-grid" id="mtIndicadores"></div>
+          <div class="ma-top">
+            <div class="ma-panel">
+              <div class="ma-panel-head"><h4>Preenchimento rápido</h4></div>
+              <p class="ma-hint">Informe a meta do mês e distribua automaticamente pelos dias. Depois, ajuste qualquer dia na tabela. Nada é gravado até clicar em <b>Salvar</b>.</p>
+              <div class="ma-quick">
+                <div class="ma-field"><label>Meta do mês · Qtd</label><div class="ma-input"><span>Qtd</span><input type="number" min="0" step="any" id="metasDistribuirQtd" placeholder="0" /></div></div>
+                <div class="ma-field"><label>Meta do mês · Valor</label><div class="ma-input"><span>R$</span><input type="number" min="0" step="any" id="metasDistribuirValor" placeholder="0,00" /></div></div>
+                <div class="ma-field wide"><label>Distribuir em</label><div class="ma-input"><select id="metasDistribuirEm"><option value="uteis">Dias úteis (seg a sex)</option><option value="todos">Todos os dias do mês</option></select></div></div>
+                <button class="btn btn-secondary" type="button" id="btnDistribuirMetas">Distribuir no mês</button>
+              </div>
+              <div class="ma-quick">
+                <div class="ma-quick-label">Atalhos</div>
+                <button class="btn btn-secondary btn-sm" type="button" id="mtCopiarAnterior">Copiar do mês anterior</button>
+                <button class="btn btn-secondary btn-sm" type="button" id="mtZerar">Zerar mês</button>
+                <button class="btn btn-secondary btn-sm" type="button" id="mtDesfazer">Desfazer alterações</button>
+              </div>
+            </div>
+            <div class="ma-panel">
+              <div class="ma-panel-head">
+                <h4 id="mtResumoTitulo">Resumo do mês</h4>
+                <div class="segmented" id="mtGrafModo"><button type="button" data-graf="qtd" class="active">Qtd</button><button type="button" data-graf="valor">Valor</button></div>
+              </div>
+              <div class="ma-kpis" id="mtKpis"></div>
+              <div class="ma-chart" id="mtChart"></div>
+            </div>
+          </div>
+          <div class="table-wrap mt-table"><table>
+            <thead><tr><th>Dia</th><th>Dia da Semana</th><th>Meta Qtd.</th><th>Meta Valor (R$)</th><th>Acumulado Qtd.</th><th>Acumulado Valor</th></tr></thead>
+            <tbody id="metasTableBody"></tbody>
+          </table></div>
+        </div>
+        <div class="ma-footer">
+          <div class="ma-tot">
+            <div>Meta do mês · Qtd<b id="mtTotQtd">0</b></div>
+            <div>Meta do mês · Valor<b id="mtTotValor">R$ 0,00</b></div>
+            <div>Dias com meta<b id="mtTotDias">0</b></div>
+          </div>
+          <div class="spacer"></div>
+          <div class="ma-status ok" id="mtStatus"><i></i><span>Tudo salvo</span></div>
+          <button class="btn btn-primary" type="button" id="btnSalvarMetas">Salvar metas</button>
+        </div>
+      </section>
+
+      <!-- ============ CADASTRO: METAS ANUAIS (janeiro a dezembro) ============ -->
+      <section class="view list-view" id="view-cad-metas-anual">
+        <div class="toolbar" id="maToolbar"></div>
+        <div class="view-scroll">
+          <div class="ma-ind-grid" id="maIndicadores"></div>
+          <div class="ma-top">
+            <div class="ma-panel" id="maTools">
+              <div class="ma-panel-head"><h4>Preenchimento rápido</h4></div>
+              <p class="ma-hint">Preencha os meses de uma vez e depois ajuste o que precisar. Nada é gravado até clicar em <b>Salvar</b>.</p>
+              <div class="ma-quick">
+                <div class="ma-quick-label">Meta do ano inteiro, dividida entre os 12 meses</div>
+                <div class="ma-field"><label>Total do ano · Qtd</label><div class="ma-input"><span>Qtd</span><input type="number" min="0" step="any" id="maAnualQtd" placeholder="0" /></div></div>
+                <div class="ma-field"><label>Total do ano · Valor</label><div class="ma-input"><span>R$</span><input type="number" min="0" step="any" id="maAnualValor" placeholder="0,00" /></div></div>
+                <div class="ma-field wide"><label>Critério</label><div class="ma-input"><select id="maCriterio"><option value="uteis">Proporcional aos dias úteis</option><option value="igual">Igual em todos os meses</option></select></div></div>
+                <button class="btn btn-secondary" type="button" id="maDistribuirAno">Distribuir no ano</button>
+              </div>
+              <div class="ma-quick">
+                <div class="ma-quick-label">Mesma meta para todos os meses</div>
+                <div class="ma-field"><label>Por mês · Qtd</label><div class="ma-input"><span>Qtd</span><input type="number" min="0" step="any" id="maTodosQtd" placeholder="0" /></div></div>
+                <div class="ma-field"><label>Por mês · Valor</label><div class="ma-input"><span>R$</span><input type="number" min="0" step="any" id="maTodosValor" placeholder="0,00" /></div></div>
+                <button class="btn btn-secondary" type="button" id="maAplicarTodos">Aplicar nos 12 meses</button>
+              </div>
+            </div>
+            <div class="ma-panel">
+              <div class="ma-panel-head">
+                <h4 id="maResumoTitulo">Resumo do ano</h4>
+                <div class="segmented" id="maGrafModo"><button type="button" data-graf="qtd" class="active">Qtd</button><button type="button" data-graf="valor">Valor</button></div>
+              </div>
+              <div class="ma-kpis" id="maKpis"></div>
+              <div class="ma-chart" id="maChart"></div>
+            </div>
+          </div>
+          <div class="ma-meses" id="maMeses"></div>
+        </div>
+        <div class="ma-footer" id="maFooter">
+          <div class="ma-tot">
+            <div>Total do ano · Qtd<b id="maTotQtd">0</b></div>
+            <div>Total do ano · Valor<b id="maTotValor">R$ 0,00</b></div>
+            <div>Meses com meta<b id="maTotMeses">0/12</b></div>
+          </div>
+          <div class="spacer"></div>
+          <div class="ma-status ok" id="maStatus"><i></i><span>Tudo salvo</span></div>
+          <button class="btn btn-primary" type="button" id="maSalvar">Salvar metas</button>
+        </div>
       </section>
 
       <!-- ============ CADASTRO: USUÁRIOS E PERMISSÕES ============ -->
@@ -1819,6 +2101,35 @@ tr.lig-det td{background:#f8fbfd;padding:0 10px 14px;border-bottom:2px solid var
     <div class="modal-footer">
       <button class="btn btn-secondary" data-close="modalCadastroSimples">Cancelar</button>
       <button class="btn btn-primary" id="btnSalvarCadastro">Salvar</button>
+    </div>
+  </div>
+</div>
+
+<!-- ============================================================= -->
+<!-- MODAL: EDITAR META PELO VELOCÍMETRO -->
+<!-- ============================================================= -->
+<div class="modal-overlay hidden" id="modalGaugeMeta">
+  <div class="modal">
+    <div class="modal-header">
+      <h3 id="gmTitulo">Editar meta</h3>
+      <button class="modal-close" data-close="modalGaugeMeta">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 6 6 18M6 6l12 12"/></svg>
+      </button>
+    </div>
+    <div class="modal-body">
+      <div class="gm-periodo">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/></svg>
+        <span>Meta do mês de <b id="gmPeriodo">—</b> · <span id="gmUteis">—</span></span>
+      </div>
+      <div class="gm-grid">
+        <div class="ma-field"><label>Meta do mês · Quantidade</label><div class="ma-input"><span>Qtd</span><input type="number" min="0" step="any" id="gmQtd" placeholder="0" /></div><div class="gm-atual" id="gmAtualQtd"></div></div>
+        <div class="ma-field"><label>Meta do mês · Valor</label><div class="ma-input"><span>R$</span><input type="number" min="0" step="any" id="gmValor" placeholder="0,00" /></div><div class="gm-atual" id="gmAtualValor"></div></div>
+      </div>
+      <div class="gm-info">A meta do mês é distribuída automaticamente nos dias úteis (seg a sex). O velocímetro compara o realizado com a meta acumulada até o dia selecionado no painel. Só o campo que você alterar é regravado. Para ajustar dia a dia, <button type="button" class="gm-link" id="gmIrDiario">abra o Cadastro de Metas</button>.</div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-secondary" data-close="modalGaugeMeta">Cancelar</button>
+      <button class="btn btn-primary" id="gmSalvar">Salvar meta</button>
     </div>
   </div>
 </div>
@@ -3400,6 +3711,7 @@ const VIEW_LIST = [
   { key:'cad-origens', label:'Cadastro: Origens' },
   { key:'cad-motivos', label:'Cadastro: Motivos de Reprovação' },
   { key:'cad-metas', label:'Cadastro: Metas' },
+  /* { key:'cad-metas-anual', label:'Cadastro: Metas Anuais' }, tela oculta */
   { key:'relatorio', label:'Relatório Gerencial' }
 ];
 function fullPermissoes(){
@@ -3451,6 +3763,8 @@ const state = {
   empresasLogin: [],            // empresas mostradas na tela de login
   empresaEscolhidaNoLogin: null,// empresa escolhida antes de digitar a senha
   indicadorModo: { contato: 'qtd', propostas: 'qtd', contatos_realizados: 'qtd', aprovados: 'qtd' },
+  c18Modo: 'gantt',
+  gaugeModo: { propostas: 'qtd', contatos_realizados: 'qtd', aprovados: 'valor' },
   indicadorPeriodo: { contato: {}, propostas: {}, contatos_realizados: {}, aprovados: {} },
   metasPeriodo: { ano: new Date().getFullYear(), mes: new Date().getMonth() + 1 }
 };
@@ -3647,6 +3961,7 @@ function canAccessView(view){
   const perms = state.currentUser.permissoes || {};
   /* Tela nova: enquanto o administrador não marcar/desmarcar, segue a permissão da tela de Leads */
   if(view === 'clientes-18' && perms['clientes-18'] === undefined) return perms['orcamentos'] === true;
+  if(view === 'cad-metas-anual' && perms['cad-metas-anual'] === undefined) return perms['cad-metas'] === true;
   return perms[view] === true;
 }
 
@@ -3697,6 +4012,7 @@ const viewTitles = {
   'ind-contatos-realizados':'Indicador de Contatos Realizados','ind-aprovados':'Indicador de Aprovados',
   'cad-vendedores':'Cadastro de Vendedores','cad-origens':'Cadastro de Origens',
   'cad-motivos':'Cadastro de Motivos de Reprovação','cad-metas':'Cadastro de Metas',
+  'cad-metas-anual':'Metas Anuais · Janeiro a Dezembro',
   'cad-usuarios':'Usuários e Permissões',
   'cad-empresas':'Empresas',
   'cad-backup':'Backup e Restauração',
@@ -3750,6 +4066,7 @@ function goToView(view){
   if(view === 'ind-contatos-realizados') renderIndicadorMeta('contatos_realizados');
   if(view === 'ind-aprovados') renderIndicadorMeta('aprovados');
   if(view === 'cad-metas') renderCadastroMetas();
+  if(view === 'cad-metas-anual') renderCadastroMetasAnual();
   if(view === 'relatorio') renderRelatorio();
 }
 
@@ -4389,14 +4706,9 @@ async function renderDashboard(){
   desenharFunilOrigem();
 
   setTextDash('gaugePeriodoTxt', '· ' + d.gaugeSub.toLowerCase());
-  const [gaugeProp, gaugeCont, gaugeAprov] = await Promise.all([
-    computeGaugeData('propostas', 'data_envio', q=>q.eq('situacao','Enviado ao Cliente')),
-    computeGaugeData('contatos_realizados', 'data_abertura', q=>q),
-    computeGaugeData('aprovados', 'data_aprovacao', q=>q.eq('situacao_cliente','Aprovado'))
-  ]);
-  renderGauge('gaugePropostas', 'gaugeProp', gaugeProp.pct, gaugeProp.real, gaugeProp.meta, 'gaugePropostasMeta');
-  renderGauge('gaugeContatos', 'gaugeCont', gaugeCont.pct, gaugeCont.real, gaugeCont.meta, 'gaugeContatosMeta');
-  renderGauge('gaugeAprovados', 'gaugeAprov', gaugeAprov.pct, gaugeAprov.real, gaugeAprov.meta, 'gaugeAprovadosMeta');
+  const podeEditarMeta = canAccessView('cad-metas');
+  document.querySelectorAll('[data-gauge-edit]').forEach(b=> b.classList.toggle('hidden', !podeEditarMeta));
+  await Promise.all(Object.keys(GAUGE_IND).map(renderGaugeInd));
 
   await renderFunilEtapas();
 }
@@ -4715,22 +5027,58 @@ async function renderFunilEtapas(){
   desenharFunilEtapas();
 }
 
-async function computeGaugeData(indicador, dataField, filtroFn){
+async function computeGaugeData(indicador, dataField, filtroFn, modo){
+  const porValor = modo === 'valor';
   const p = state.dashboardPeriodo;
   const inicio = `${p.ano}-${String(p.mes).padStart(2,'0')}-01`;
   /* Meta e realizado acumulados do dia 1 até o dia selecionado (proporcional) */
   const diaRef = Math.min(p.dia || daysInMonth(p.ano,p.mes), daysInMonth(p.ano,p.mes));
   const fim = `${p.ano}-${String(p.mes).padStart(2,'0')}-${String(diaRef).padStart(2,'0')}`;
-  const query = buscarTodos(()=> filtroFn(sb.from('orcamentos').select(dataField).gte(dataField, inicio).lte(dataField, fim)));
+  const campos = porValor ? `${dataField}, valor` : dataField;
+  const query = buscarTodos(()=> filtroFn(sb.from('orcamentos').select(campos).gte(dataField, inicio).lte(dataField, fim)));
   const [{ data: reais }, { data: metasRows }] = await Promise.all([
     query,
-    sb.from('metas').select('meta_qtd').eq('indicador', indicador).eq('ano', p.ano).eq('mes', p.mes).lte('dia', diaRef)
+    sb.from('metas').select(porValor ? 'meta_valor' : 'meta_qtd').eq('indicador', indicador).eq('ano', p.ano).eq('mes', p.mes).lte('dia', diaRef)
   ]);
-  const real = (reais||[]).length;
-  const meta = (metasRows||[]).reduce((s,r)=> s + (Number(r.meta_qtd)||0), 0);
+  const real = porValor
+    ? Math.round((reais||[]).reduce((s,r)=> s + (Number(r.valor)||0), 0) * 100) / 100
+    : (reais||[]).length;
+  const meta = porValor
+    ? Math.round((metasRows||[]).reduce((s,r)=> s + (Number(r.meta_valor)||0), 0) * 100) / 100
+    : (metasRows||[]).reduce((s,r)=> s + (Number(r.meta_qtd)||0), 0);
   const pct = meta>0 ? (real/meta*100) : (real>0 ? 100 : 0);
   return { real, meta, pct };
 }
+
+/* Velocímetros: cada um pode ser visto por quantidade ou por valor */
+const GAUGE_IND = {
+  propostas:           { canvas:'gaugePropostas', chave:'gaugeProp',  metaEl:'gaugePropostasMeta', dataField:'data_envio',     filtro:q=>q.eq('situacao','Enviado ao Cliente') },
+  contatos_realizados: { canvas:'gaugeContatos',  chave:'gaugeCont',  metaEl:'gaugeContatosMeta',  dataField:'data_abertura',  filtro:q=>q },
+  aprovados:           { canvas:'gaugeAprovados', chave:'gaugeAprov', metaEl:'gaugeAprovadosMeta', dataField:'data_aprovacao', filtro:q=>q.eq('situacao_cliente','Aprovado') }
+};
+async function renderGaugeInd(ind){
+  const c = GAUGE_IND[ind];
+  const modo = state.gaugeModo[ind] === 'valor' ? 'valor' : 'qtd';
+  const g = await computeGaugeData(ind, c.dataField, c.filtro, modo);
+  if((state.gaugeModo[ind] === 'valor' ? 'valor' : 'qtd') !== modo) return; /* trocou o modo enquanto carregava */
+  renderGauge(c.canvas, c.chave, g.pct, g.real, g.meta, c.metaEl, modo);
+}
+(function bindGauges(){
+  const grid = document.querySelector('.gauge-grid');
+  if(!grid) return;
+  grid.addEventListener('click', (e)=>{
+    const ed = e.target.closest('[data-gauge-edit]');
+    if(ed){ abrirMetaGauge(ed.dataset.gaugeEdit); return; }
+    const b = e.target.closest('[data-gauge-modo] button[data-modo]');
+    if(!b) return;
+    const wrap = b.closest('[data-gauge-modo]');
+    const ind = wrap.dataset.gaugeModo;
+    if(state.gaugeModo[ind] === b.dataset.modo) return;
+    state.gaugeModo[ind] = b.dataset.modo;
+    wrap.querySelectorAll('button').forEach(x=> x.classList.toggle('active', x === b));
+    renderGaugeInd(ind);
+  });
+})();
 
 /* =====================================================================
    PAINEL · VELOCÍMETROS (SVG)
@@ -4804,9 +5152,12 @@ function gaugesPainelSVG(){
     const ok = d.pct >= 100;
     s += `<rect x="${x0+10}" y="8" width="380" height="372" rx="14" fill="#ffffff" stroke="#e2e8f0" stroke-width="1.5"/>`;
     s += `<rect x="${x0+40}" y="8" width="320" height="5" rx="2.5" fill="${cor}"/>`;
-    s += `<text x="${mx}" y="46" text-anchor="middle" font-size="15" font-weight="700" fill="#475569" letter-spacing="1">${escapeHtml(GAUGE_TITULOS[k].toUpperCase())}</text>`;
+    const porValor = d.modo === 'valor';
+    const fmtG = (v)=> porValor ? fmtMoney(v) : (Number(v)||0).toLocaleString('pt-BR',{maximumFractionDigits:2});
+    const titulo = GAUGE_TITULOS[k] + (porValor ? ' · Valor' : ' · Qtd');
+    s += `<text x="${mx}" y="46" text-anchor="middle" font-size="15" font-weight="700" fill="#475569" letter-spacing="1">${escapeHtml(titulo.toUpperCase())}</text>`;
     s += `<g transform="translate(${mx-150} 62) scale(1.25)">${gaugeSVGInterno(d.pct, false)}</g>`;
-    s += `<text x="${mx}" y="308" text-anchor="middle" font-size="15" fill="#64748b">Realizado <tspan font-weight="800" fill="#0f172a">${d.real}</tspan>   ·   Meta <tspan font-weight="800" fill="#0f172a">${d.meta}</tspan></text>`;
+    s += `<text x="${mx}" y="308" text-anchor="middle" font-size="${porValor ? 13.5 : 15}" fill="#64748b">Realizado <tspan font-weight="800" fill="#0f172a">${escapeHtml(String(fmtG(d.real)))}</tspan>   ·   Meta <tspan font-weight="800" fill="#0f172a">${escapeHtml(String(fmtG(d.meta)))}</tspan></text>`;
     s += `<rect x="${mx-75}" y="324" width="150" height="28" rx="14" fill="${ok ? '#e6f6ec' : '#fdecec'}"/>`;
     s += `<text x="${mx}" y="338" text-anchor="middle" dominant-baseline="central" font-size="13" font-weight="700" fill="${ok ? '#1f9d55' : '#d64545'}">${ok ? 'OK' : 'Abaixo da meta'}</text>`;
   });
@@ -4814,10 +5165,11 @@ function gaugesPainelSVG(){
   return s;
 }
 
-function renderGauge(canvasId, chartKey, pct, real, meta, metaElId){
+function renderGauge(canvasId, chartKey, pct, real, meta, metaElId, modo){
   destroyChart(chartKey);
   if(!state.dashGauges) state.dashGauges = {};
-  state.dashGauges[chartKey] = { pct, real, meta };
+  state.dashGauges[chartKey] = { pct, real, meta, modo };
+  const fmtG = (v)=> modo === 'valor' ? fmtMoney(v) : (Number(v)||0).toLocaleString('pt-BR',{maximumFractionDigits:2});
   const wrap = document.getElementById(canvasId);
   if(wrap){
     wrap.innerHTML = gaugeSVG(pct, true);
@@ -4831,7 +5183,7 @@ function renderGauge(canvasId, chartKey, pct, real, meta, metaElId){
     const statusHtml = pct >= 100
       ? '<span class="badge badge-green">OK</span>'
       : '<span class="badge badge-red">Abaixo da meta</span>';
-    metaEl.innerHTML = `<span>Realizado <b>${real}</b> · Meta <b>${meta}</b></span> ${statusHtml}`;
+    metaEl.innerHTML = `<span>Realizado <b>${fmtG(real)}</b> · Meta <b>${fmtG(meta)}</b></span> ${statusHtml}`;
   }
 }
 
@@ -7175,6 +7527,7 @@ function drawClientes18Table(){
     })
     .sort((a,b)=> (a._dias===null ? 99999 : a._dias) - (b._dias===null ? 99999 : b._dias));
 
+  drawClientes18Gantt(rows);
   const tbody = document.getElementById('c18TableBody');
   if(!rows.length){
     tbody.innerHTML = `<tr class="empty-row"><td colspan="11">Nenhum cliente encontrado. Marque "Cliente ainda não tem 18 anos" no cadastro do lead.</td></tr>`;
@@ -7215,6 +7568,107 @@ function drawClientes18Table(){
 }
 document.getElementById('c18Search').addEventListener('input', drawClientes18Table);
 document.getElementById('c18FiltroStatus').addEventListener('change', drawClientes18Table);
+
+/* ---------- Gráfico de Gantt: quando cada cliente completa 18 anos ---------- */
+function mudarModoClientes18(modo){
+  state.c18Modo = modo === 'gantt' ? 'gantt' : 'tabela';
+  const gantt = state.c18Modo === 'gantt';
+  document.querySelectorAll('#c18Modo button').forEach(b=> b.classList.toggle('active', b.dataset.modo === state.c18Modo));
+  document.getElementById('c18TabelaWrap').classList.toggle('hidden', gantt);
+  document.getElementById('c18GanttWrap').classList.toggle('hidden', !gantt);
+  document.getElementById('c18Legenda').classList.toggle('hidden', !gantt);
+  document.getElementById('c18Horizonte').classList.toggle('hidden', !gantt);
+  drawClientes18Table();
+}
+function drawClientes18Gantt(rows){
+  const wrap = document.getElementById('c18GanttWrap');
+  if(state.c18Modo !== 'gantt' || !wrap) return;
+  if(!rows.length){
+    wrap.innerHTML = '<div class="c18g-vazio">Nenhum cliente encontrado. Marque "Cliente ainda não tem 18 anos" no cadastro do lead.</div>';
+    return;
+  }
+  const horizonte = Number(document.getElementById('c18Horizonte').value) || 12;
+  const hoje = todayISO();
+  const [ha, hm] = hoje.split('-').map(Number);
+  /* começa no mês anterior (mostra quem acabou de fazer 18) e vai até o fim do horizonte */
+  const meses = [];
+  for(let i = -1; i <= horizonte; i++){
+    const dt = new Date(ha, hm - 1 + i, 1);
+    meses.push({ ano: dt.getFullYear(), mes: dt.getMonth() + 1, iso: isoDeData(dt) });
+  }
+  const iniISO = meses[0].iso;
+  const fimISO = isoDeData(new Date(meses[meses.length-1].ano, meses[meses.length-1].mes, 1));
+  const total = diasEntre(iniISO, fimISO);
+  const pct = (iso)=> Math.max(0, Math.min(100, diasEntre(iniISO, iso) / total * 100));
+  const dentro = (iso)=> iso >= iniISO && iso < fimISO;
+  const mesAtualIdx = 1;
+
+  /* quantos completam 18 em cada mês (considerando os filtros da tela) */
+  const contagem = meses.map(m=> rows.filter(o=>{
+    const d18 = data18Anos(o.data_nascimento);
+    return d18 && Number(d18.slice(0,4)) === m.ano && Number(d18.slice(5,7)) === m.mes;
+  }).length);
+  const nomeMes = (m)=> MESES[m.mes-1].slice(0,3) + '/' + String(m.ano).slice(2);
+
+  let html = `<div class="c18g" style="min-width:${270 + meses.length * 74}px">`;
+  html += `<div class="c18g-head"><div class="c18g-name">Cliente · ${rows.length}</div><div class="c18g-track"><div class="c18g-meses">`
+    + meses.map((m,i)=> `<div class="c18g-mes ${i===mesAtualIdx?'atual':''}"><b>${nomeMes(m)}</b><span class="${contagem[i]?'tem':''}" title="${contagem[i]} cliente(s) completam 18 anos em ${MESES[m.mes-1]}/${m.ano}">${contagem[i]} fazem 18</span></div>`).join('')
+    + `</div></div></div>`;
+  html += `<div class="c18g-body"><div class="c18g-grid">${meses.map((m,i)=>`<div class="${i===mesAtualIdx?'atual':''}"></div>`).join('')}</div>`;
+  html += `<div class="c18g-hoje" style="left:calc(var(--gn) + (100% - var(--gn)) * ${(pct(hoje)/100).toFixed(5)})"><span>Hoje</span></div>`;
+
+  rows.forEach(o=>{
+    const dias = o._dias;
+    const d18 = data18Anos(o.data_nascimento);
+    const idade = idadeAnos(o.data_nascimento);
+    let det, track = '';
+    if(dias === null){
+      det = 'Sem data de nascimento';
+      track = `<span class="c18g-lbl" style="left:0">Informe a data de nascimento no cadastro do lead</span>`;
+    } else {
+      const prox = dias > 0 && dias <= 30;
+      det = `${idade} anos · ` + (dias > 0 ? `faltam ${dias} dia${dias===1?'':'s'}` : dias === 0 ? 'completa 18 hoje' : 'já tem 18');
+      const tip = `${o.cliente||''} — 18 anos em ${fmtDate(d18)}` + (dias > 0 ? ` (faltam ${dias} dias)` : '');
+      if(dias > 0){
+        const x1 = pct(hoje), x2 = pct(d18);
+        const corte = !dentro(d18);
+        track += `<div class="c18g-bar ${prox?'prox':''} ${corte?'corte':''}" style="left:${x1}%;width:${Math.max(x2-x1,0.4)}%" title="${escapeHtml(tip)}"></div>`;
+        if(!corte){
+          track += `<div class="c18g-marco ${prox?'prox':'futuro'}" style="left:${x2}%" title="${escapeHtml(tip)}"></div>`;
+          track += x2 > 82
+            ? `<span class="c18g-lbl esq ${prox?'prox':''}" style="left:${x2}%">${fmtDate(d18)}</span>`
+            : `<span class="c18g-lbl ${prox?'prox':''}" style="left:${x2}%">${fmtDate(d18)}</span>`;
+        } else {
+          track += `<span class="c18g-lbl esq fora" style="left:100%">18 anos em ${fmtDate(d18)} →</span>`;
+        }
+      } else if(dentro(d18)){
+        track += `<div class="c18g-marco" style="left:${pct(d18)}%" title="${escapeHtml(tip)}"></div>`
+              +  `<span class="c18g-lbl ok" style="left:${pct(d18)}%">${dias === 0 ? 'Hoje!' : 'Fez 18 em ' + fmtDate(d18)}</span>`;
+      } else {
+        track += `<span class="c18g-lbl ok" style="left:0">✓ Já tem 18 anos desde ${fmtDate(d18)}</span>`;
+      }
+      const aviso = dataAviso18(o);
+      if(aviso && aviso !== d18 && dentro(aviso) && dias > 0){
+        track += `<div class="c18g-aviso" style="left:${pct(aviso)}%" title="Avisar em ${fmtDate(aviso)}"></div>`;
+      }
+    }
+    html += `<div class="c18g-row">
+      <div class="c18g-name">
+        <div class="c18g-txt"><div class="c18g-nome" title="${escapeHtml(o.cliente||'')}">${escapeHtml(o.cliente||'')}</div><div class="c18g-det">${det}${o.msg_18_enviada_em ? ' · msg enviada' : ''}</div></div>
+        <span class="row-actions"><button title="Enviar mensagem pelo WhatsApp" class="whats" data-msg18g="${o.id}">${ICON_WHATS}</button></span>
+      </div>
+      <div class="c18g-track">${track}</div>
+    </div>`;
+  });
+  html += `</div></div>`;
+  wrap.innerHTML = html;
+  wrap.querySelectorAll('[data-msg18g]').forEach(b=> b.addEventListener('click', ()=> openMsg18Modal(b.dataset.msg18g)));
+}
+document.getElementById('c18Modo').addEventListener('click', (e)=>{
+  const b = e.target.closest('button[data-modo]');
+  if(b && b.dataset.modo !== state.c18Modo) mudarModoClientes18(b.dataset.modo);
+});
+document.getElementById('c18Horizonte').addEventListener('change', drawClientes18Table);
 
 /* ---------- Mensagem padrão (editável, gravada por empresa) ---------- */
 const MSG18_CHAVE = 'whats_18_anos';
@@ -7685,85 +8139,682 @@ async function renderIndicadorMeta(indicador){
 /* =====================================================================
    CADASTRO DE METAS
    ===================================================================== */
-function renderCadastroMetas(){
-  const now = new Date();
-  const anos = [];
-  for(let a = now.getFullYear()-2; a <= now.getFullYear()+1; a++) anos.push(a);
-  const el = document.getElementById('metasToolbar');
-  const mp = state.metasPeriodo;
-  el.innerHTML = `
-    <select id="metasIndicador">
-      <option value="propostas">Propostas Enviadas</option>
-      <option value="contatos_realizados">Contatos Realizados</option>
-      <option value="aprovados">Aprovados</option>
-    </select>
-    <select id="metasMes">${MESES.map((m,i)=>`<option value="${i+1}" ${mp.mes===i+1?'selected':''}>${m}</option>`).join('')}</select>
-    <select id="metasAno">${anos.map(a=>`<option value="${a}" ${mp.ano===a?'selected':''}>${a}</option>`).join('')}</select>
-    <div class="spacer"></div>
-    <input type="number" id="metasDistribuirQtd" placeholder="Meta mensal (qtd)" style="width:150px;" />
-    <input type="number" id="metasDistribuirValor" placeholder="Meta mensal (R$)" style="width:150px;" />
-    <button class="btn btn-secondary" id="btnDistribuirMetas">Distribuir total (dias úteis)</button>
-  `;
-  document.getElementById('metasIndicador').addEventListener('change', loadMetasTable);
-  document.getElementById('metasMes').addEventListener('change', (e)=>{ mp.mes=Number(e.target.value); loadMetasTable(); });
-  document.getElementById('metasAno').addEventListener('change', (e)=>{ mp.ano=Number(e.target.value); loadMetasTable(); });
-  document.getElementById('btnDistribuirMetas').addEventListener('click', distribuirMetas);
-  loadMetasTable();
+function mtState(){
+  if(!state.metasCad) state.metasCad = { indicador:'propostas', dados:[], orig:[], linhas:[], graf:'qtd' };
+  return state.metasCad;
+}
+function mtZeros(ano, mes){ return Array.from({length: daysInMonth(ano, mes)}, ()=>({ qtd:0, valor:0 })); }
+function mtDiasAlterados(){
+  const s = mtState();
+  return s.dados.filter((d,i)=> s.orig[i] && (maDif(d.qtd, s.orig[i].qtd) || maDif(d.valor, s.orig[i].valor))).length;
+}
+function mtConfirmaDescartar(){
+  return !mtDiasAlterados() || confirm('Há metas alteradas e ainda não salvas. Descartar as alterações?');
 }
 
-async function loadMetasTable(){
-  const indicador = document.getElementById('metasIndicador').value;
-  const p = state.metasPeriodo;
-  const dias = daysInMonth(p.ano, p.mes);
-  const { data: metas } = await sb.from('metas').select('*').eq('indicador', indicador).eq('ano', p.ano).eq('mes', p.mes);
-  const tbody = document.getElementById('metasTableBody');
-  let rowsHtml = '';
-  for(let d=1; d<=dias; d++){
-    const weekend = isWeekend(p.ano,p.mes,d);
-    const m = (metas||[]).find(x=>x.dia===d);
-    rowsHtml += `<tr class="${weekend?'weekend':''}">
-      <td>${d}</td><td>${DIAS_SEMANA[weekdayOf(p.ano,p.mes,d)]}</td>
-      <td><input type="number" class="obs-input" data-metaday="${d}" data-field="qtd" value="${m?.meta_qtd||0}" /></td>
-      <td><input type="number" step="0.01" class="obs-input" data-metaday="${d}" data-field="valor" value="${m?.meta_valor||0}" /></td>
-    </tr>`;
-  }
-  tbody.innerHTML = rowsHtml;
+function renderCadastroMetas(){
+  mtState();
+  mtMontarToolbar();
+  mtCarregar();
 }
+
+function mtMontarToolbar(){
+  const mp = state.metasPeriodo;
+  const atual = new Date().getFullYear();
+  const anos = [];
+  for(let a = atual-3; a <= atual+3; a++) anos.push(a);
+  if(!anos.includes(mp.ano)){ anos.push(mp.ano); anos.sort((a,b)=>a-b); }
+  document.getElementById('metasToolbar').innerHTML = `
+    <div class="mt-mesnav">
+      <button class="btn btn-secondary btn-sm" type="button" id="mtMesPrev" title="Mês anterior">&#8249;</button>
+      <select id="metasMes" title="Mês">${MESES.map((m,i)=>`<option value="${i+1}" ${mp.mes===i+1?'selected':''}>${m}</option>`).join('')}</select>
+      <select id="metasAno" title="Ano">${anos.map(a=>`<option value="${a}" ${mp.ano===a?'selected':''}>${a}</option>`).join('')}</select>
+      <button class="btn btn-secondary btn-sm" type="button" id="mtMesNext" title="Próximo mês">&#8250;</button>
+    </div>
+    <div class="spacer"></div>
+    <span class="muted small" id="mtUteisTxt"></span>
+  `;
+  const trocar = (ano, mes)=>{
+    if(mes < 1){ mes = 12; ano--; }
+    if(mes > 12){ mes = 1; ano++; }
+    if(ano === mp.ano && mes === mp.mes) return;
+    if(!mtConfirmaDescartar()){ mtMontarToolbar(); return; }
+    mp.ano = ano; mp.mes = mes;
+    mtMontarToolbar();
+    mtCarregar();
+  };
+  document.getElementById('metasMes').addEventListener('change', (e)=> trocar(mp.ano, Number(e.target.value)));
+  document.getElementById('metasAno').addEventListener('change', (e)=> trocar(Number(e.target.value), mp.mes));
+  document.getElementById('mtMesPrev').addEventListener('click', ()=> trocar(mp.ano, mp.mes - 1));
+  document.getElementById('mtMesNext').addEventListener('click', ()=> trocar(mp.ano, mp.mes + 1));
+  document.getElementById('mtUteisTxt').textContent = `${maDiasUteis(mp.ano, mp.mes)} dias úteis · ${daysInMonth(mp.ano, mp.mes)} dias`;
+}
+
+async function mtCarregar(){
+  const s = mtState(), mp = state.metasPeriodo;
+  const ano = mp.ano, mes = mp.mes;
+  document.getElementById('metasTableBody').innerHTML = '<tr class="empty-row"><td colspan="6">Carregando metas...</td></tr>';
+  const { data, error } = await sb.from('metas').select('indicador, dia, meta_qtd, meta_valor').eq('ano', ano).eq('mes', mes);
+  if(mp.ano !== ano || mp.mes !== mes) return; /* trocou de mês enquanto carregava */
+  if(error){
+    document.getElementById('metasTableBody').innerHTML = `<tr class="empty-row"><td colspan="6">Erro ao carregar: ${escapeHtml(error.message)}</td></tr>`;
+    return;
+  }
+  s.linhas = data || [];
+  mtAplicarIndicador();
+}
+function mtAplicarIndicador(){
+  const s = mtState(), mp = state.metasPeriodo;
+  s.orig = mtZeros(mp.ano, mp.mes);
+  s.linhas.filter(r=> r.indicador === s.indicador).forEach(r=>{
+    const i = Number(r.dia) - 1;
+    if(s.orig[i]){ s.orig[i].qtd = maR2(r.meta_qtd); s.orig[i].valor = maR2(r.meta_valor); }
+  });
+  s.dados = s.orig.map(d=>({ ...d }));
+  mtRenderIndicadores();
+  mtRenderTabela();
+  mtRenderResumo();
+}
+
+function mtRenderIndicadores(){
+  const s = mtState(), mp = state.metasPeriodo;
+  document.getElementById('mtIndicadores').innerHTML = MA_INDICADORES.map(ind=>{
+    let qtd = 0, valor = 0;
+    if(ind.key === s.indicador) s.dados.forEach(d=>{ qtd += d.qtd; valor += d.valor; });
+    else s.linhas.forEach(r=>{ if(r.indicador === ind.key){ qtd += Number(r.meta_qtd)||0; valor += Number(r.meta_valor)||0; } });
+    return `<button type="button" class="ma-ind ${ind.key===s.indicador?'active':''}" data-ind="${ind.key}">
+      <span class="ma-ind-sel">Editando</span>
+      <span class="ma-ind-ico">${ind.icone}</span>
+      <span>
+        <div class="ma-ind-nome">${ind.nome}</div>
+        <div class="ma-ind-sub">${MESES[mp.mes-1]}/${mp.ano}: <b>${maNum(maR2(qtd))}</b> · <b>${fmtMoney(valor)}</b></div>
+      </span>
+    </button>`;
+  }).join('');
+}
+
+function mtRenderTabela(){
+  const s = mtState(), mp = state.metasPeriodo;
+  const hoje = new Date();
+  const vIn = (v)=> (Number(v)||0) ? String(maR2(v)) : '';
+  document.getElementById('metasTableBody').innerHTML = s.dados.map((d,i)=>{
+    const dia = i + 1;
+    const fds = isWeekend(mp.ano, mp.mes, dia);
+    const ehHoje = hoje.getFullYear() === mp.ano && hoje.getMonth()+1 === mp.mes && hoje.getDate() === dia;
+    return `<tr class="${fds?'weekend':''} ${ehHoje?'hoje':''}" data-linha="${i}">
+      <td class="mt-dia">${String(dia).padStart(2,'0')}</td>
+      <td class="mt-sem">${DIAS_SEMANA[weekdayOf(mp.ano, mp.mes, dia)]}${ehHoje?'<span class="mt-hoje-tag">Hoje</span>':''}${fds?'<span class="mt-fds-tag">FDS</span>':''}</td>
+      <td><div class="ma-input"><span>Qtd</span><input type="number" min="0" step="any" inputmode="decimal" data-metaday="${dia}" data-field="qtd" value="${vIn(d.qtd)}" placeholder="0" /></div></td>
+      <td><div class="ma-input"><span>R$</span><input type="number" min="0" step="any" inputmode="decimal" data-metaday="${dia}" data-field="valor" value="${vIn(d.valor)}" placeholder="0,00" /></div></td>
+      <td class="mt-acum" data-acum="qtd"></td>
+      <td class="mt-acum" data-acum="valor"></td>
+    </tr>`;
+  }).join('');
+  mtAtualizarLinhas();
+}
+function mtAtualizarLinhas(){
+  const s = mtState();
+  let aq = 0, av = 0;
+  document.querySelectorAll('#metasTableBody tr[data-linha]').forEach(tr=>{
+    const i = Number(tr.dataset.linha), d = s.dados[i], o = s.orig[i];
+    aq += d.qtd; av += d.valor;
+    tr.querySelector('[data-field="qtd"]').parentElement.classList.toggle('changed', maDif(d.qtd, o.qtd));
+    tr.querySelector('[data-field="valor"]').parentElement.classList.toggle('changed', maDif(d.valor, o.valor));
+    tr.querySelector('[data-acum="qtd"]').textContent = maNum(maR2(aq));
+    tr.querySelector('[data-acum="valor"]').textContent = fmtMoney(av);
+  });
+}
+
+function mtRenderResumo(){
+  const s = mtState(), mp = state.metasPeriodo;
+  let tq = 0, tv = 0, diasMeta = 0;
+  s.dados.forEach(d=>{ tq += d.qtd; tv += d.valor; if(d.qtd > 0 || d.valor > 0) diasMeta++; });
+  tq = maR2(tq); tv = maR2(tv);
+  const uteis = maDiasUteis(mp.ano, mp.mes) || 1;
+  document.getElementById('mtResumoTitulo').textContent = `${MESES[mp.mes-1]}/${mp.ano} · ${maNomeIndicador(s.indicador)}`;
+  document.getElementById('mtKpis').innerHTML = `
+    <div class="ma-kpi"><span>Meta do mês · Qtd</span><b>${maNum(tq)}</b></div>
+    <div class="ma-kpi"><span>Meta do mês · Valor</span><b title="${fmtMoney(tv)}">${fmtMoneyCompacto(tv)}</b></div>
+    <div class="ma-kpi"><span>Por dia útil · Qtd</span><b>${maNum(maR2(tq/uteis))}</b></div>
+    <div class="ma-kpi"><span>Por dia útil · Valor</span><b title="${fmtMoney(tv/uteis)}">${fmtMoneyCompacto(tv/uteis)}</b></div>`;
+  document.getElementById('mtGrafModo').querySelectorAll('button').forEach(b=> b.classList.toggle('active', b.dataset.graf === s.graf));
+  document.getElementById('mtChart').innerHTML = mtGraficoSVG();
+  document.getElementById('mtTotQtd').textContent = maNum(tq);
+  document.getElementById('mtTotValor').textContent = fmtMoney(tv);
+  document.getElementById('mtTotDias').textContent = `${diasMeta}/${s.dados.length}`;
+  const alt = mtDiasAlterados();
+  const st = document.getElementById('mtStatus');
+  st.className = 'ma-status ' + (alt ? 'dirty' : 'ok');
+  st.querySelector('span').textContent = alt ? `${alt} dia(s) com alteração não salva` : 'Tudo salvo';
+  document.getElementById('btnSalvarMetas').textContent = `Salvar metas de ${MESES[mp.mes-1]}`;
+}
+
+/* Barras diárias do mês (Qtd ou Valor) */
+function mtGraficoSVG(){
+  const s = mtState(), mp = state.metasPeriodo;
+  const campo = s.graf === 'valor' ? 'valor' : 'qtd';
+  const vals = s.dados.map(d=> d[campo]);
+  const max = Math.max(...vals, 0);
+  const n = vals.length, W = 520, H = 150, top = 12, base = H - 20, larg = W / n;
+  let svg = `<svg viewBox="0 0 ${W} ${H}" xmlns="http://www.w3.org/2000/svg" font-family="Inter, system-ui, sans-serif">`;
+  svg += `<line x1="0" y1="${base}" x2="${W}" y2="${base}" stroke="#e3e8ee" stroke-width="1"/>`;
+  vals.forEach((v,i)=>{
+    const dia = i + 1;
+    const fds = isWeekend(mp.ano, mp.mes, dia);
+    const h = max > 0 ? Math.max((v / max) * (base - top), v > 0 ? 2 : 0) : 0;
+    const x = i * larg + larg * 0.15, w = larg * 0.7;
+    const cor = maDif(v, s.orig[i][campo]) ? 'var(--warning)' : 'var(--blue-600)';
+    if(h > 0) svg += `<rect x="${x.toFixed(1)}" y="${(base-h).toFixed(1)}" width="${w.toFixed(1)}" height="${h.toFixed(1)}" rx="2" style="fill:${cor}"><title>Dia ${dia}: ${campo==='valor'?fmtMoney(v):maNum(v)}</title></rect>`;
+    else if(fds) svg += `<rect x="${x.toFixed(1)}" y="${base-3}" width="${w.toFixed(1)}" height="3" rx="1" fill="#f3c4c4"/>`;
+    if(dia === 1 || dia % 5 === 0) svg += `<text x="${(x+w/2).toFixed(1)}" y="${H-5}" text-anchor="middle" font-size="9.5" font-weight="600" fill="#64748b">${dia}</text>`;
+  });
+  if(max === 0) svg += `<text x="${W/2}" y="${(top+base)/2}" text-anchor="middle" font-size="12" fill="#94a3b8">Nenhuma meta lançada neste mês</text>`;
+  svg += `</svg>`;
+  return svg;
+}
+
+/* Distribui um total (qtd ou valor) no mês: só dias úteis ou todos os dias */
+function mtDistribuir(campo, total, emTodos){
+  const s = mtState(), mp = state.metasPeriodo;
+  const pesos = s.dados.map((_,i)=> emTodos ? 1 : (isWeekend(mp.ano, mp.mes, i+1) ? 0 : 1));
+  maRatear(total, pesos, 2).forEach((v,i)=> s.dados[i][campo] = v);
+}
+function mtRedesenharTudo(){ mtRenderIndicadores(); mtRenderTabela(); mtRenderResumo(); }
 
 function distribuirMetas(){
-  const p = state.metasPeriodo;
-  const dias = daysInMonth(p.ano, p.mes);
-  let uteis = 0;
-  for(let d=1; d<=dias; d++){ if(!isWeekend(p.ano,p.mes,d)) uteis++; }
-  const totalQtd = Number(document.getElementById('metasDistribuirQtd').value) || 0;
-  const totalValor = Number(document.getElementById('metasDistribuirValor').value) || 0;
-  const porDiaQtd = uteis>0 ? Math.round((totalQtd/uteis)*100)/100 : 0;
-  const porDiaValor = uteis>0 ? Math.round((totalValor/uteis)*100)/100 : 0;
-  document.querySelectorAll('#metasTableBody tr').forEach((tr,i)=>{
-    const d = i+1;
-    const weekend = isWeekend(p.ano,p.mes,d);
-    const qtdInput = tr.querySelector('[data-field="qtd"]');
-    const valorInput = tr.querySelector('[data-field="valor"]');
-    qtdInput.value = weekend ? 0 : porDiaQtd;
-    valorInput.value = weekend ? 0 : porDiaValor;
-  });
-  showToast('Metas distribuídas nos dias úteis. Clique em "Salvar Metas" para confirmar.');
+  const lerCampo = (id)=>{ const v = document.getElementById(id).value; return v === '' ? null : Math.max(0, Number(v) || 0); };
+  const q = lerCampo('metasDistribuirQtd'), v = lerCampo('metasDistribuirValor');
+  if(q === null && v === null){ showToast('Informe a meta do mês (quantidade e/ou valor).', true); return; }
+  const emTodos = document.getElementById('metasDistribuirEm').value === 'todos';
+  if(q !== null) mtDistribuir('qtd', q, emTodos);
+  if(v !== null) mtDistribuir('valor', v, emTodos);
+  mtRedesenharTudo();
+  showToast(`Metas distribuídas ${emTodos ? 'em todos os dias' : 'nos dias úteis'}. Clique em "Salvar" para confirmar.`);
 }
 
-document.getElementById('btnSalvarMetas').addEventListener('click', async ()=>{
-  const indicador = document.getElementById('metasIndicador').value;
-  const p = state.metasPeriodo;
-  const rows = [];
-  document.querySelectorAll('#metasTableBody tr').forEach((tr,i)=>{
-    const d = i+1;
-    const qtd = Number(tr.querySelector('[data-field="qtd"]').value) || 0;
-    const valor = Number(tr.querySelector('[data-field="valor"]').value) || 0;
-    rows.push({ indicador, ano:p.ano, mes:p.mes, dia:d, meta_qtd:qtd, meta_valor:valor });
-  });
+async function mtCopiarMesAnterior(){
+  const s = mtState(), mp = state.metasPeriodo;
+  const ano = mp.mes === 1 ? mp.ano - 1 : mp.ano, mes = mp.mes === 1 ? 12 : mp.mes - 1;
+  const { data, error } = await sb.from('metas').select('meta_qtd, meta_valor').eq('indicador', s.indicador).eq('ano', ano).eq('mes', mes);
+  if(error){ showToast('Erro ao buscar o mês anterior: ' + error.message, true); return; }
+  let q = 0, v = 0;
+  (data||[]).forEach(r=>{ q += Number(r.meta_qtd)||0; v += Number(r.meta_valor)||0; });
+  if(q <= 0 && v <= 0){ showToast(`Não há metas de "${maNomeIndicador(s.indicador)}" em ${MESES[mes-1]}/${ano}.`, true); return; }
+  if(s.dados.some(d=> d.qtd > 0 || d.valor > 0) && !confirm(`Substituir as metas na tela pelo total de ${MESES[mes-1]}/${ano}?`)) return;
+  mtDistribuir('qtd', maR2(q), false);
+  mtDistribuir('valor', maR2(v), false);
+  mtRedesenharTudo();
+  showToast(`Total de ${MESES[mes-1]} (${maNum(maR2(q))} · ${fmtMoney(v)}) distribuído nos dias úteis. Revise e clique em Salvar.`);
+}
+
+async function mtSalvar(){
+  const s = mtState(), mp = state.metasPeriodo;
+  if(!mtDiasAlterados()){ showToast('Nenhuma alteração para salvar.'); return; }
+  const rows = s.dados.map((d,i)=>({ indicador: s.indicador, ano: mp.ano, mes: mp.mes, dia: i+1, meta_qtd: maR2(d.qtd), meta_valor: maR2(d.valor) }));
+  const btn = document.getElementById('btnSalvarMetas');
+  btn.disabled = true; btn.textContent = 'Salvando...';
   const { error } = await sb.from('metas').upsert(rows, { onConflict:'indicador,ano,mes,dia' });
-  if(error){ showToast('Erro ao salvar metas: '+error.message, true); return; }
-  showToast('Metas salvas com sucesso.');
-});
+  btn.disabled = false;
+  if(error){ mtRenderResumo(); showToast('Erro ao salvar metas: ' + error.message, true); return; }
+  showToast(`Metas de ${MESES[mp.mes-1]}/${mp.ano} salvas com sucesso.`);
+  await mtCarregar();
+}
+
+(function bindCadastroMetas(){
+  document.getElementById('mtIndicadores').addEventListener('click', (e)=>{
+    const b = e.target.closest('[data-ind]');
+    const s = mtState();
+    if(!b || b.dataset.ind === s.indicador) return;
+    if(!mtConfirmaDescartar()) return;
+    s.indicador = b.dataset.ind;
+    mtAplicarIndicador();
+  });
+  document.getElementById('metasTableBody').addEventListener('input', (e)=>{
+    const inp = e.target.closest('input[data-metaday]');
+    if(!inp) return;
+    const s = mtState(), i = Number(inp.dataset.metaday) - 1;
+    if(!s.dados[i]) return;
+    s.dados[i][inp.dataset.field] = Math.max(0, Number(inp.value) || 0);
+    mtAtualizarLinhas(); mtRenderIndicadores(); mtRenderResumo();
+  });
+  document.getElementById('mtGrafModo').addEventListener('click', (e)=>{
+    const b = e.target.closest('[data-graf]');
+    if(!b) return;
+    mtState().graf = b.dataset.graf;
+    mtRenderResumo();
+  });
+  document.getElementById('btnDistribuirMetas').addEventListener('click', distribuirMetas);
+  document.getElementById('mtCopiarAnterior').addEventListener('click', mtCopiarMesAnterior);
+  document.getElementById('mtZerar').addEventListener('click', ()=>{
+    const mp = state.metasPeriodo;
+    if(!confirm(`Zerar as metas de ${MESES[mp.mes-1]}/${mp.ano} para "${maNomeIndicador(mtState().indicador)}"? (Só será gravado ao clicar em Salvar.)`)) return;
+    mtState().dados.forEach(d=>{ d.qtd = 0; d.valor = 0; });
+    mtRedesenharTudo();
+  });
+  document.getElementById('mtDesfazer').addEventListener('click', ()=>{
+    if(!mtDiasAlterados()){ showToast('Não há alterações para desfazer.'); return; }
+    const s = mtState();
+    s.dados = s.orig.map(d=>({ ...d }));
+    mtRedesenharTudo();
+  });
+  document.getElementById('btnSalvarMetas').addEventListener('click', mtSalvar);
+})();
+
+/* =====================================================================
+   PAINEL · EDITAR META PELO PRÓPRIO VELOCÍMETRO
+   Altera a meta do mês do painel; distribui nos dias úteis e regrava
+   só o campo (Qtd ou Valor) que mudou.
+   ===================================================================== */
+async function abrirMetaGauge(ind){
+  if(!canAccessView('cad-metas')){ showToast('Você não tem permissão para alterar metas.', true); return; }
+  const p = state.dashboardPeriodo;
+  const { data, error } = await sb.from('metas').select('dia, meta_qtd, meta_valor').eq('indicador', ind).eq('ano', p.ano).eq('mes', p.mes);
+  if(error){ showToast('Erro ao carregar a meta: ' + error.message, true); return; }
+  let q = 0, v = 0;
+  (data||[]).forEach(r=>{ q += Number(r.meta_qtd)||0; v += Number(r.meta_valor)||0; });
+  q = maR2(q); v = maR2(v);
+  state.gaugeMetaEdit = { ind, ano: p.ano, mes: p.mes, linhas: data || [], q, v };
+  document.getElementById('gmTitulo').textContent = 'Editar meta · ' + maNomeIndicador(ind);
+  document.getElementById('gmPeriodo').textContent = `${MESES[p.mes-1]}/${p.ano}`;
+  document.getElementById('gmUteis').textContent = `${maDiasUteis(p.ano, p.mes)} dias úteis`;
+  document.getElementById('gmQtd').value = q ? String(q) : '';
+  document.getElementById('gmValor').value = v ? String(v) : '';
+  document.getElementById('gmAtualQtd').innerHTML = `Meta atual: <b>${maNum(q)}</b>`;
+  document.getElementById('gmAtualValor').innerHTML = `Meta atual: <b>${fmtMoney(v)}</b>`;
+  openModal('modalGaugeMeta');
+  const foco = document.getElementById(state.gaugeModo[ind] === 'valor' ? 'gmValor' : 'gmQtd');
+  setTimeout(()=>{ foco.focus(); foco.select(); }, 30);
+}
+async function salvarMetaGauge(){
+  const ed = state.gaugeMetaEdit;
+  if(!ed) return;
+  const q = Math.max(0, Number(document.getElementById('gmQtd').value) || 0);
+  const v = Math.max(0, Number(document.getElementById('gmValor').value) || 0);
+  const altQ = maDif(q, ed.q), altV = maDif(v, ed.v);
+  if(!altQ && !altV){ closeModal('modalGaugeMeta'); showToast('Nenhuma alteração na meta.'); return; }
+  const dq = maDistribuirMes(q, ed.ano, ed.mes), dv = maDistribuirMes(v, ed.ano, ed.mes);
+  const ex = {}; ed.linhas.forEach(r=> ex[r.dia] = r);
+  const rows = [];
+  for(let d=1; d<=daysInMonth(ed.ano, ed.mes); d++){
+    rows.push({
+      indicador: ed.ind, ano: ed.ano, mes: ed.mes, dia: d,
+      meta_qtd:   altQ ? dq[d] : (Number(ex[d] && ex[d].meta_qtd) || 0),
+      meta_valor: altV ? dv[d] : (Number(ex[d] && ex[d].meta_valor) || 0)
+    });
+  }
+  const btn = document.getElementById('gmSalvar');
+  btn.disabled = true; btn.textContent = 'Salvando...';
+  const { error } = await sb.from('metas').upsert(rows, { onConflict:'indicador,ano,mes,dia' });
+  btn.disabled = false; btn.textContent = 'Salvar meta';
+  if(error){ showToast('Erro ao salvar a meta: ' + error.message, true); return; }
+  closeModal('modalGaugeMeta');
+  showToast(`Meta de ${maNomeIndicador(ed.ind)} (${MESES[ed.mes-1]}/${ed.ano}) atualizada.`);
+  renderGaugeInd(ed.ind);
+}
+(function bindMetaGauge(){
+  document.getElementById('gmSalvar').addEventListener('click', salvarMetaGauge);
+  ['gmQtd','gmValor'].forEach(id=> document.getElementById(id).addEventListener('keydown', (e)=>{ if(e.key === 'Enter') salvarMetaGauge(); }));
+  document.getElementById('gmIrDiario').addEventListener('click', ()=>{
+    const ed = state.gaugeMetaEdit;
+    closeModal('modalGaugeMeta');
+    if(!ed) return;
+    if(state.currentView === 'cad-metas' && !mtConfirmaDescartar()) return;
+    mtState().indicador = ed.ind;
+    state.metasPeriodo.ano = ed.ano; state.metasPeriodo.mes = ed.mes;
+    goToView('cad-metas');
+  });
+})();
+
+/* =====================================================================
+   CADASTRO DE METAS · VISÃO ANUAL (janeiro a dezembro)
+   Grava na mesma tabela "metas" (formato diário), então velocímetros e
+   indicadores continuam funcionando sem mudança: a meta de cada mês é
+   distribuída nos dias úteis (seg–sex), igual ao "Distribuir total".
+   Só os meses/campos alterados são regravados; o resto fica intacto
+   (inclusive ajustes feitos dia a dia na tela de Metas).
+   ===================================================================== */
+const MA_INDICADORES = [
+  { key:'propostas', nome:'Propostas Enviadas',
+    icone:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 2 11 13"/><path d="M22 2 15 22l-4-9-9-4 20-7Z"/></svg>' },
+  { key:'contatos_realizados', nome:'Contatos Realizados',
+    icone:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.8 19.8 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6A19.8 19.8 0 0 1 2.1 4.18 2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.13.96.36 1.9.7 2.81a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.9.34 1.85.57 2.81.7A2 2 0 0 1 22 16.92Z"/></svg>' },
+  { key:'aprovados', nome:'Aprovados',
+    icone:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><path d="M22 4 12 14.01l-3-3"/></svg>' }
+];
+const MA_MESES_ABREV = ['Jan','Fev','Mar','Abr','Mai','Jun','Jul','Ago','Set','Out','Nov','Dez'];
+
+function maR2(v){ return Math.round((Number(v)||0)*100)/100; }
+function maNum(v){ return (Number(v)||0).toLocaleString('pt-BR',{maximumFractionDigits:2}); }
+function maDif(a,b){ return Math.abs((Number(a)||0)-(Number(b)||0)) > 0.004; }
+function maZeros(){ return Array.from({length:12}, ()=>({ qtd:0, valor:0 })); }
+function maDiasUteis(ano, mes){
+  let u = 0; const t = daysInMonth(ano, mes);
+  for(let d=1; d<=t; d++) if(!isWeekend(ano,mes,d)) u++;
+  return u;
+}
+/* Rateia um total por pesos sem perder nada no arredondamento (casas = 0 ou 2) */
+function maRatear(total, pesos, casas){
+  const f = Math.pow(10, casas);
+  const unidades = Math.round((Number(total)||0) * f);
+  const somaPesos = pesos.reduce((s,p)=> s+p, 0);
+  let acumPeso = 0, acum = 0;
+  return pesos.map(p=>{
+    if(somaPesos <= 0 || p <= 0) return 0;
+    acumPeso += p;
+    const alvo = Math.round(unidades * acumPeso / somaPesos);
+    const v = (alvo - acum) / f; acum = alvo;
+    return v;
+  });
+}
+/* Meta do mês -> valor por dia (1..n), somente nos dias úteis */
+function maDistribuirMes(total, ano, mes){
+  const dias = daysInMonth(ano, mes);
+  const pesos = []; for(let d=1; d<=dias; d++) pesos.push(isWeekend(ano,mes,d) ? 0 : 1);
+  const vals = maRatear(total, pesos, 2);
+  const out = {}; vals.forEach((v,i)=> out[i+1] = v);
+  return out;
+}
+function maSomarPorMes(linhas){
+  const m = maZeros();
+  (linhas||[]).forEach(r=>{
+    const i = Number(r.mes) - 1;
+    if(i < 0 || i > 11) return;
+    m[i].qtd += Number(r.meta_qtd)||0;
+    m[i].valor += Number(r.meta_valor)||0;
+  });
+  return m.map(x=>({ qtd: maR2(x.qtd), valor: maR2(x.valor) }));
+}
+function maTemAlteracao(){
+  const s = state.metasAnual;
+  return !!s && s.dados.some((m,i)=> maDif(m.qtd, s.orig[i].qtd) || maDif(m.valor, s.orig[i].valor));
+}
+function maConfirmaDescartar(){
+  return !maTemAlteracao() || confirm('Há metas alteradas e ainda não salvas. Descartar as alterações?');
+}
+
+function renderCadastroMetasAnual(){
+  if(!state.metasAnual){
+    state.metasAnual = { ano: new Date().getFullYear(), indicador:'propostas', dados: maZeros(), orig: maZeros(), linhasAno: [], graf:'qtd' };
+  }
+  maMontarToolbar();
+  maCarregar();
+}
+
+function maMontarToolbar(){
+  const s = state.metasAnual;
+  const atual = new Date().getFullYear();
+  const anos = [];
+  for(let a = atual-3; a <= atual+3; a++) anos.push(a);
+  if(!anos.includes(s.ano)){ anos.push(s.ano); anos.sort((a,b)=>a-b); }
+  document.getElementById('maToolbar').innerHTML = `
+    <div class="ma-yearnav">
+      <button class="btn btn-secondary btn-sm" type="button" id="maAnoPrev" title="Ano anterior">&#8249;</button>
+      <select id="maAno" title="Ano das metas">${anos.map(a=>`<option value="${a}" ${a===s.ano?'selected':''}>${a}</option>`).join('')}</select>
+      <button class="btn btn-secondary btn-sm" type="button" id="maAnoNext" title="Próximo ano">&#8250;</button>
+    </div>
+    <div class="spacer"></div>
+    <button class="btn btn-secondary btn-sm" type="button" id="maCopiarAnterior">Copiar do ano anterior</button>
+    <button class="btn btn-secondary btn-sm" type="button" id="maZerar">Zerar ano</button>
+    <button class="btn btn-secondary btn-sm" type="button" id="maIrDiario">Ajustar dia a dia</button>
+  `;
+  const trocarAno = (novo)=>{
+    if(novo === s.ano) return;
+    if(!maConfirmaDescartar()){ document.getElementById('maAno').value = s.ano; return; }
+    s.ano = novo;
+    maMontarToolbar();
+    maCarregar();
+  };
+  document.getElementById('maAno').addEventListener('change', (e)=> trocarAno(Number(e.target.value)));
+  document.getElementById('maAnoPrev').addEventListener('click', ()=> trocarAno(s.ano - 1));
+  document.getElementById('maAnoNext').addEventListener('click', ()=> trocarAno(s.ano + 1));
+  document.getElementById('maCopiarAnterior').addEventListener('click', maCopiarAnoAnterior);
+  document.getElementById('maZerar').addEventListener('click', ()=>{
+    if(!confirm(`Zerar as metas de ${s.ano} para "${maNomeIndicador(s.indicador)}"? (Só será gravado ao clicar em Salvar.)`)) return;
+    s.dados = maZeros();
+    maRenderMeses(); maRenderResumo();
+  });
+  document.getElementById('maIrDiario').addEventListener('click', ()=>{
+    if(!maConfirmaDescartar()) return;
+    s.dados = s.orig.map(m=>({ ...m }));
+    goToView('cad-metas');
+  });
+}
+function maNomeIndicador(key){ return (MA_INDICADORES.find(i=>i.key===key)||{}).nome || key; }
+
+async function maCarregar(){
+  const s = state.metasAnual;
+  const ano = s.ano;
+  document.getElementById('maMeses').innerHTML = '<p class="muted">Carregando metas...</p>';
+  const { data, error } = await buscarTodos(()=> sb.from('metas').select('id, indicador, mes, dia, meta_qtd, meta_valor').eq('ano', ano));
+  if(s.ano !== ano) return; /* o usuário trocou de ano enquanto carregava */
+  if(error){
+    document.getElementById('maMeses').innerHTML = '';
+    showToast('Erro ao carregar metas: ' + error.message, true);
+    return;
+  }
+  s.linhasAno = data || [];
+  maAplicarIndicador();
+}
+function maAplicarIndicador(){
+  const s = state.metasAnual;
+  s.orig = maSomarPorMes(s.linhasAno.filter(r=> r.indicador === s.indicador));
+  s.dados = s.orig.map(m=>({ ...m }));
+  maRenderIndicadores();
+  maRenderMeses();
+  maRenderResumo();
+}
+
+function maRenderIndicadores(){
+  const s = state.metasAnual;
+  const el = document.getElementById('maIndicadores');
+  el.innerHTML = MA_INDICADORES.map(ind=>{
+    let qtd = 0, valor = 0;
+    if(ind.key === s.indicador){
+      s.dados.forEach(m=>{ qtd += Number(m.qtd)||0; valor += Number(m.valor)||0; });
+    } else {
+      s.linhasAno.forEach(r=>{ if(r.indicador === ind.key){ qtd += Number(r.meta_qtd)||0; valor += Number(r.meta_valor)||0; } });
+    }
+    return `<button type="button" class="ma-ind ${ind.key===s.indicador?'active':''}" data-ind="${ind.key}">
+      <span class="ma-ind-sel">Editando</span>
+      <span class="ma-ind-ico">${ind.icone}</span>
+      <span>
+        <div class="ma-ind-nome">${ind.nome}</div>
+        <div class="ma-ind-sub">Meta ${s.ano}: <b>${maNum(qtd)}</b> · <b>${fmtMoney(valor)}</b></div>
+      </span>
+    </button>`;
+  }).join('');
+}
+
+function maRenderMeses(){
+  const s = state.metasAnual;
+  const hoje = new Date();
+  const anoAt = hoje.getFullYear(), mesAt = hoje.getMonth() + 1;
+  const vIn = (v)=> (Number(v)||0) ? String(maR2(v)) : '';
+  document.getElementById('maMeses').innerHTML = s.dados.map((m,i)=>{
+    const mes = i + 1;
+    const atual = s.ano === anoAt && mes === mesAt;
+    return `<div class="ma-mes ${atual?'atual':''}" data-mes="${i}">
+      <div class="ma-mes-head">
+        <div class="ma-mes-titulo"><span class="ma-mes-num">${String(mes).padStart(2,'0')}</span><span class="ma-mes-nome">${MESES[i]}</span></div>
+        <span class="ma-mes-tag"></span>
+      </div>
+      <div class="ma-mes-sub">${maDiasUteis(s.ano, mes)} dias úteis · ${daysInMonth(s.ano, mes)} dias</div>
+      <div class="ma-field"><label>Quantidade</label><div class="ma-input"><span>Qtd</span><input type="number" min="0" step="any" inputmode="decimal" data-ma="${i}" data-campo="qtd" value="${vIn(m.qtd)}" placeholder="0" /></div></div>
+      <div class="ma-field"><label>Valor</label><div class="ma-input"><span>R$</span><input type="number" min="0" step="any" inputmode="decimal" data-ma="${i}" data-campo="valor" value="${vIn(m.valor)}" placeholder="0,00" /></div></div>
+      <div class="ma-mes-foot"></div>
+    </div>`;
+  }).join('');
+  for(let i=0; i<12; i++) maAtualizarMes(i);
+}
+
+function maAtualizarMes(i){
+  const s = state.metasAnual;
+  const card = document.querySelector(`#maMeses .ma-mes[data-mes="${i}"]`);
+  if(!card) return;
+  const m = s.dados[i], o = s.orig[i], mes = i + 1;
+  const altQ = maDif(m.qtd, o.qtd), altV = maDif(m.valor, o.valor);
+  const alterado = altQ || altV;
+  const hoje = new Date();
+  const atual = s.ano === hoje.getFullYear() && mes === hoje.getMonth() + 1;
+  const passado = s.ano < hoje.getFullYear() || (s.ano === hoje.getFullYear() && mes < hoje.getMonth() + 1);
+  card.classList.toggle('alterado', alterado);
+  card.classList.toggle('preenchido', (Number(m.qtd)||0) > 0 || (Number(m.valor)||0) > 0);
+  card.querySelector('[data-campo="qtd"]').parentElement.classList.toggle('changed', altQ);
+  card.querySelector('[data-campo="valor"]').parentElement.classList.toggle('changed', altV);
+  const tag = card.querySelector('.ma-mes-tag');
+  tag.innerHTML = alterado ? '<span class="ma-tag alt">Alterado</span>'
+    : atual ? '<span class="ma-tag atual">Mês atual</span>'
+    : passado ? '<span class="ma-tag passado">Encerrado</span>' : '';
+  const uteis = maDiasUteis(s.ano, mes) || 1;
+  const foot = card.querySelector('.ma-mes-foot');
+  foot.innerHTML = ((Number(m.qtd)||0) || (Number(m.valor)||0))
+    ? `<span>≈ <b>${maNum(maR2(m.qtd/uteis))}</b> /dia útil</span><span>≈ <b>${fmtMoney(m.valor/uteis)}</b> /dia útil</span>`
+    : '<span>Sem meta definida</span>';
+}
+
+function maRenderResumo(){
+  const s = state.metasAnual;
+  let tq = 0, tv = 0, meses = 0;
+  s.dados.forEach(m=>{
+    tq += Number(m.qtd)||0; tv += Number(m.valor)||0;
+    if((Number(m.qtd)||0) > 0 || (Number(m.valor)||0) > 0) meses++;
+  });
+  tq = maR2(tq); tv = maR2(tv);
+  document.getElementById('maResumoTitulo').textContent = `Resumo ${s.ano} · ${maNomeIndicador(s.indicador)}`;
+  document.getElementById('maKpis').innerHTML = `
+    <div class="ma-kpi"><span>Meta anual · Qtd</span><b>${maNum(tq)}</b></div>
+    <div class="ma-kpi"><span>Meta anual · Valor</span><b title="${fmtMoney(tv)}">${fmtMoneyCompacto(tv)}</b></div>
+    <div class="ma-kpi"><span>Média mensal · Qtd</span><b>${maNum(maR2(tq/12))}</b></div>
+    <div class="ma-kpi"><span>Média mensal · Valor</span><b title="${fmtMoney(tv/12)}">${fmtMoneyCompacto(tv/12)}</b></div>`;
+  document.getElementById('maGrafModo').querySelectorAll('button').forEach(b=> b.classList.toggle('active', b.dataset.graf === s.graf));
+  document.getElementById('maChart').innerHTML = maGraficoSVG();
+  document.getElementById('maTotQtd').textContent = maNum(tq);
+  document.getElementById('maTotValor').textContent = fmtMoney(tv);
+  document.getElementById('maTotMeses').textContent = `${meses}/12`;
+  const dirty = maTemAlteracao();
+  const st = document.getElementById('maStatus');
+  st.className = 'ma-status ' + (dirty ? 'dirty' : 'ok');
+  st.querySelector('span').textContent = dirty
+    ? `${s.dados.filter((m,i)=> maDif(m.qtd,s.orig[i].qtd) || maDif(m.valor,s.orig[i].valor)).length} mês(es) com alteração não salva`
+    : 'Tudo salvo';
+  document.getElementById('maSalvar').textContent = `Salvar metas de ${s.ano}`;
+}
+
+/* Barras mensais (Qtd ou Valor) do indicador em edição */
+function maGraficoSVG(){
+  const s = state.metasAnual;
+  const campo = s.graf === 'valor' ? 'valor' : 'qtd';
+  const vals = s.dados.map(m=> Number(m[campo])||0);
+  const max = Math.max(...vals, 0);
+  const W = 520, H = 168, top = 22, base = H - 22, larg = W / 12;
+  const hoje = new Date();
+  const fmt = (v)=> campo === 'valor' ? fmtMoneyCompacto(v).replace('R$ ','') : maNum(v);
+  let svg = `<svg viewBox="0 0 ${W} ${H}" xmlns="http://www.w3.org/2000/svg" font-family="Inter, system-ui, sans-serif">`;
+  svg += `<line x1="0" y1="${base}" x2="${W}" y2="${base}" stroke="#e3e8ee" stroke-width="1"/>`;
+  vals.forEach((v,i)=>{
+    const h = max > 0 ? Math.max((v / max) * (base - top), v > 0 ? 3 : 0) : 0;
+    const x = i * larg + larg * 0.18, w = larg * 0.64;
+    const atual = s.ano === hoje.getFullYear() && i === hoje.getMonth();
+    const alterado = maDif(s.dados[i][campo], s.orig[i][campo]);
+    const cor = alterado ? 'var(--warning)' : 'var(--blue-600)';
+    if(h > 0) svg += `<rect x="${x.toFixed(1)}" y="${(base-h).toFixed(1)}" width="${w.toFixed(1)}" height="${h.toFixed(1)}" rx="4" style="fill:${cor};opacity:${atual?1:.85}"><title>${MESES[i]}: ${campo==='valor'?fmtMoney(v):maNum(v)}</title></rect>`;
+    else svg += `<rect x="${x.toFixed(1)}" y="${base-2}" width="${w.toFixed(1)}" height="2" rx="1" fill="#e3e8ee"/>`;
+    if(v > 0) svg += `<text x="${(x+w/2).toFixed(1)}" y="${(base-h-5).toFixed(1)}" text-anchor="middle" font-size="9.5" font-weight="700" fill="#334155">${escapeHtml(fmt(v))}</text>`;
+    svg += `<text x="${(x+w/2).toFixed(1)}" y="${H-6}" text-anchor="middle" font-size="10.5" font-weight="${atual?800:600}" fill="${atual?'#0f172a':'#64748b'}">${MA_MESES_ABREV[i]}</text>`;
+  });
+  if(max === 0) svg += `<text x="${W/2}" y="${(top+base)/2}" text-anchor="middle" font-size="12" fill="#94a3b8">Nenhuma meta lançada para ${s.ano}</text>`;
+  svg += `</svg>`;
+  return svg;
+}
+
+async function maCopiarAnoAnterior(){
+  const s = state.metasAnual;
+  const anoAnt = s.ano - 1;
+  const { data, error } = await buscarTodos(()=> sb.from('metas').select('id, mes, meta_qtd, meta_valor').eq('indicador', s.indicador).eq('ano', anoAnt));
+  if(error){ showToast('Erro ao buscar metas de ' + anoAnt + ': ' + error.message, true); return; }
+  const somas = maSomarPorMes(data);
+  if(!somas.some(m=> m.qtd > 0 || m.valor > 0)){ showToast(`Não há metas de "${maNomeIndicador(s.indicador)}" em ${anoAnt}.`, true); return; }
+  if(s.dados.some(m=> m.qtd > 0 || m.valor > 0) && !confirm(`Substituir os valores na tela pelas metas de ${anoAnt}?`)) return;
+  s.dados = somas;
+  maRenderIndicadores(); maRenderMeses(); maRenderResumo();
+  showToast(`Metas de ${anoAnt} copiadas. Revise e clique em Salvar.`);
+}
+
+async function maSalvar(){
+  const s = state.metasAnual;
+  const existentes = {};
+  s.linhasAno.forEach(r=>{ if(r.indicador === s.indicador){ (existentes[r.mes] = existentes[r.mes] || {})[r.dia] = r; } });
+  const rows = [], mesesAlt = [];
+  s.dados.forEach((m,i)=>{
+    const mes = i + 1, o = s.orig[i];
+    const altQ = maDif(m.qtd, o.qtd), altV = maDif(m.valor, o.valor);
+    if(!altQ && !altV) return;
+    mesesAlt.push(MA_MESES_ABREV[i]);
+    const dq = altQ ? maDistribuirMes(m.qtd, s.ano, mes) : null;
+    const dv = altV ? maDistribuirMes(m.valor, s.ano, mes) : null;
+    const ex = existentes[mes] || {};
+    for(let d=1; d<=daysInMonth(s.ano, mes); d++){
+      rows.push({
+        indicador: s.indicador, ano: s.ano, mes, dia: d,
+        meta_qtd:   altQ ? dq[d] : (Number(ex[d] && ex[d].meta_qtd) || 0),
+        meta_valor: altV ? dv[d] : (Number(ex[d] && ex[d].meta_valor) || 0)
+      });
+    }
+  });
+  if(!rows.length){ showToast('Nenhuma alteração para salvar.'); return; }
+  const btn = document.getElementById('maSalvar');
+  btn.disabled = true; btn.textContent = 'Salvando...';
+  const { error } = await sb.from('metas').upsert(rows, { onConflict:'indicador,ano,mes,dia' });
+  btn.disabled = false;
+  if(error){ maRenderResumo(); showToast('Erro ao salvar metas: ' + error.message, true); return; }
+  showToast(`Metas de ${s.ano} salvas (${mesesAlt.join(', ')}).`);
+  await maCarregar();
+}
+
+(function bindMetasAnual(){
+  const s = ()=> state.metasAnual;
+  document.getElementById('maIndicadores').addEventListener('click', (e)=>{
+    const b = e.target.closest('[data-ind]');
+    if(!b || !s() || b.dataset.ind === s().indicador) return;
+    if(!maConfirmaDescartar()) return;
+    s().indicador = b.dataset.ind;
+    maAplicarIndicador();
+  });
+  document.getElementById('maMeses').addEventListener('input', (e)=>{
+    const inp = e.target.closest('input[data-ma]');
+    if(!inp || !s()) return;
+    const i = Number(inp.dataset.ma);
+    s().dados[i][inp.dataset.campo] = Math.max(0, Number(inp.value) || 0);
+    maAtualizarMes(i); maRenderIndicadores(); maRenderResumo();
+  });
+  document.getElementById('maGrafModo').addEventListener('click', (e)=>{
+    const b = e.target.closest('[data-graf]');
+    if(!b || !s()) return;
+    s().graf = b.dataset.graf;
+    maRenderResumo();
+  });
+  const lerCampo = (id)=>{ const v = document.getElementById(id).value; return v === '' ? null : Math.max(0, Number(v) || 0); };
+  document.getElementById('maDistribuirAno').addEventListener('click', ()=>{
+    const q = lerCampo('maAnualQtd'), v = lerCampo('maAnualValor');
+    if(q === null && v === null){ showToast('Informe o total do ano (quantidade e/ou valor).', true); return; }
+    const st = s();
+    const pesos = document.getElementById('maCriterio').value === 'igual'
+      ? Array(12).fill(1)
+      : Array.from({length:12}, (_,i)=> maDiasUteis(st.ano, i+1));
+    if(q !== null){ const r = maRatear(q, pesos, Number.isInteger(q) ? 0 : 2); r.forEach((x,i)=> st.dados[i].qtd = x); }
+    if(v !== null){ const r = maRatear(v, pesos, 2); r.forEach((x,i)=> st.dados[i].valor = x); }
+    maRenderIndicadores(); maRenderMeses(); maRenderResumo();
+    showToast('Meta anual distribuída nos 12 meses. Revise e clique em Salvar.');
+  });
+  document.getElementById('maAplicarTodos').addEventListener('click', ()=>{
+    const q = lerCampo('maTodosQtd'), v = lerCampo('maTodosValor');
+    if(q === null && v === null){ showToast('Informe a meta mensal (quantidade e/ou valor).', true); return; }
+    s().dados.forEach(m=>{ if(q !== null) m.qtd = maR2(q); if(v !== null) m.valor = maR2(v); });
+    maRenderIndicadores(); maRenderMeses(); maRenderResumo();
+    showToast('Meta aplicada nos 12 meses. Revise e clique em Salvar.');
+  });
+  document.getElementById('maSalvar').addEventListener('click', maSalvar);
+})();
 
 /* =====================================================================
    USUÁRIOS E PERMISSÕES
